@@ -51,6 +51,7 @@ function UploadModal({
   const [file, setFile] = useState<File | null>(null);
   const [docName, setDocName] = useState('');
   const [department, setDepartment] = useState('');
+  const [phase, setPhase] = useState('Hari 1');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
@@ -93,6 +94,7 @@ function UploadModal({
           name: docName.trim(),
           cloudinary_url: publicUrl,
           department: department || null,
+          phase: phase,
         }),
       });
       
@@ -173,6 +175,24 @@ function UploadModal({
                   >
                     <option value="">Untuk Semua Divisi (Global)</option>
                     {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Fase Onboarding</label>
+                <div className="relative">
+                  <select
+                    value={phase}
+                    onChange={(e) => setPhase(e.target.value)}
+                    className="w-full appearance-none px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all bg-white"
+                  >
+                    <option value="Hari 1">Hari 1</option>
+                    <option value="Hari 2">Hari 2</option>
+                    <option value="Minggu 1">Minggu 1</option>
+                    <option value="Bulan 1">Bulan 1</option>
+                    <option value="Umum">Umum</option>
                   </select>
                   <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>

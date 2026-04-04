@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { name, cloudinary_url, department } = await req.json();
+    const { name, cloudinary_url, department, phase } = await req.json();
 
     const { data: doc, error: insertErr } = await supabase
       .from('documents')
@@ -45,6 +45,19 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (insertErr) throw insertErr;
+
+    // Auto-create Checklist Item for this Document
+    const { error: checklistErr } = await supabase
+      .from('checklist_items')
+      .insert({
+        title: `Baca Dokumen: ${name}`,
+        description: cloudinary_url, // Use description to link the URL
+        phase: phase || 'Umum',
+        department: department || null,
+        priority: 'wajib',
+      });
+
+    if (checklistErr) console.error("Checklist dual-write error:", checklistErr.message);
 
     return NextResponse.json({ success: true, document: doc });
   } catch (err: any) {

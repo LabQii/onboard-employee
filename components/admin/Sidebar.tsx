@@ -11,7 +11,6 @@ export function Sidebar() {
     { name: 'Ringkasan',          href: '/admin',                    icon: LayoutDashboard, exact: true },
     { name: 'Dokumen',             href: '/admin/documents',          icon: FileText,        exact: false },
     { name: 'Karyawan',            href: '/admin/employees',          icon: Users,           exact: false },
-    { name: 'Template Checklist',  href: '/admin/checklist-template', icon: ListChecks,      exact: false },
     { name: 'Pengaturan',          href: '/admin/settings',           icon: Settings,        exact: false },
   ];
 

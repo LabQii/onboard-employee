@@ -57,19 +57,16 @@ export default function EmployeeDashboard() {
   useEffect(() => {
     async function load() {
       try {
-        const [profileRes, checklistRes, docsRes] = await Promise.all([
+        const [profileRes, checklistRes] = await Promise.all([
           fetch('/api/karyawan/profile'),
           fetch('/api/karyawan/checklist'),
-          fetch('/api/karyawan/documents'),
         ]);
         if (profileRes.status === 401) { router.push('/'); return; }
         const { profile: p } = await profileRes.json();
         const { items } = await checklistRes.json();
-        const { documents } = await docsRes.json();
         
         setProfile(p);
         setChecklistItems(items ?? []);
-        setDocuments(documents ?? []);
       } catch {
         router.push('/');
       } finally {
@@ -207,11 +204,11 @@ export default function EmployeeDashboard() {
             </p>
             <div className="flex items-center gap-3 flex-wrap">
               <div className="bg-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
-                📋 {profile?.department || 'Divisi belum ditentukan'}
+                {profile?.department || 'Divisi belum ditentukan'}
               </div>
               {profile?.role && (
                 <div className="bg-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
-                  💼 {profile.role}
+                  {profile.role}
                 </div>
               )}
             </div>
@@ -281,7 +278,7 @@ export default function EmployeeDashboard() {
             {/* Checklist Section */}
             <div className="flex flex-col gap-6">
               <h2 className="text-[1.3rem] font-bold text-[#1E3A5F] tracking-tight px-1">
-                📋 Checklist Onboarding
+                Checklist Onboarding
               </h2>
 
             {totalItems === 0 ? (
@@ -327,13 +324,23 @@ export default function EmployeeDashboard() {
                                 ? <CheckCircle2 className="w-3 h-3" />
                                 : <Circle className="w-3 h-3" />}
                             </div>
-                            <div className="text-left">
+                            <div className="text-left flex-1 min-w-0 pr-4">
                               <span className={`font-bold text-[14px] block transition-all ${item.completed ? 'text-[#9AADB8] line-through' : 'text-[#1E3A5F]'}`}>
                                 {item.title}
                               </span>
-                              {item.description && (
-                                <span className="text-[11px] text-[#9AADB8] font-medium">{item.description}</span>
-                              )}
+                              {item.description && item.description.startsWith('http') ? (
+                                <a 
+                                  href={item.description}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="mt-2 inline-flex items-center justify-center py-2 px-4 bg-white/50 hover:bg-[#1E4D6B] text-[#1E4D6B] hover:text-white rounded-lg text-[11px] font-bold transition-all border border-[#E8EFF4] hover:border-[#1E4D6B] shadow-sm"
+                                >
+                                  <FileText className="w-3.5 h-3.5 mr-1.5" /> Baca Dokumen
+                                </a>
+                              ) : item.description ? (
+                                <span className="text-[11px] text-[#9AADB8] font-medium block mt-1">{item.description}</span>
+                              ) : null}
                             </div>
                           </div>
                           <span className={`text-[9px] font-bold px-3 py-1 rounded-lg tracking-[0.15em] shrink-0 ml-2 ${
@@ -352,46 +359,6 @@ export default function EmployeeDashboard() {
             )}
             </div>
 
-            {/* Documents Section */}
-            <div className="flex flex-col gap-6">
-              <h2 className="text-[1.3rem] font-bold text-[#1E3A5F] tracking-tight px-1 mt-4">
-                📚 Dokumen Perusahaan
-              </h2>
-                
-                {documents.length === 0 ? (
-                  <Card className="py-16 text-center">
-                    <FileText className="w-8 h-8 text-[#C0CDD4] mx-auto mb-3" />
-                    <p className="text-[13px] text-[#9AADB8] font-medium">Belum ada dokumen yang tersedia untuk Anda.</p>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {documents.map((doc) => (
-                      <Card key={doc.id} className="p-5 flex flex-col justify-between hover:border-[#1E4D6B]/30 hover:shadow-md transition-all group">
-                        <div className="flex items-start gap-4 mb-4">
-                          <div className="w-10 h-10 bg-blue-50 text-[#1E4D6B] rounded-xl flex items-center justify-center font-bold text-[10px] uppercase shrink-0">
-                            {doc.name.split('.').pop()?.slice(0, 3) || 'DOC'}
-                          </div>
-                          <div className="min-w-0">
-                            <h3 className="font-bold text-[13px] text-[#1E3A5F] truncate w-full" title={doc.name}>{doc.name}</h3>
-                            <p className="text-[10px] font-bold text-[#9AADB8] mt-1 tracking-widest uppercase">
-                              {doc.department ? doc.department : 'Global'}
-                            </p>
-                          </div>
-                        </div>
-                        <a 
-                          href={doc.cloudinary_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="w-full py-2.5 bg-[#F8FAFC] group-hover:bg-[#1E4D6B] text-[#5A7A8C] group-hover:text-white rounded-xl text-center text-[12px] font-bold transition-all border border-[#E8EFF4] group-hover:border-[#1E4D6B]"
-                        >
-                          Lihat Dokumen
-                        </a>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-            </div>
-            
             {/* Directory Intro Section */}
             <Card className="py-12 mt-4 text-center border-dashed border-2 border-[#E8EFF4] bg-transparent shadow-none">
                <p className="text-[#9AADB8] text-[13px] font-bold">Fitur Direktori Tim segera hadir.</p>
