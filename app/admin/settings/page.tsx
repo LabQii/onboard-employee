@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
-import { Building2, User, KeyRound, Trash2, RefreshCw } from 'lucide-react';
+import { Building2, User, KeyRound, Trash2, RefreshCw, Briefcase, UserRound, Plus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 // ─── Section Card ────────────────────────────────────────────────────────────
@@ -41,6 +41,14 @@ export default function SettingsPage() {
   // Danger zone
   const [dangerConfirm, setDangerConfirm] = useState('');
 
+  // Departments & Roles
+  const [departments, setDepartments] = useState<{id: string, name: string}[]>([]);
+  const [roles, setRoles] = useState<{id: string, name: string}[]>([]);
+  const [newDep, setNewDep] = useState('');
+  const [newRole, setNewRole] = useState('');
+  const [loadingDeps, setLoadingDeps] = useState(false);
+  const [loadingRoles, setLoadingRoles] = useState(false);
+
   useEffect(() => {
     // Fetch current admin profile from DB
     supabase.from('profiles').select('email, full_name').eq('is_admin', true).limit(1).then(({ data }) => {
@@ -50,8 +58,65 @@ export default function SettingsPage() {
       }
     });
 
+    // Fetch deps & roles
+    fetch('/api/admin/departments').then(res => res.json()).then(data => setDepartments(data.departments || []));
+    fetch('/api/admin/roles').then(res => res.json()).then(data => setRoles(data.roles || []));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function addDepartment() {
+    if (!newDep.trim()) return;
+    setLoadingDeps(true);
+    try {
+      const res = await fetch('/api/admin/departments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newDep.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setDepartments(prev => [...prev, data.department]);
+        setNewDep('');
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingDeps(false);
+    }
+  }
+
+  async function deleteDepartment(id: string) {
+    if (!confirm('Hapus divisi ini?')) return;
+    const res = await fetch(`/api/admin/departments?id=${id}`, { method: 'DELETE' });
+    if (res.ok) setDepartments(prev => prev.filter(d => d.id !== id));
+  }
+
+  async function addRole() {
+    if (!newRole.trim()) return;
+    setLoadingRoles(true);
+    try {
+      const res = await fetch('/api/admin/roles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newRole.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRoles(prev => [...prev, data.role]);
+        setNewRole('');
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingRoles(false);
+    }
+  }
+
+  async function deleteRole(id: string) {
+    if (!confirm('Hapus jabatan ini?')) return;
+    const res = await fetch(`/api/admin/roles?id=${id}`, { method: 'DELETE' });
+    if (res.ok) setRoles(prev => prev.filter(r => r.id !== id));
+  }
 
   async function saveCompany() {
     setSavingCompany(true);
@@ -173,6 +238,70 @@ export default function SettingsPage() {
               >
                 {savingProfile ? 'Menyimpan…' : profileSaved ? '✓ Tersimpan' : 'Simpan Profil'}
               </button>
+            </div>
+          </SectionCard>
+
+          {/* ── Manage Departments ── */}
+          <SectionCard icon={Briefcase} title="Kelola Divisi">
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-2">
+                <input
+                  value={newDep}
+                  onChange={(e) => setNewDep(e.target.value)}
+                  placeholder="Nama divisi baru..."
+                  className="flex-1 px-4 py-2.5 border border-[#E8EFF4] rounded-xl text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] transition-all bg-white"
+                />
+                <button
+                  onClick={addDepartment}
+                  disabled={loadingDeps || !newDep.trim()}
+                  className="w-10 h-10 rounded-xl bg-[#1E4D6B] text-white flex items-center justify-center hover:bg-[#236181] transition-all disabled:opacity-40"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+                {departments.map((d) => (
+                  <div key={d.id} className="flex items-center justify-between p-3 bg-[#F8FAFC] border border-[#E8EFF4] rounded-xl group transition-all hover:border-red-100">
+                    <span className="text-[13px] font-bold text-[#1E3A5F]">{d.name}</span>
+                    <button onClick={() => deleteDepartment(d.id)} className="p-1.5 text-[#9AADB8] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {departments.length === 0 && <p className="text-center py-4 text-[12px] text-[#9AADB8] font-medium">Belum ada divisi.</p>}
+              </div>
+            </div>
+          </SectionCard>
+
+          {/* ── Manage Roles ── */}
+          <SectionCard icon={UserRound} title="Kelola Jabatan">
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-2">
+                <input
+                  value={newRole}
+                  onChange={(e) => setNewRole(e.target.value)}
+                  placeholder="Nama jabatan baru..."
+                  className="flex-1 px-4 py-2.5 border border-[#E8EFF4] rounded-xl text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] transition-all bg-white"
+                />
+                <button
+                  onClick={addRole}
+                  disabled={loadingRoles || !newRole.trim()}
+                  className="w-10 h-10 rounded-xl bg-[#1E4D6B] text-white flex items-center justify-center hover:bg-[#236181] transition-all disabled:opacity-40"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+                {roles.map((r) => (
+                  <div key={r.id} className="flex items-center justify-between p-3 bg-[#F8FAFC] border border-[#E8EFF4] rounded-xl group transition-all hover:border-red-100">
+                    <span className="text-[13px] font-bold text-[#1E3A5F]">{r.name}</span>
+                    <button onClick={() => deleteRole(r.id)} className="p-1.5 text-[#9AADB8] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                {roles.length === 0 && <p className="text-center py-4 text-[12px] text-[#9AADB8] font-medium">Belum ada jabatan.</p>}
+              </div>
             </div>
           </SectionCard>
 

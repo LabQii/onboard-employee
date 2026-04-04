@@ -21,11 +21,6 @@ interface Employee {
   progress?: number;
 }
 
-const DEPARTMENTS = [
-  'Engineering', 'Product', 'Design', 'Marketing',
-  'Finance', 'HR', 'Operations', 'Sales', 'Legal',
-];
-
 // ─── Invite / Edit Modal ──────────────────────────────────────────────────────
 
 function EmployeeModal({
@@ -46,6 +41,14 @@ function EmployeeModal({
   const [startDate, setStartDate] = useState(initial?.start_date?.slice(0, 10) ?? '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [deps, setDeps] = useState<{id: string, name: string}[]>([]);
+  const [roles, setRoles] = useState<{id: string, name: string}[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin/departments').then(res => res.json()).then(data => setDeps(data.departments || []));
+    fetch('/api/admin/roles').then(res => res.json()).then(data => setRoles(data.roles || []));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -84,7 +87,7 @@ function EmployeeModal({
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Nama Lengkap</label>
             <input value={fullName} onChange={e => setFullName(e.target.value)} required
               placeholder="Nama lengkap karyawan..."
-              className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all" />
+              className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white" />
           </div>
 
           {/* Email */}
@@ -93,7 +96,7 @@ function EmployeeModal({
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="email@perusahaan.com"
               disabled={mode === 'edit'}
-              className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all disabled:bg-[#F8FAFC] disabled:text-[#9AADB8]" />
+              className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all disabled:bg-[#F8FAFC] disabled:text-[#9AADB8] bg-white" />
           </div>
 
           {/* Divisi */}
@@ -101,9 +104,9 @@ function EmployeeModal({
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Divisi</label>
             <div className="relative">
               <select value={department} onChange={e => setDepartment(e.target.value)}
-                className="w-full appearance-none px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all bg-white">
+                className="w-full appearance-none px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white">
                 <option value="">Pilih divisi...</option>
-                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                {deps.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
               </select>
               <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
@@ -112,9 +115,14 @@ function EmployeeModal({
           {/* Jabatan */}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Jabatan</label>
-            <input value={role} onChange={e => setRole(e.target.value)}
-              placeholder="Contoh: Software Engineer"
-              className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all" />
+            <div className="relative">
+              <select value={role} onChange={e => setRole(e.target.value)}
+                className="w-full appearance-none px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white">
+                <option value="">Pilih jabatan...</option>
+                {roles.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
 
           {/* Tanggal Mulai */}
@@ -123,7 +131,7 @@ function EmployeeModal({
             <div className="relative">
               <Calendar className="w-4 h-4 text-[#9AADB8] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all" />
+                className="w-full pl-11 pr-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white" />
             </div>
           </div>
 
@@ -138,7 +146,7 @@ function EmployeeModal({
               className="flex-1 py-3 bg-[#1E4D6B] text-white rounded-xl text-[13px] font-bold hover:bg-[#236181] transition-all disabled:opacity-60 flex items-center justify-center gap-2">
               {loading
                 ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Memproses…</>
-                : mode === 'create' ? '📧 Kirim Undangan' : '💾 Simpan Perubahan'}
+                : mode === 'create' ? '📧 Kirim Undangan' : '�� Simpan Perubahan'}
             </button>
           </div>
         </form>
@@ -323,6 +331,12 @@ export default function EmployeesPage() {
   const [deleteTarget, setDeleteTarget] = useState<Employee | null>(null);
   const [toast, setToast] = useState('');
 
+  const [deps, setDeps] = useState<{id: string, name: string}[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin/departments').then(res => res.json()).then(data => setDeps(data.departments || []));
+  }, []);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams();
@@ -396,7 +410,7 @@ export default function EmployeesPage() {
               className="appearance-none bg-white border border-[#D8E8F0] rounded-xl px-4 py-2.5 pr-9 text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] shadow-sm transition-all"
             >
               <option value="">Semua Divisi</option>
-              {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+              {deps.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
             </select>
           </div>
           <div className="relative">

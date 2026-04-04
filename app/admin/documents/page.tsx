@@ -2,19 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
-import { UploadCloud, Search, FileText, Trash2, Eye, X, ChevronDown, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { UploadCloud, Search, FileText, Trash2, Edit2, Eye, X, ChevronDown, CheckCircle, Clock, XCircle, Users } from 'lucide-react';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
-
-const DEPARTMENTS = [
-  'Engineering', 'Product', 'Design', 'Marketing',
-  'Finance', 'HR', 'Operations', 'Sales', 'Legal',
-];
 
 interface Document {
   id: string;
   name: string;
   department: string | null;
+  role: string | null;
   cloudinary_url: string;
   created_at: string;
   status: 'indexed' | 'processing' | 'failed' | string;
@@ -38,23 +34,41 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ─── Upload Modal ────────────────────────────────────────────────────────────
+// ─── Document Modal (Create & Edit) ─────────────────────────────────────────
 
-function UploadModal({
+function DocModal({
+  editDoc,
   onClose,
-  onUploaded,
+  onSuccess,
 }: {
+  editDoc?: Document;
   onClose: () => void;
-  onUploaded: () => void;
+  onSuccess: () => void;
 }) {
-  const [step, setStep] = useState<'file' | 'form'>('file');
+  const [step, setStep] = useState<'file' | 'form'>(editDoc ? 'form' : 'file');
   const [file, setFile] = useState<File | null>(null);
-  const [docName, setDocName] = useState('');
-  const [department, setDepartment] = useState('');
-  const [phase, setPhase] = useState('Hari 1');
-  const [uploading, setUploading] = useState(false);
+  const [docName, setDocName] = useState(editDoc?.name || '');
+  
+  // Targeting
+  const [targetType, setTargetType] = useState<'all' | 'dept' | 'role'>(
+    editDoc?.role ? 'role' : editDoc?.department ? 'dept' : 'all'
+  );
+  const [department, setDepartment] = useState(editDoc?.department || '');
+  const [role, setRole] = useState(editDoc?.role || '');
+  
+  const [phase, setPhase] = useState('Hari');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  const [deps, setDeps] = useState<{id: string, name: string}[]>([]);
+  const [roles, setRoles] = useState<{id: string, name: string}[]>([]);
+  
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/departments').then(res => res.json()).then(data => setDeps(data.departments || []));
+    fetch('/api/admin/roles').then(res => res.json()).then(data => setRoles(data.roles || []));
+  }, []);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -65,56 +79,77 @@ function UploadModal({
   }
 
   async function handleConfirm() {
-    if (!file || !docName.trim()) return setError('Nama dokumen wajib diisi.');
+    if (!docName.trim()) return setError('Nama dokumen wajib diisi.');
+    if (!editDoc && !file) return setError('File dokumen wajib diunggah.');
+    if (targetType === 'dept' && !department) return setError('Silakan pilih divisi.');
+    if (targetType === 'role' && !role) return setError('Silakan pilih jabatan.');
 
-    setUploading(true);
+    setLoading(true);
     setError('');
 
     try {
-      // 1. Upload file to Cloudinary via Next.js API
-      const formData = new FormData();
-      formData.append('file', file);
+      const payload = {
+        name: docName.trim(),
+        department: targetType === 'dept' ? department : null,
+        role: targetType === 'role' ? role : null,
+        phase: phase,
+      };
 
-      const uploadRes = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      if (editDoc) {
+        // Edit mode
+        const res = await fetch('/api/admin/documents', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: editDoc.id,
+            ...payload,
+            cloudinary_url: editDoc.cloudinary_url,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Gagal mengubah dokumen.');
+      } else {
+        // Create mode
+        const formData = new FormData();
+        formData.append('file', file!);
 
-      const uploadData = await uploadRes.json();
-      if (!uploadRes.ok) {
-        throw new Error(uploadData.error || 'Gagal upload ke Cloudinary.');
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Gagal upload ke Cloudinary.');
+        
+        const publicUrl = uploadData.secure_url;
+
+        const dbRes = await fetch('/api/admin/documents', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...payload,
+            cloudinary_url: publicUrl,
+          }),
+        });
+        
+        const dbData = await dbRes.json();
+        if (!dbRes.ok) throw new Error(dbData.error || 'Gagal menyimpan ke database.');
+        const doc = dbData.document;
+
+        // Trigger ingest
+        await fetch('/api/ingest-document', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ document_id: doc.id, cloudinary_url: publicUrl }),
+        });
       }
-      const publicUrl = uploadData.secure_url;
 
-      // 2. Insert document record into DB via API
-      const dbRes = await fetch('/api/admin/documents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: docName.trim(),
-          cloudinary_url: publicUrl,
-          department: department || null,
-          phase: phase,
-        }),
-      });
-      
-      const dbData = await dbRes.json();
-      if (!dbRes.ok) throw new Error(dbData.error || 'Gagal menyimpan ke database.');
-      const doc = dbData.document;
-
-      // 3. Trigger ingest-document API
-      await fetch('/api/ingest-document', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ document_id: doc.id, cloudinary_url: publicUrl }),
-      });
-
-      onUploaded();
+      onSuccess();
       onClose();
     } catch (err: any) {
       setError(err.message ?? 'Terjadi kesalahan. Coba lagi.');
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   }
 
@@ -123,7 +158,9 @@ function UploadModal({
       <div className="bg-white rounded-3xl shadow-premium w-full max-w-md mx-4 overflow-hidden">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b border-neutral/10">
-          <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">Unggah Dokumen</h2>
+          <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">
+            {editDoc ? 'Edit Dokumen' : 'Unggah Dokumen'}
+          </h2>
           <button onClick={onClose} className="text-[#9AADB8] hover:text-[#1E3A5F] transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -131,7 +168,6 @@ function UploadModal({
 
         <div className="p-8">
           {step === 'file' ? (
-            /* ── Step 1: File picker ── */
             <button
               onClick={() => fileRef.current?.click()}
               className="w-full border-2 border-dashed border-neutral/20 rounded-2xl p-12 flex flex-col items-center gap-4 hover:border-primary/40 transition-all group"
@@ -145,40 +181,83 @@ function UploadModal({
               </div>
             </button>
           ) : (
-            /* ── Step 2: Form ── */
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center gap-3 p-4 bg-[#F8FAFC] rounded-2xl">
-                <FileText className="w-5 h-5 text-[#1E4D6B] shrink-0" />
-                <span className="text-[13px] font-bold text-[#1E3A5F] truncate flex-1">{file?.name}</span>
-                <button onClick={() => { setFile(null); setStep('file'); }} className="text-[#9AADB8] hover:text-red-500 transition-colors">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+            <div className="flex flex-col gap-5 text-left">
+              {!editDoc && file && (
+                <div className="flex items-center gap-3 p-4 bg-[#F8FAFC] rounded-2xl">
+                  <FileText className="w-5 h-5 text-[#1E4D6B] shrink-0" />
+                  <span className="text-[13px] font-bold text-[#1E3A5F] truncate flex-1">{file.name}</span>
+                  <button onClick={() => { setFile(null); setStep('file'); }} className="text-[#9AADB8] hover:text-red-500 transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
 
               <div>
                 <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Nama Dokumen</label>
                 <input
                   value={docName}
                   onChange={(e) => setDocName(e.target.value)}
-                  className="w-full px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all"
+                  className="w-full px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white"
                   placeholder="Nama dokumen..."
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Target Divisi (Opsional)</label>
-                <div className="relative">
-                  <select
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full appearance-none px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all bg-white"
-                  >
-                    <option value="">Untuk Semua Divisi (Global)</option>
-                    {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Kirimkan Ke</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: 'all', label: 'Semua' },
+                    { id: 'dept', label: 'Divisi' },
+                    { id: 'role', label: 'Jabatan' },
+                  ].map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => setTargetType(t.id as any)}
+                      className={`py-2 px-1 rounded-xl text-[11px] font-bold border transition-all ${
+                        targetType === t.id
+                          ? 'bg-[#1E4D6B] text-white border-[#1E4D6B] shadow-md shadow-[#1E4D6B]/20'
+                          : 'bg-white text-[#5A7A8C] border-neutral/10 hover:border-[#1E4D6B]/30'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
                 </div>
               </div>
+
+              {targetType === 'dept' && (
+                <div>
+                  <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Pilih Divisi</label>
+                  <div className="relative">
+                    <select
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)}
+                      className="w-full appearance-none px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] bg-white transition-all"
+                    >
+                      <option value="">-- Pilih Divisi --</option>
+                      {deps.map((d) => <option key={d.id} value={d.name}>{d.name}</option>)}
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {targetType === 'role' && (
+                <div>
+                  <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Pilih Jabatan</label>
+                  <div className="relative">
+                    <select
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="w-full appearance-none px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] bg-white transition-all"
+                    >
+                      <option value="">-- Pilih Jabatan --</option>
+                      {roles.map((r) => <option key={r.id} value={r.name}>{r.name}</option>)}
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Fase Onboarding</label>
@@ -186,13 +265,11 @@ function UploadModal({
                   <select
                     value={phase}
                     onChange={(e) => setPhase(e.target.value)}
-                    className="w-full appearance-none px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all bg-white"
+                    className="w-full appearance-none px-4 py-3 border border-neutral/20 rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] bg-white transition-all"
                   >
-                    <option value="Hari 1">Hari 1</option>
-                    <option value="Hari 2">Hari 2</option>
-                    <option value="Minggu 1">Minggu 1</option>
-                    <option value="Bulan 1">Bulan 1</option>
-                    <option value="Umum">Umum</option>
+                    <option value="Hari">Hari</option>
+                    <option value="Minggu">Minggu</option>
+                    <option value="Bulan">Bulan</option>
                   </select>
                   <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -214,19 +291,19 @@ function UploadModal({
             </button>
             <button
               onClick={handleConfirm}
-              disabled={uploading}
+              disabled={loading}
               className="flex-1 py-3 bg-[#1E4D6B] text-white rounded-xl text-[13px] font-bold hover:bg-[#236181] transition-all disabled:opacity-60 flex items-center justify-center gap-2"
             >
-              {uploading ? (
-                <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Mengunggah…</>
+              {loading ? (
+                <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Menyimpan…</>
               ) : (
-                <><UploadCloud className="w-4 h-4" /> Konfirmasi Upload</>
+                <><CheckCircle className="w-4 h-4" /> Simpan</>
               )}
             </button>
           </div>
         )}
       </div>
-      <input ref={fileRef} type="file" accept=".pdf,.docx,.txt,.doc" className="hidden" onChange={handleFileChange} />
+      {!editDoc && <input ref={fileRef} type="file" accept=".pdf,.docx,.txt,.doc" className="hidden" onChange={handleFileChange} />}
     </div>
   );
 }
@@ -237,6 +314,7 @@ export default function DocumentsPage() {
   const [docs, setDocs] = useState<Document[]>([]);
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [editDoc, setEditDoc] = useState<Document | undefined>();
   const [loading, setLoading] = useState(true);
 
   async function fetchData() {
@@ -254,7 +332,7 @@ export default function DocumentsPage() {
   useEffect(() => { fetchData(); }, []);
 
   async function handleDelete(id: string) {
-    if (!confirm('Hapus dokumen ini?')) return;
+    if (!confirm('Hapus dokumen ini? (Juga akan menghapus tugas onboarding terkait)')) return;
     await fetch(`/api/admin/documents?id=${id}`, { method: 'DELETE' });
     setDocs((prev) => prev.filter((d) => d.id !== id));
   }
@@ -276,7 +354,7 @@ export default function DocumentsPage() {
             </p>
           </div>
           <button
-            onClick={() => setShowModal(true)}
+            onClick={() => { setEditDoc(undefined); setShowModal(true); }}
             className="flex items-center gap-2 px-6 py-3 bg-[#1E4D6B] text-white rounded-xl text-[13.5px] font-bold shadow-lg shadow-[#1E4D6B]/20 hover:bg-[#236181] transition-all active:scale-[0.98] shrink-0"
           >
             <UploadCloud className="w-4 h-4 stroke-[2.5]" />
@@ -323,7 +401,7 @@ export default function DocumentsPage() {
               <thead>
                 <tr className="border-b border-[#E8EFF4] bg-[#F8FAFC]">
                   <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Nama Dokumen</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Divisi</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Target</th>
                   <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Tanggal Unggah</th>
                   <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Status AI</th>
                   <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider text-right">Aksi</th>
@@ -347,8 +425,18 @@ export default function DocumentsPage() {
                       </td>
                       <td className="py-4 px-6 text-[13px] text-[#5A7A8C]">
                         {doc.department ? (
-                          <span className="font-bold text-[#1E4D6B] bg-[#EBF4FA] px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wider">{doc.department}</span>
-                        ) : 'Global (Semua)'}
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-tighter">DIVISI</span>
+                            <span className="font-bold text-[#1E4D6B] bg-[#EBF4FA] px-2 py-0.5 rounded text-[11px] w-fit">{doc.department}</span>
+                          </div>
+                        ) : doc.role ? (
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-tighter">JABATAN</span>
+                            <span className="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-[11px] w-fit">{doc.role}</span>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Semua Karyawan</span>
+                        )}
                       </td>
                       <td className="py-4 px-6 text-[13px] text-[#5A7A8C]">
                         {new Date(doc.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -358,12 +446,20 @@ export default function DocumentsPage() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-end gap-2">
-                          <a href={doc.cloudinary_url} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-blue-50 text-[#9AADB8] hover:text-[#1E4D6B] transition-all">
+                          <a href={doc.cloudinary_url} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-blue-50 text-[#9AADB8] hover:text-[#1E4D6B] transition-all" title="Lihat">
                             <Eye className="w-4 h-4" />
                           </a>
                           <button
+                            onClick={() => { setEditDoc(doc); setShowModal(true); }}
+                            className="p-2 rounded-lg hover:bg-amber-50 text-[#9AADB8] hover:text-amber-500 transition-all"
+                            title="Edit"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
                             onClick={() => handleDelete(doc.id)}
                             className="p-2 rounded-lg hover:bg-red-50 text-[#9AADB8] hover:text-red-500 transition-all"
+                            title="Hapus"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -379,9 +475,10 @@ export default function DocumentsPage() {
       </div>
 
       {showModal && (
-        <UploadModal
-          onClose={() => setShowModal(false)}
-          onUploaded={fetchData}
+        <DocModal
+          editDoc={editDoc}
+          onClose={() => { setShowModal(false); setEditDoc(undefined); }}
+          onSuccess={fetchData}
         />
       )}
     </div>
