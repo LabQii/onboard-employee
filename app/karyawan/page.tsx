@@ -64,7 +64,7 @@ export default function EmployeeDashboard() {
         if (profileRes.status === 401) { router.push('/'); return; }
         const { profile: p } = await profileRes.json();
         const { items } = await checklistRes.json();
-        
+
         setProfile(p);
         setChecklistItems(items ?? []);
       } catch {
@@ -141,18 +141,23 @@ export default function EmployeeDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] to-[#E3F0F8] flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-[#1E4D6B]/20 border-t-[#1E4D6B] rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#F8FAFC]">
+    <div className="w-full min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] flex flex-col relative overflow-hidden">
+      {/* Decorative Gradient Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#DCECF5] rounded-full blur-[120px] opacity-60" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#E0F0FA] rounded-full blur-[150px] opacity-70" />
+      </div>
+
       {/* Top Navbar */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/90 backdrop-blur-xl border-b border-[#E8EFF4] shadow-sm' : 'bg-[#F8FAFC]/80 backdrop-blur-sm'
-      }`}>
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-xl border-b border-[#E8EFF4] shadow-sm' : 'bg-transparent backdrop-blur-sm'
+        }`}>
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -162,10 +167,10 @@ export default function EmployeeDashboard() {
 
           {/* Tabs */}
           <div className="hidden md:flex items-center gap-8 text-[13px] font-bold text-[#5A7A8C] h-full">
-             <div className="h-full relative px-2 flex items-center text-[#1E4D6B]">
-               Dashboard Onboarding
-               <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#1E4D6B] rounded-t-full" />
-             </div>
+            <div className="h-full relative px-2 flex items-center text-[#1E4D6B]">
+              Dashboard Onboarding
+              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#1E4D6B] rounded-t-full" />
+            </div>
           </div>
 
           {/* User */}
@@ -192,185 +197,184 @@ export default function EmployeeDashboard() {
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 pt-24 pb-12 w-full flex flex-col gap-8">
-        {/* Welcome Block */}
-        <div className="relative bg-[#EBF4FA] p-10 lg:p-14 overflow-hidden rounded-[2.5rem]">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-white/40 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 max-w-xl">
-            <h1 className="text-[2.5rem] font-bold text-[#1E3A5F] mb-2 tracking-tight leading-tight">
-              Selamat Datang, {profile?.full_name?.split(' ')[0]}!
+        {/* Welcome & Stats Block */}
+        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col xl:flex-row items-center justify-between gap-10">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex-1 min-w-[280px]">
+            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-2 tracking-tight leading-tight">
+              Halo, {profile?.full_name?.split(' ')[0]}!
             </h1>
-            <p className="text-[#5A7A8C] text-lg mb-8 font-medium">
-              {daysSinceStart === 0 ? 'Hari pertama perjalanan Anda!' : `Hari ke-${daysSinceStart} di OnboardFlow`}
+            <p className="text-[#5A7A8C] text-lg mb-6 lg:mb-8 font-medium">
+              {daysSinceStart === 0 ? 'Hari pertama perjalanan anda!' : `Hari ke-${daysSinceStart} di OnboardFlow`}
             </p>
             <div className="flex items-center gap-3 flex-wrap">
-              <div className="bg-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
+              <div className="bg-white/80 backdrop-blur-sm border border-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
                 {profile?.department || 'Divisi belum ditentukan'}
               </div>
               {profile?.role && (
-                <div className="bg-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
+                <div className="bg-white/80 backdrop-blur-sm border border-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
                   {profile.role}
                 </div>
               )}
             </div>
           </div>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Progress */}
-          <Card className="flex items-center gap-5 hover:-translate-y-1 transition-all cursor-pointer">
-            <div className="relative w-[68px] h-[68px] shrink-0">
-              <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none" stroke="#E8EFF4" strokeWidth="3" />
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none" stroke="#1E4D6B" strokeWidth="3"
-                  strokeDasharray={`${progress}, 100`} strokeLinecap="round" />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center font-bold text-[15px] text-[#1E3A5F]">{progress}%</span>
-            </div>
-            <div>
-              <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Progres Onboarding</div>
-              <div className="font-bold text-[1.2rem] text-[#1E3A5F] tracking-tight">
-                {progress === 100 ? 'Selesai! 🎉' : progress > 50 ? 'Hampir Selesai' : 'Sedang Berproses'}
+          <div className="relative z-10 flex flex-nowrap sm:flex-wrap lg:flex-nowrap items-stretch gap-5 shrink-0 w-full xl:w-auto overflow-x-auto pb-4 xl:pb-0 snap-x snap-mandatory hide-scrollbar">
+            {/* Progress */}
+            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[260px] snap-center">
+              <div className="relative w-[60px] h-[60px] shrink-0">
+                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none" stroke="#E8EFF4" strokeWidth="3" />
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none" stroke="#1E4D6B" strokeWidth="3"
+                    strokeDasharray={`${progress}, 100`} strokeLinecap="round" />
+                </svg>
+                <span className="absolute inset-0 flex items-center justify-center font-bold text-[14px] text-[#1E3A5F]">{progress}%</span>
               </div>
-            </div>
-          </Card>
+              <div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Progres Onboarding</div>
+                <div className="font-bold text-[1.1rem] text-[#1E3A5F] tracking-tight">
+                  {progress === 100 ? 'Selesai! 🎉' : progress > 50 ? 'Hampir Selesai' : 'Sedang Berproses'}
+                </div>
+              </div>
+            </Card>
 
-          {/* Tasks remaining */}
-          <Card className="flex items-center gap-5 hover:-translate-y-1 transition-all cursor-pointer">
-            <div className="w-[68px] h-[68px] rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-              <CheckSquare className="w-7 h-7 stroke-[1.8]" />
-            </div>
-            <div>
-              <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Tugas Tersisa</div>
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-[1.8rem] text-[#1E3A5F] leading-none">{remaining}</span>
-                {remaining > 0 && (
-                  <span className="text-[9px] font-bold bg-red-50 text-red-500 px-2 py-0.5 rounded-lg tracking-widest mt-1">BELUM SELESAI</span>
-                )}
+            {/* Tasks remaining */}
+            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] snap-center">
+              <div className="w-[60px] h-[60px] rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <CheckSquare className="w-6 h-6 stroke-[1.8]" />
               </div>
-            </div>
-          </Card>
+              <div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Tugas Tersisa</div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-[1.5rem] text-[#1E3A5F] leading-none">{remaining}</span>
+                  {remaining > 0 && (
+                    <span className="text-[9px] font-bold bg-red-50 text-red-500 px-2 py-0.5 rounded-lg tracking-widest mt-1">BELUM SELESAI</span>
+                  )}
+                </div>
+              </div>
+            </Card>
 
-          {/* Completed */}
-          <Card className="flex items-center gap-5 hover:-translate-y-1 transition-all cursor-pointer">
-            <div className="w-[68px] h-[68px] rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-7 h-7 stroke-[1.8]" />
-            </div>
-            <div>
-              <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Selesai</div>
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-[1.8rem] text-[#1E3A5F] leading-none">{completedItems}</span>
-                <span className="text-[9px] font-bold bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-lg tracking-widest mt-1">
-                  dari {totalItems}
-                </span>
+            {/* Completed */}
+            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] snap-center">
+              <div className="w-[60px] h-[60px] rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-6 h-6 stroke-[1.8]" />
               </div>
-            </div>
-          </Card>
+              <div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Selesai</div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-[1.5rem] text-[#1E3A5F] leading-none">{completedItems}</span>
+                  <span className="text-[9px] font-bold bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-lg tracking-widest mt-1">
+                    dari {totalItems}
+                  </span>
+                </div>
+              </div>
+            </Card>
+          </div>
         </div>
 
         {/* Content */}
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Dynamic Content */}
           <div className="flex-1 w-full flex flex-col gap-10">
-            
+
             {/* Checklist Section */}
             <div className="flex flex-col gap-6">
               <h2 className="text-[1.3rem] font-bold text-[#1E3A5F] tracking-tight px-1">
                 Checklist Onboarding
               </h2>
 
-            {totalItems === 0 ? (
-              <Card className="py-16 text-center">
-                <Lock className="w-8 h-8 text-[#C0CDD4] mx-auto mb-3" />
-                <p className="text-[13px] text-[#9AADB8] font-medium">Belum ada checklist. Admin akan segera menambahkan.</p>
-              </Card>
-            ) : (
-              phases.map(phase => {
-                const phaseItems = checklistItems.filter(i => (i.phase || 'Umum') === phase);
-                const pDone = phaseItems.filter(i => i.completed).length;
-                const pPct = phaseItems.length > 0 ? Math.round((pDone / phaseItems.length) * 100) : 0;
+              {totalItems === 0 ? (
+                <Card className="py-16 text-center">
+                  <Lock className="w-8 h-8 text-[#C0CDD4] mx-auto mb-3" />
+                  <p className="text-[13px] text-[#9AADB8] font-medium">Belum ada checklist. Admin akan segera menambahkan.</p>
+                </Card>
+              ) : (
+                phases.map(phase => {
+                  const phaseItems = checklistItems.filter(i => (i.phase || 'Umum') === phase);
+                  const pDone = phaseItems.filter(i => i.completed).length;
+                  const pPct = phaseItems.length > 0 ? Math.round((pDone / phaseItems.length) * 100) : 0;
 
-                return (
-                  <Card key={phase} className="p-8">
-                    <div className="flex items-end justify-between mb-6">
-                      <div>
-                        <h3 className="font-bold text-[1.1rem] text-[#1E3A5F]">{phase}</h3>
-                        <p className="text-[11px] font-bold text-[#9AADB8] mt-0.5">{pDone}/{phaseItems.length} selesai</p>
-                      </div>
-                      <div className="flex flex-col items-end gap-1.5 w-[40%]">
-                        <span className="text-[11px] font-bold text-[#1E4D6B]">{pPct}%</span>
-                        <div className="w-full h-1.5 bg-[#E8EFF4] rounded-full overflow-hidden">
-                          <div className="h-full bg-[#1E4D6B] rounded-full transition-all duration-700" style={{ width: `${pPct}%` }} />
+                  return (
+                    <Card key={phase} className="p-8">
+                      <div className="flex items-end justify-between mb-6">
+                        <div>
+                          <h3 className="font-bold text-[1.1rem] text-[#1E3A5F]">{phase}</h3>
+                          <p className="text-[11px] font-bold text-[#9AADB8] mt-0.5">{pDone}/{phaseItems.length} selesai</p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1.5 w-[40%]">
+                          <span className="text-[11px] font-bold text-[#1E4D6B]">{pPct}%</span>
+                          <div className="w-full h-1.5 bg-[#E8EFF4] rounded-full overflow-hidden">
+                            <div className="h-full bg-[#1E4D6B] rounded-full transition-all duration-700" style={{ width: `${pPct}%` }} />
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex flex-col gap-2">
-                      {phaseItems.map(item => (
-                        <button
-                          key={item.id}
-                          onClick={() => toggleItem(item.id, item.completed)}
-                          className="flex items-center justify-between p-4 rounded-2xl hover:bg-[#F8FAFC] transition-all group focus:outline-none w-full text-left"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-5 h-5 rounded-lg flex items-center justify-center border-2 transition-all shrink-0 ${
-                              item.completed
+                      <div className="flex flex-col gap-2">
+                        {phaseItems.map(item => (
+                          <button
+                            key={item.id}
+                            onClick={() => toggleItem(item.id, item.completed)}
+                            className="flex items-center justify-between p-4 rounded-2xl hover:bg-[#F8FAFC] transition-all group focus:outline-none w-full text-left"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className={`w-5 h-5 rounded-lg flex items-center justify-center border-2 transition-all shrink-0 ${item.completed
                                 ? 'bg-[#1E4D6B] border-[#1E4D6B] text-white'
                                 : 'border-[#C0CDD4] text-transparent group-hover:border-[#1E4D6B]'
-                            }`}>
-                              {item.completed
-                                ? <CheckCircle2 className="w-3 h-3" />
-                                : <Circle className="w-3 h-3" />}
+                                }`}>
+                                {item.completed
+                                  ? <CheckCircle2 className="w-3 h-3" />
+                                  : <Circle className="w-3 h-3" />}
+                              </div>
+                              <div className="text-left flex-1 min-w-0 pr-4">
+                                <span className={`font-bold text-[14px] block transition-all ${item.completed ? 'text-[#9AADB8] line-through' : 'text-[#1E3A5F]'}`}>
+                                  {item.title.replace(/^Baca Dokumen:\s*/i, 'Baca : ')}
+                                </span>
+                                {item.description && item.description.startsWith('http') ? (
+                                  <a
+                                    href={item.description}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="mt-2 inline-flex items-center justify-center py-2 px-4 bg-white/50 hover:bg-[#1E4D6B] text-[#1E4D6B] hover:text-white rounded-lg text-[11px] font-bold transition-all border border-[#E8EFF4] hover:border-[#1E4D6B] shadow-sm"
+                                  >
+                                    <FileText className="w-3.5 h-3.5 mr-1.5" /> Baca Dokumen
+                                  </a>
+                                ) : item.description ? (
+                                  <span className="text-[11px] text-[#9AADB8] font-medium block mt-1">{item.description}</span>
+                                ) : null}
+                              </div>
                             </div>
-                            <div className="text-left flex-1 min-w-0 pr-4">
-                              <span className={`font-bold text-[14px] block transition-all ${item.completed ? 'text-[#9AADB8] line-through' : 'text-[#1E3A5F]'}`}>
-                                {item.title}
-                              </span>
-                              {item.description && item.description.startsWith('http') ? (
-                                <a 
-                                  href={item.description}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="mt-2 inline-flex items-center justify-center py-2 px-4 bg-white/50 hover:bg-[#1E4D6B] text-[#1E4D6B] hover:text-white rounded-lg text-[11px] font-bold transition-all border border-[#E8EFF4] hover:border-[#1E4D6B] shadow-sm"
-                                >
-                                  <FileText className="w-3.5 h-3.5 mr-1.5" /> Baca Dokumen
-                                </a>
-                              ) : item.description ? (
-                                <span className="text-[11px] text-[#9AADB8] font-medium block mt-1">{item.description}</span>
-                              ) : null}
-                            </div>
-                          </div>
-                          <span className={`text-[9px] font-bold px-3 py-1 rounded-lg tracking-[0.15em] shrink-0 ml-2 ${
-                            item.priority === 'wajib'
+                            <span className={`text-[9px] font-bold px-3 py-1 rounded-lg tracking-[0.15em] shrink-0 ml-2 ${item.priority === 'wajib'
                               ? 'bg-amber-50 text-amber-600'
                               : 'bg-[#EBF4FA] text-[#1E4D6B]'
-                          }`}>
-                            {(item.priority || 'opsional').toUpperCase()}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </Card>
-                );
-              })
-            )}
+                              }`}>
+                              {(item.priority || 'opsional').toUpperCase()}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </Card>
+                  );
+                })
+              )}
             </div>
 
             {/* Directory Intro Section */}
             <Card className="py-12 mt-4 text-center border-dashed border-2 border-[#E8EFF4] bg-transparent shadow-none">
-               <p className="text-[#9AADB8] text-[13px] font-bold">Fitur Direktori Tim segera hadir.</p>
+              <p className="text-[#9AADB8] text-[13px] font-bold">Fitur Direktori Tim segera hadir.</p>
             </Card>
 
           </div>
 
           {/* Chatbot */}
-          <div className="w-full lg:w-[420px] shrink-0 sticky top-24">
-            <Card className="w-full h-[calc(100vh-140px)] min-h-[560px] p-0 flex flex-col overflow-hidden">
+          <div className="w-full lg:w-[420px] shrink-0 sticky top-24 z-10">
+            <Card className="w-full h-[440px] sm:h-[600px] p-0 flex flex-col overflow-hidden bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
               {/* Header chatbot */}
-              <div className="bg-[#1E4D6B] p-5 text-white flex items-center justify-between shrink-0">
+              <div className="bg-gradient-to-r from-[#1E4D6B] to-[#276087] p-5 text-white flex items-center justify-between shrink-0 shadow-sm border-b border-[#1A4560]/20">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                     <Bot className="w-5 h-5 text-white stroke-[1.5]" />
@@ -393,11 +397,10 @@ export default function EmployeeDashboard() {
                         <Bot className="w-3.5 h-3.5 stroke-[1.5]" />
                       </div>
                     )}
-                    <div className={`px-4 py-3 rounded-2xl text-[13px] leading-relaxed font-medium ${
-                      msg.role === 'bot'
-                        ? 'bg-white text-[#1E3A5F] rounded-tl-sm shadow-sm border border-[#E8EFF4]'
-                        : 'bg-[#1E4D6B] text-white rounded-tr-sm'
-                    }`}>
+                    <div className={`px-4 py-3 rounded-2xl text-[13px] leading-relaxed font-medium ${msg.role === 'bot'
+                      ? 'bg-white text-[#1E3A5F] rounded-tl-sm shadow-sm border border-[#E8EFF4]'
+                      : 'bg-[#1E4D6B] text-white rounded-tr-sm'
+                      }`}>
                       {msg.text}
                     </div>
                   </div>
