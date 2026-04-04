@@ -1,0 +1,98 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+model companies {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  created_at      DateTime?         @default(now()) @db.Timestamptz(6)
+  
+  checklist_items checklist_items[]
+  documents       documents[]
+  profiles        profiles[]
+}
+
+model profiles {
+  id                String    @id @db.Uuid
+  company_id        String?   @db.Uuid
+  full_name         String?
+  email             String?   @unique
+  password_hash     String?
+  invite_token      String?   @unique
+  invite_expires_at DateTime? @db.Timestamptz(6)
+  department        String?
+  role              String?
+  is_admin          Boolean?  @default(false)
+  start_date        DateTime? @db.Date
+  avatar_url        String?
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  
+  companies  companies? @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  checklist_progress checklist_progress[]
+}
+
+model documents {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  company_id     String?    @db.Uuid
+  name           String
+  cloudinary_url String
+  file_type      String?
+  department     String?
+  status         String?    @default("processing")
+  created_at     DateTime?  @default(now()) @db.Timestamptz(6)
+  
+  chunks         chunks[]
+  companies      companies? @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model chunks {
+  id          String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id String?                     @db.Uuid
+  content     String
+  embedding   Unsupported("vector(768)")?
+  
+  documents   documents?                  @relation(fields: [document_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model checklist_items {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  company_id         String?              @db.Uuid
+  department         String?
+  title              String
+  description        String?
+  phase              String?
+  priority           String?              @default("wajib")
+  created_at         DateTime?            @default(now()) @db.Timestamptz(6)
+  
+  companies          companies?           @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  checklist_progress checklist_progress[]
+}
+
+model checklist_progress {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String          @db.Uuid
+  checklist_item_id String          @db.Uuid
+  completed         Boolean?        @default(false)
+  completed_at      DateTime?       @db.Timestamptz(6)
+  
+  checklist_items   checklist_items @relation(fields: [checklist_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  profiles          profiles        @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, checklist_item_id])
+}
+
+model chat_history {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @db.Uuid
+  question   String
+  answer     String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+}

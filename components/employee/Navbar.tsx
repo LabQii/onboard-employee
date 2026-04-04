@@ -1,0 +1,44 @@
+import React from 'react';
+import Link from 'next/link';
+import { Bell, Search } from 'lucide-react';
+
+export function UserNavbar() {
+  return (
+    <header className="bg-white px-8 py-4 flex items-center justify-between border-b border-neutral/20 shadow-sm sticky top-0 z-50">
+      <div className="flex items-center justify-center gap-3">
+        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white text-sm">
+          OF
+        </div>
+        <span className="font-bold text-xl text-tertiary">OnboardFlow</span>
+      </div>
+
+      <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-neutral-dark">
+        <Link href="/onboarding" className="text-primary border-b-2 border-primary pb-1">Panduan Saya</Link>
+        <Link href="#" className="hover:text-primary transition-colors">Dokumen</Link>
+        <Link href="#" className="hover:text-primary transition-colors">Tim & Kontak</Link>
+      </nav>
+
+      <div className="flex items-center gap-6">
+        <button className="text-neutral-dark hover:text-primary transition-colors">
+          <Search className="w-5 h-5" />
+        </button>
+        <button className="text-neutral-dark hover:text-primary transition-colors relative">
+          <Bell className="w-5 h-5" />
+          <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+        </button>
+        
+        <div className="h-8 w-px bg-neutral/20"></div>
+
+        <div className="flex items-center gap-3">
+          <div className="text-right hidden md:block">
+            <div className="text-sm font-semibold text-tertiary">Budi Santoso</div>
+            <div className="text-xs text-secondary">Engineer</div>
+          </div>
+          <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">
+            BS
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}

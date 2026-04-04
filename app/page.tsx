@@ -1,66 +1,46 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import LoginForm from '@/components/auth/LoginForm';
+import { Star } from 'lucide-react';
 
-export default function Home() {
+export default function LoginPage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex min-h-screen w-full items-center justify-center bg-[#EBF4FA] p-4 lg:p-8 relative">
+      <div className="w-full max-w-[960px] bg-white rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl z-10">
+        
+        {/* Left Panel */}
+        <div className="w-full md:w-[42%] bg-[#1E4D6B] p-10 flex flex-col relative overflow-hidden text-white">
+          <div className="absolute top-[-20%] right-[-30%] w-[150%] h-[150%] bg-[#22516A] rounded-[100%] opacity-50 pointer-events-none" />
+          <div className="absolute bottom-[-10%] left-[-20%] w-[100%] h-[100%] bg-[#36799C] rounded-[100%] opacity-40 pointer-events-none" />
+          
+          {/* Logo */}
+          <div className="relative z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center font-bold text-lg text-[#1E4D6B] mb-10">
+            O
+          </div>
+
+          <div className="relative z-10 mt-6">
+            <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">OnboardFlow.</h1>
+            <p className="text-[#B5DBEC] text-sm font-light leading-relaxed opacity-90">
+              Platform orientasi terpusat untuk membantu masa transisi peran baru Anda secara terstruktur dan efisien.
+            </p>
+          </div>
+
+          <div className="relative z-10 mt-auto">
+            <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
+              <Star className="w-8 h-8 text-[#E5B67B] mb-3 fill-current" />
+              <p className="text-sm font-bold text-white mb-1">Akses Eksklusif</p>
+              <p className="text-xs text-[#B5DBEC] font-light leading-relaxed italic">
+                "Proses administrasi karyawan terintegrasi dengan mulus. Saya merasa diarahkan dengan baik sejak hari pertama."
+              </p>
+              <p className="text-[10px] font-bold text-white mt-2">— Sarah J., Desainer Produk</p>
+            </div>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Right Panel - Form (White) */}
+        <div className="w-full md:w-[58%] p-10 lg:px-14 lg:py-12 flex flex-col justify-center bg-white relative z-10">
+          <LoginForm />
         </div>
-      </main>
-    </div>
+
+      </div>
+    </main>
   );
 }
