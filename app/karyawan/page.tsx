@@ -218,10 +218,14 @@ export default function EmployeeDashboard() {
       <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-xl border-b border-[#E8EFF4] shadow-sm' : 'bg-transparent backdrop-blur-sm'
         }`}>
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#1E4D6B] text-white font-bold text-[10px] rounded-lg flex items-center justify-center">OF</div>
-            <h1 className="font-bold text-[1rem] text-[#1E3A5F] tracking-tight">On-Boarding</h1>
+          {/* Logo - Modern Minimalist Style */}
+          <div className="flex items-center gap-3 group/logo cursor-pointer">
+            <div className="w-[34px] h-[34px] bg-gradient-to-br from-[#1E4D6B] to-[#276087] text-white font-extrabold text-[10px] rounded-full flex items-center justify-center shadow-md shadow-[#1E4D6B]/20 group-hover/logo:scale-110 transition-transform">
+              OF
+            </div>
+            <div className="flex flex-col">
+              <h1 className="font-extrabold text-[1.05rem] text-[#1E3A5F] tracking-tight leading-none">On-Boarding</h1>
+            </div>
           </div>
 
           {/* User */}
@@ -252,20 +256,16 @@ export default function EmployeeDashboard() {
       <div className="max-w-[1400px] mx-auto px-6 pt-28 pb-12 w-full flex flex-col gap-6">
         {/* Simplified Header with 3 Cards */}
         <div className="flex flex-col gap-6">
-           <div className="flex items-end justify-between px-2">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#1E4D6B] shadow-[0_0_8px_rgba(30,77,107,0.4)]" />
-                  <span className="text-[10px] font-extrabold text-[#9AADB8] tracking-[0.2em] uppercase">Overview</span>
-                </div>
-                <h2 className="text-[1.6rem] font-extrabold text-[#1E3A5F] tracking-tight leading-none text-shadow-sm">Dashboard</h2>
-              </div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold bg-white/80 text-[#1E4D6B] px-3.5 py-1.5 rounded-xl border border-[#E8EFF4] shadow-sm backdrop-blur-md">
-                   HARI KE-{daysSinceStart}
-                </span>
-              </div>
-           </div>
+          <div className="flex items-end justify-between px-2">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-[1.6rem] font-extrabold text-[#1E3A5F] tracking-tight leading-none text-shadow-sm">Dashboard</h2>
+            </div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-bold bg-white/80 text-[#1E4D6B] px-3.5 py-1.5 rounded-xl border border-[#E8EFF4] shadow-sm backdrop-blur-md">
+                HARI KE-{daysSinceStart}
+              </span>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Card 1: Progress */}
@@ -324,10 +324,7 @@ export default function EmployeeDashboard() {
             {/* Checklist Section */}
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1 px-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#1E4D6B] shadow-[0_0_8px_rgba(30,77,107,0.4)]" />
-                  <span className="text-[10px] font-extrabold text-[#9AADB8] tracking-[0.2em] uppercase">Missions</span>
-                </div>
+
                 <h2 className="text-[1.6rem] font-extrabold text-[#1E3A5F] tracking-tight leading-none">Checklist Onboarding</h2>
               </div>
 

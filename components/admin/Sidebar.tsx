@@ -16,21 +16,17 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-app-bg flex flex-col h-screen fixed left-0 top-0 z-40">
-      {/* Header */}
-      <div className="p-8 pb-10">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="w-9 h-9 bg-tertiary rounded-xl flex items-center justify-center font-bold text-xs text-white shadow-inner">
+      {/* Header - Minimalist Logo Card */}
+      <div className="p-6 pb-2">
+        <div className="bg-white p-5 rounded-[2rem] border border-[#E8EFF4] shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex items-center gap-4 group/logo hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all cursor-default">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#1E4D6B] to-[#276087] rounded-full flex items-center justify-center font-bold text-[11px] text-white shadow-lg shadow-[#1E4D6B]/20 group-hover/logo:scale-110 transition-transform">
             OF
           </div>
-          <h1 className="font-bold text-[1.4rem] tracking-tight text-tertiary leading-none">
-            On-Boarding
-          </h1>
-        </div>
-        <div className="flex items-center gap-2 ml-12 opacity-40">
-           <span className="w-1 h-1 rounded-full bg-tertiary"></span>
-           <p className="text-[10px] font-bold tracking-[0.2em] text-tertiary uppercase">
-             HR PORTAL
-           </p>
+          <div className="flex flex-col">
+            <h1 className="font-extrabold text-[1.1rem] tracking-tight text-[#1E3A5F] leading-none">
+              On-Boarding
+            </h1>
+          </div>
         </div>
       </div>
 
