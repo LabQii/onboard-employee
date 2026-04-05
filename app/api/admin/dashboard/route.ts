@@ -7,6 +7,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -25,23 +27,28 @@ export async function GET(req: NextRequest) {
 
     const { data: employees } = await supabase
       .from('profiles')
-      .select('id, full_name, department, email')
+      .select('id, full_name, department, role, email')
       .eq('is_admin', false);
 
     let totalProgress = 0;
     const attentionCandidates = [];
 
-    const { data: allItems } = await supabase.from('checklist_items').select('id, department');
-    const { data: allProgress } = await supabase.from('checklist_progress').select('user_id, completed');
+    const { data: allItems } = await supabase.from('checklist_items').select('id, department, role');
+    const { data: allProgress } = await supabase.from('checklist_progress').select('user_id, completed').eq('completed', true);
 
     for (const emp of employees ?? []) {
-      const deptItems = allItems?.filter(i => i.department === emp.department || i.department === 'Global') || [];
-      const total = deptItems.length;
+      // Filter item yang sesuai dengan karyawan ini: (Global) OR Match Dept OR Match Role
+      const targetedItems = allItems?.filter(item => {
+        const isGlobal = !item.department && !item.role;
+        const matchDept = item.department && item.department === emp.department;
+        const matchRole = item.role && item.role === emp.role;
+        return isGlobal || matchDept || matchRole;
+      }) || [];
 
-      const empProgress = allProgress?.filter(p => p.user_id === emp.id && p.completed) || [];
-      const done = empProgress.length;
-
+      const total = targetedItems.length;
+      const done = allProgress?.filter(p => p.user_id === emp.id).length || 0;
       const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+      
       totalProgress += progress;
 
       if (progress < 50) {

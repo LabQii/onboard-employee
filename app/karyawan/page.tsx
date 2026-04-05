@@ -4,10 +4,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/Card';
 import {
   CheckSquare, FileText, PaperPlane, Bell, Phone,
-  LockKey, MagnifyingGlass, SignOut, CheckCircle, Circle, User
+  LockKey, MagnifyingGlass, SignOut, CheckCircle, Circle, User, X
 } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const AssistantIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -62,6 +63,7 @@ export default function EmployeeDashboard() {
     { role: 'bot', text: 'Halo! Saya asisten onboarding Anda. Ada yang bisa saya bantu?' }
   ]);
   const [chatLoading, setChatLoading] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   // Fetch data
   useEffect(() => {
@@ -77,6 +79,17 @@ export default function EmployeeDashboard() {
 
         setProfile(p);
         setChecklistItems(items ?? []);
+
+        // Welcome Alert Logic: Only show once per session (after login)
+        const isWelcomeShown = sessionStorage.getItem('onboard_welcome_shown');
+        if (!isWelcomeShown) {
+          setTimeout(() => {
+            setShowWelcome(true);
+            sessionStorage.setItem('onboard_welcome_shown', 'true');
+            // Auto hide after 5 seconds
+            setTimeout(() => setShowWelcome(false), 5000);
+          }, 800);
+        }
       } catch {
         router.push('/');
       } finally {
@@ -125,7 +138,7 @@ export default function EmployeeDashboard() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           question: text,
           department: profile?.department,
           role: profile?.role,
@@ -156,8 +169,8 @@ export default function EmployeeDashboard() {
 
   // Days since start
   const daysSinceStart = profile?.start_date
-    ? Math.max(0, Math.floor((Date.now() - new Date(profile.start_date).getTime()) / 86400000))
-    : 0;
+    ? Math.max(0, Math.floor((Date.now() - new Date(profile.start_date).getTime()) / 86400000)) + 1
+    : 1;
 
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?';
 
@@ -171,6 +184,30 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] flex flex-col relative overflow-hidden">
+      {/* Animated Welcome Alert */}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            initial={{ x: 400, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 400, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+            className="fixed top-24 right-6 z-[60] bg-white border border-[#E8EFF4] shadow-2xl rounded-2xl p-6 flex items-center gap-4 max-w-sm pointer-events-auto"
+          >
+            <div className="w-12 h-12 bg-gradient-to-br from-[#1E4D6B] to-[#276087] rounded-xl flex items-center justify-center text-white shrink-0">
+              <User weight="duotone" className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-bold text-[#1E3A5F] text-[14px]">Halo, {profile?.full_name?.split(' ')[0]}!</h4>
+              <p className="text-[#9AADB8] text-[12px] font-medium">Selamat datang kembali di perjalanan onboarding Anda.</p>
+            </div>
+            <button onClick={() => setShowWelcome(false)} className="text-[#C0CDD4] hover:text-[#1E3A5F] ml-2">
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Decorative Gradient Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#DCECF5] rounded-full blur-[120px] opacity-60" />
@@ -187,14 +224,6 @@ export default function EmployeeDashboard() {
             <h1 className="font-bold text-[1rem] text-[#1E3A5F] tracking-tight">On-Boarding</h1>
           </div>
 
-          {/* Tabs */}
-          <div className="hidden md:flex items-center gap-8 text-[13px] font-bold text-[#5A7A8C] h-full">
-            <div className="h-full relative px-2 flex items-center text-[#1E4D6B]">
-              Dashboard Onboarding
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#1E4D6B] rounded-t-full" />
-            </div>
-          </div>
-
           {/* User */}
           <div className="flex items-center gap-4">
             <button className="relative text-[#5A7A8C] hover:text-[#1E4D6B] transition-colors">
@@ -203,10 +232,12 @@ export default function EmployeeDashboard() {
             </button>
             <div className="flex items-center gap-3 border-l border-[#E8EFF4] pl-4">
               <div className="text-right hidden sm:block">
-                <div className="text-sm font-bold text-[#1E3A5F] leading-tight">{profile?.full_name || '—'}</div>
-                <div className="text-[10px] text-[#9AADB8] font-bold">{profile?.role || profile?.department || 'Karyawan'}</div>
+                <div className="text-[14px] font-bold text-[#1E3A5F] leading-tight">{profile?.full_name || '—'}</div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mt-0.5">
+                  {profile?.role || 'Karyawan'} {profile?.department ? ` - ${profile.department}` : ''}
+                </div>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-[#EBF4FA] text-[#1E4D6B] flex items-center justify-center font-bold text-xs">
+              <div className="w-10 h-10 rounded-xl bg-[#EBF4FA] text-[#1E4D6B] flex items-center justify-center font-extrabold text-[13px] border border-white shadow-sm">
                 {initials}
               </div>
             </div>
@@ -218,34 +249,27 @@ export default function EmployeeDashboard() {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 pt-24 pb-12 w-full flex flex-col gap-8">
-        {/* Welcome & Stats Block */}
-        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col xl:flex-row items-center justify-between gap-10">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-2 tracking-tight leading-tight">
-              Halo, {profile?.full_name?.split(' ')[0]}!
-            </h1>
-            <p className="text-[#5A7A8C] text-lg mb-6 lg:mb-8 font-medium">
-              {daysSinceStart === 0 ? 'Hari pertama perjalanan anda!' : `Hari ke-${daysSinceStart} di On-Boarding`}
-            </p>
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="bg-white/80 backdrop-blur-sm border border-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
-                {profile?.department || 'Divisi belum ditentukan'}
-              </div>
-              {profile?.role && (
-                <div className="bg-white/80 backdrop-blur-sm border border-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
-                  {profile.role}
+      <div className="max-w-[1400px] mx-auto px-6 pt-28 pb-12 w-full flex flex-col gap-6">
+        {/* Simplified Header with 3 Cards */}
+        <div className="flex flex-col gap-6">
+           <div className="flex items-end justify-between px-2">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1E4D6B] shadow-[0_0_8px_rgba(30,77,107,0.4)]" />
+                  <span className="text-[10px] font-extrabold text-[#9AADB8] tracking-[0.2em] uppercase">Overview</span>
                 </div>
-              )}
-            </div>
-          </div>
+                <h2 className="text-[1.6rem] font-extrabold text-[#1E3A5F] tracking-tight leading-none text-shadow-sm">Dashboard</h2>
+              </div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-bold bg-white/80 text-[#1E4D6B] px-3.5 py-1.5 rounded-xl border border-[#E8EFF4] shadow-sm backdrop-blur-md">
+                   HARI KE-{daysSinceStart}
+                </span>
+              </div>
+           </div>
 
-          <div className="relative z-10 flex flex-nowrap sm:flex-wrap lg:flex-nowrap items-stretch gap-5 shrink-0 w-full xl:w-auto overflow-x-auto pb-4 xl:pb-0 snap-x snap-mandatory hide-scrollbar">
-            {/* Progress */}
-            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[260px] snap-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Card 1: Progress */}
+            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 p-6 hover:-translate-y-1 transition-all cursor-pointer">
               <div className="relative w-[60px] h-[60px] shrink-0">
                 <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -257,41 +281,35 @@ export default function EmployeeDashboard() {
                 <span className="absolute inset-0 flex items-center justify-center font-bold text-[14px] text-[#1E3A5F]">{progress}%</span>
               </div>
               <div>
-                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Progres Onboarding</div>
-                <div className="font-bold text-[1.1rem] text-[#1E3A5F] tracking-tight">
-                  {progress === 100 ? 'Selesai! ' : progress > 50 ? 'Hampir Selesai' : 'Sedang Berproses'}
-                </div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-wider uppercase">Progres</div>
+                <div className="font-bold text-[1.1rem] text-[#1E3A5F]">{progress === 100 ? 'Selesai!' : 'Sedang Berproses'}</div>
               </div>
             </Card>
 
-            {/* Tasks remaining */}
-            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] snap-center">
+            {/* Card 2: Remaining */}
+            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 p-6 hover:-translate-y-1 transition-all cursor-pointer">
               <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8EFF4] text-[#276087] flex items-center justify-center shrink-0">
                 <CheckSquare weight="duotone" className="w-7 h-7" />
               </div>
               <div>
-                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Tugas Tersisa</div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-wider uppercase">Tugas Tersisa</div>
                 <div className="flex items-center gap-3">
                   <span className="font-bold text-[1.5rem] text-[#1E3A5F] leading-none">{remaining}</span>
-                  {remaining > 0 && (
-                    <span className="text-[9px] font-bold bg-[#E8EFF4] text-[#276087] px-2 py-0.5 rounded-lg tracking-widest mt-1">BELUM SELESAI</span>
-                  )}
+                  <span className="text-[9px] font-bold bg-[#E8EFF4] text-[#276087] px-2 py-0.5 rounded-lg">BELUM</span>
                 </div>
               </div>
             </Card>
 
-            {/* Completed */}
-            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] snap-center">
+            {/* Card 3: Completed */}
+            <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 p-6 hover:-translate-y-1 transition-all cursor-pointer">
               <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8EFF4] text-[#276087] flex items-center justify-center shrink-0">
                 <CheckCircle weight="duotone" className="w-7 h-7" />
               </div>
               <div>
-                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Selesai</div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-wider uppercase">Selesai</div>
                 <div className="flex items-center gap-3">
                   <span className="font-bold text-[1.5rem] text-[#1E3A5F] leading-none">{completedItems}</span>
-                  <span className="text-[9px] font-bold bg-[#E8EFF4] text-[#276087] px-2 py-0.5 rounded-lg tracking-widest mt-1">
-                    dari {totalItems}
-                  </span>
+                  <span className="text-[9px] font-bold bg-[#E8EFF4] text-[#276087] px-2 py-0.5 rounded-lg">DARI {totalItems}</span>
                 </div>
               </div>
             </Card>
@@ -305,9 +323,13 @@ export default function EmployeeDashboard() {
 
             {/* Checklist Section */}
             <div className="flex flex-col gap-6">
-              <h2 className="text-[1.3rem] font-bold text-[#1E3A5F] tracking-tight px-1">
-                Checklist Onboarding
-              </h2>
+              <div className="flex flex-col gap-1 px-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1E4D6B] shadow-[0_0_8px_rgba(30,77,107,0.4)]" />
+                  <span className="text-[10px] font-extrabold text-[#9AADB8] tracking-[0.2em] uppercase">Missions</span>
+                </div>
+                <h2 className="text-[1.6rem] font-extrabold text-[#1E3A5F] tracking-tight leading-none">Checklist Onboarding</h2>
+              </div>
 
               {totalItems === 0 ? (
                 <Card className="py-16 text-center">
@@ -321,11 +343,16 @@ export default function EmployeeDashboard() {
                   const pPct = phaseItems.length > 0 ? Math.round((pDone / phaseItems.length) * 100) : 0;
 
                   return (
-                    <Card key={phase} className="p-8">
-                      <div className="flex items-end justify-between mb-6">
+                    <Card key={phase} className="p-8 group/card hover:shadow-xl transition-all duration-300 border-white/80 bg-white/60">
+                      <div className="flex items-end justify-between mb-8 border-b border-[#E8EFF4] pb-6">
                         <div>
-                          <h3 className="font-bold text-[1.1rem] text-[#1E3A5F]">{phase}</h3>
-                          <p className="text-[11px] font-bold text-[#9AADB8] mt-0.5">{pDone}/{phaseItems.length} selesai</p>
+                          <h3 className="font-bold text-[1.2rem] text-[#1E3A5F]">
+                            {phase === 'Hari' ? 'Tugas Harian' : phase}
+                          </h3>
+                          <p className="text-[12px] font-bold text-[#9AADB8] mt-1 flex items-center gap-2">
+                            <CheckCircle weight="duotone" className="w-4 h-4 text-[#1E4D6B]" />
+                            {pDone} dari {phaseItems.length} selesai
+                          </p>
                         </div>
                         <div className="flex flex-col items-end gap-1.5 w-[40%]">
                           <span className="text-[11px] font-bold text-[#1E4D6B]">{pPct}%</span>
@@ -427,11 +454,11 @@ export default function EmployeeDashboard() {
                         <div className="flex flex-col gap-2">
                           <ReactMarkdown
                             components={{
-                              p: ({node, ...props}) => <p className="mb-1" {...props} />,
-                              ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-1 space-y-1" {...props} />,
-                              ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-1 space-y-1" {...props} />,
-                              li: ({node, ...props}) => <li className="" {...props} />,
-                              strong: ({node, ...props}) => <strong className="font-bold text-[#1E3A5F]" {...props} />
+                              p: ({ node, ...props }) => <p className="mb-1" {...props} />,
+                              ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-1 space-y-1" {...props} />,
+                              ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-1 space-y-1" {...props} />,
+                              li: ({ node, ...props }) => <li className="" {...props} />,
+                              strong: ({ node, ...props }) => <strong className="font-bold text-[#1E3A5F]" {...props} />
                             }}
                           >
                             {msg.text}

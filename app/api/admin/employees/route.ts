@@ -10,6 +10,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+export const dynamic = 'force-dynamic';
+
 // ─── GET: List semua karyawan ─────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
@@ -33,12 +35,31 @@ export async function GET(req: NextRequest) {
   const { data, error } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Ambil data checklist untuk hitung progress
+  const { data: allItems } = await supabase.from('checklist_items').select('id, department, role');
+  const { data: allProgress } = await supabase.from('checklist_progress').select('user_id, completed').eq('completed', true);
   
   const employees = (data || []).map(emp => {
     const { password_hash, ...rest } = emp;
+    
+    // Filter item yang sesuai dengan karyawan ini
+    // (Global: dept & role null) OR Match Dept OR Match Role
+    const targetedItems = allItems?.filter(item => {
+      const isGlobal = !item.department && !item.role;
+      const matchDept = item.department && item.department === emp.department;
+      const matchRole = item.role && item.role === emp.role;
+      return isGlobal || matchDept || matchRole;
+    }) || [];
+
+    const total = targetedItems.length;
+    const done = allProgress?.filter(p => p.user_id === emp.id).length || 0;
+    const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+
     return {
       ...rest,
-      hasPassword: !!password_hash
+      hasPassword: !!password_hash,
+      progress
     };
   });
 
