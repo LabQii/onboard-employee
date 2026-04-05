@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { LayoutDashboard, FileText, Users, Settings, LogOut, ListChecks } from 'lucide-react';
+import { SquaresFour, FileText, Users, Gear, SignOut } from '@phosphor-icons/react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -8,10 +8,10 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const links = [
-    { name: 'Ringkasan',          href: '/admin',                    icon: LayoutDashboard, exact: true },
+    { name: 'Ringkasan',          href: '/admin',                    icon: SquaresFour, exact: true },
     { name: 'Dokumen',             href: '/admin/documents',          icon: FileText,        exact: false },
     { name: 'Karyawan',            href: '/admin/employees',          icon: Users,           exact: false },
-    { name: 'Pengaturan',          href: '/admin/settings',           icon: Settings,        exact: false },
+    { name: 'Pengaturan',          href: '/admin/settings',           icon: Gear,        exact: false },
   ];
 
   return (
@@ -23,7 +23,7 @@ export function Sidebar() {
             OF
           </div>
           <h1 className="font-bold text-[1.4rem] tracking-tight text-tertiary leading-none">
-            OnboardFlow
+            On-Boarding
           </h1>
         </div>
         <div className="flex items-center gap-2 ml-12 opacity-40">
@@ -51,8 +51,9 @@ export function Sidebar() {
               )}
             >
               <Icon
+                weight="duotone"
                 className={cn(
-                  'w-5 h-5 stroke-[2] shrink-0 transition-colors',
+                  'w-5 h-5 shrink-0 transition-colors',
                   isActive ? 'text-primary' : 'text-tertiary/40'
                 )}
               />
@@ -83,7 +84,7 @@ export function Sidebar() {
               type="submit"
               className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-2xl text-tertiary border border-neutral/10 bg-white hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all text-[12px] font-bold shadow-sm active:scale-[0.98]"
             >
-              <LogOut className="w-4 h-4 stroke-[2.5]" />
+              <SignOut weight="duotone" className="w-4 h-4" />
               Keluar Sesi
             </button>
           </form>

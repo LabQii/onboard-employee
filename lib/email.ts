@@ -59,7 +59,7 @@ export async function sendInviteEmail(
     <div class="body">
       <h2>Selamat datang, ${fullName}! 👋</h2>
       <p>
-        Anda telah diundang untuk bergabung di <strong>OnboardFlow</strong>. 
+        Anda telah diundang untuk bergabung di <strong>On-Boarding</strong>. 
         Klik tombol di bawah untuk mengatur kata sandi dan memulai perjalanan onboarding Anda.
       </p>
       <a href="${inviteUrl}" class="btn">Atur Kata Sandi &amp; Masuk →</a>
@@ -71,7 +71,7 @@ export async function sendInviteEmail(
       <div class="link-box">${inviteUrl}</div>
     </div>
     <div class="footer">
-      <p>© 2026 OnboardFlow · Dikirim secara otomatis, jangan reply email ini.</p>
+      <p>© 2026 On-Boarding · Dikirim secara otomatis, jangan reply email ini.</p>
     </div>
   </div>
 </body>
@@ -88,9 +88,9 @@ export async function sendInviteEmail(
   }
 
   await transporter.sendMail({
-    from: `"OnboardFlow" <${SMTP_FROM}>`,
+    from: `"On-Boarding" <${SMTP_FROM}>`,
     to: email,
-    subject: `Undangan Bergabung – OnboardFlow`,
+    subject: `Undangan Bergabung – On-Boarding`,
     html: htmlBody,
   });
 }
@@ -127,7 +127,7 @@ export async function sendLoginOtp(
       <div class="otp-box">${otp}</div>
       <p>Kode ini berlaku selama <strong>10 menit</strong>.<br/>Jangan berikan kode ini ke siapapun.</p>
     </div>
-    <div class="footer"><p>© 2026 OnboardFlow</p></div>
+    <div class="footer"><p>© 2026 On-Boarding</p></div>
   </div>
 </body>
 </html>`;
@@ -142,9 +142,9 @@ export async function sendLoginOtp(
   }
 
   await transporter.sendMail({
-    from: `"OnboardFlow" <${SMTP_FROM}>`,
+    from: `"On-Boarding" <${SMTP_FROM}>`,
     to: email,
-    subject: `Kode Masuk OnboardFlow: ${otp}`,
+    subject: `Kode Masuk On-Boarding: ${otp}`,
     html: htmlBody,
   });
 }

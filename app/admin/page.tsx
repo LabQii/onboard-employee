@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Users, TrendingUp, AlertTriangle, FileText, ArrowRight, Bell, Search } from 'lucide-react';
+import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
@@ -37,36 +37,32 @@ function StatCard({
   value,
   sub,
   alert = false,
-  color = 'primary',
 }: {
   icon: React.ElementType;
   label: string;
   value: string | number;
   sub?: string;
   alert?: boolean;
-  color?: 'primary' | 'green' | 'red' | 'amber';
 }) {
-  const colorMap = {
-    primary: 'text-primary bg-primary/10',
-    green:   'text-[#22C55E] bg-[#22C55E]/10',
-    red:     'text-red-500 bg-red-50',
-    amber:   'text-amber-500 bg-amber-50',
-  };
   return (
-    <Card className={`hover:-translate-y-1 transition-all shadow-soft border-none ${alert ? 'ring-2 ring-red-200' : ''}`}>
+    <Card className={`bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex flex-col hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] ${alert ? 'ring-2 ring-red-200/50' : ''}`}>
       <div className="flex items-start justify-between mb-4">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorMap[color]}`}>
-          <Icon className="w-5 h-5" />
+        <div className={`w-[60px] h-[60px] rounded-2xl flex items-center justify-center shrink-0 ${alert ? 'bg-red-50 text-red-500' : 'bg-[#E8EFF4] text-[#276087]'}`}>
+          <Icon weight="duotone" className="w-7 h-7" />
         </div>
         {alert && (
-          <span className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg uppercase tracking-wider">
+          <span className="text-[9px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg uppercase tracking-widest mt-1">
             Perlu Tindakan
           </span>
         )}
       </div>
-      <div className="text-[2rem] font-bold text-tertiary tracking-tight leading-none mb-1">{value}</div>
-      <div className="text-[11px] font-bold text-neutral-dark uppercase tracking-[0.12em] mt-2">{label}</div>
-      {sub && <div className="text-[11px] text-neutral-dark font-medium mt-1">{sub}</div>}
+      <div>
+        <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">{label}</div>
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-[1.8rem] text-[#1E3A5F] leading-none">{value}</span>
+        </div>
+        {sub && <div className="text-[11px] text-[#5A7A8C] font-medium mt-2">{sub}</div>}
+      </div>
     </Card>
   );
 }
@@ -93,11 +89,11 @@ export default function AdminDashboardPage() {
       try {
         const res = await fetch('/api/admin/dashboard');
         const data = await res.json();
-        
+
         if (data.stats) setStats(data.stats);
         if (data.attentionList) setAttentionList(data.attentionList);
         if (data.faqs) setFaqs(data.faqs);
-        
+
       } catch (err) {
         console.error('Dashboard fetch error:', err);
       } finally {
@@ -125,25 +121,30 @@ export default function AdminDashboardPage() {
   return (
     <div className="flex flex-col w-full min-h-full">
       {/* ── Header ── */}
-      <div className="relative bg-app-soft px-10 pt-10 pb-20 overflow-hidden shrink-0">
-        <div className="absolute top-[-50%] right-[-10%] w-[50%] h-[200%] bg-app-bg rounded-full blur-3xl opacity-50 pointer-events-none" />
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div className="max-w-xl">
-            <h1 className="text-[2.2rem] font-bold text-tertiary mb-3 tracking-tight">Ringkasan</h1>
-            <p className="text-neutral-dark leading-relaxed font-medium text-[15px]">
+      {/* ── Header ── */}
+      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
+        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex-1 min-w-[280px]">
+            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+              Ringkasan Dashboard
+            </h1>
+            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
               Pantau progres onboarding seluruh karyawan dari satu tempat.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="relative z-10 flex items-center gap-3 shrink-0">
             <Link href="/admin/documents">
-              <Button variant="outline" size="md" className="gap-2">
-                <FileText className="w-4 h-4 stroke-[2]" /> Dokumen
-              </Button>
+              <button className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white/70 backdrop-blur-xl border border-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-[#1E3A5F] font-bold text-[13px]">
+                <FileText weight="duotone" className="w-5 h-5" /> Dokumen
+              </button>
             </Link>
             <Link href="/admin/employees">
-              <Button variant="primary" size="md" className="gap-2">
-                <Users className="w-4 h-4 stroke-[2.5]" /> Karyawan
-              </Button>
+              <button className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#1E4D6B] hover:bg-[#163850] shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-white font-bold text-[13px]">
+                <Users weight="duotone" className="w-5 h-5" /> Karyawan
+              </button>
             </Link>
           </div>
         </div>
@@ -151,115 +152,108 @@ export default function AdminDashboardPage() {
 
       <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
         {/* ── Stat Cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 -mt-10 relative z-20">
+        {/* ── Stat Cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-20">
           <StatCard
             icon={Users}
             label="Karyawan Aktif"
             value={loading ? '…' : stats.totalEmployees}
-            sub="Sedang dalam onboarding"
-            color="primary"
           />
           <StatCard
-            icon={TrendingUp}
-            label="Rata-rata Progres Checklist"
+            icon={TrendUp}
+            label="Progres Checklist"
             value={loading ? '…' : `${stats.avgProgress}%`}
-            sub="Keseluruhan karyawan"
-            color="green"
           />
           <StatCard
-            icon={AlertTriangle}
+            icon={Warning}
             label="Belum Login > 3 Hari"
             value={loading ? '…' : stats.inactiveEmployees}
-            sub="Perlu tindak lanjut"
-            color="red"
             alert={!loading && stats.inactiveEmployees > 0}
           />
           <StatCard
             icon={FileText}
             label="Dokumen Terindeks AI"
             value={loading ? '…' : stats.totalDocuments}
-            sub="Siap dijawab chatbot"
-            color="amber"
           />
         </div>
 
         {/* ── Karyawan Perlu Perhatian ── */}
         <div className="mt-10">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-[1.4rem] font-bold text-tertiary tracking-tight">Karyawan Perlu Perhatian</h2>
-              <p className="text-[12px] text-neutral-dark font-medium mt-1">Progress &lt; 30% atau tidak login lebih dari 3 hari</p>
+              <h2 className="text-[1.4rem] font-bold text-[#1E3A5F] tracking-tight">Karyawan Perlu Perhatian</h2>
+              <p className="text-[12px] text-[#5A7A8C] font-medium mt-1">Progress &lt; 30% atau tidak login lebih dari 3 hari</p>
             </div>
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral" strokeWidth={2.5} />
+              <MagnifyingGlass weight="duotone" className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Cari karyawan..."
-                className="pl-10 pr-4 py-2.5 text-[13px] bg-white border border-neutral/20 rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 shadow-soft text-tertiary placeholder:text-neutral-dark/50 transition-all w-52"
+                className="pl-10 pr-4 py-2.5 text-[13px] bg-white/70 backdrop-blur-xl border border-white shadow-[0_4px_20px_rgb(0,0,0,0.02)] rounded-xl focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 text-[#1E3A5F] placeholder:text-[#9AADB8] transition-all w-full sm:w-56 font-medium"
               />
             </div>
           </div>
 
-          <Card className="shadow-soft border-none p-0 overflow-hidden">
+          <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl p-0 overflow-hidden rounded-3xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-neutral/10 bg-app-soft/50">
-                    <th className="py-4 px-6 text-[10px] font-bold text-neutral-dark uppercase tracking-[0.15em]">Nama</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-neutral-dark uppercase tracking-[0.15em]">Divisi</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-neutral-dark uppercase tracking-[0.15em]">Progress</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-neutral-dark uppercase tracking-[0.15em]">Terakhir Login</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-neutral-dark uppercase tracking-[0.15em]">Aksi</th>
+                  <tr className="border-b border-[#E8EFF4] bg-[#F8FAFC]">
+                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Nama</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Divisi</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Progress</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Terakhir Login</th>
+                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan={5} className="py-16 text-center text-[13px] text-neutral-dark font-medium">
+                      <td colSpan={5} className="py-16 text-center text-[13px] text-[#5A7A8C] font-medium">
                         Memuat data…
                       </td>
                     </tr>
                   ) : filteredAttention.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-16 text-center text-[13px] text-neutral-dark font-medium">
+                      <td colSpan={5} className="py-16 text-center text-[13px] text-[#5A7A8C] font-medium">
                         ✓ Semua karyawan dalam kondisi baik
                       </td>
                     </tr>
                   ) : (
                     filteredAttention.map((emp) => (
-                      <tr key={emp.id} className="border-b border-neutral/5 hover:bg-app-soft/30 transition-colors group">
+                      <tr key={emp.id} className="border-b border-[#E8EFF4] hover:bg-white transition-colors group">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-bold shrink-0">
+                            <div className="w-8 h-8 rounded-xl bg-[#EBF4FA] text-[#1E4D6B] flex items-center justify-center text-[11px] font-bold shrink-0">
                               {emp.full_name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                             </div>
-                            <span className="font-bold text-[13.5px] text-tertiary">{emp.full_name}</span>
+                            <span className="font-bold text-[13.5px] text-[#1E3A5F]">{emp.full_name}</span>
                           </div>
                         </td>
-                        <td className="py-4 px-6 text-[13px] text-neutral-dark">{emp.division}</td>
+                        <td className="py-4 px-6 text-[13px] font-medium text-[#5A7A8C]">{emp.division}</td>
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-24 h-1.5 bg-neutral/10 rounded-full overflow-hidden">
+                            <div className="w-24 h-1.5 bg-[#E8EFF4] rounded-full overflow-hidden">
                               <div
-                                className={`h-full rounded-full ${emp.progress < 30 ? 'bg-red-400' : 'bg-primary'}`}
+                                className={`h-full rounded-full transition-all duration-700 ${emp.progress < 30 ? 'bg-red-400' : 'bg-[#1E4D6B]'}`}
                                 style={{ width: `${emp.progress}%` }}
                               />
                             </div>
-                            <span className={`text-[12px] font-bold ${emp.progress < 30 ? 'text-red-500' : 'text-tertiary'}`}>
+                            <span className={`text-[12px] font-bold ${emp.progress < 30 ? 'text-red-500' : 'text-[#1E3A5F]'}`}>
                               {emp.progress}%
                             </span>
                           </div>
                         </td>
                         <td className="py-4 px-6">
-                          <span className={`text-[12px] font-medium ${!emp.last_login || new Date(emp.last_login) < new Date(Date.now() - 3 * 86400000) ? 'text-red-500' : 'text-neutral-dark'}`}>
+                          <span className={`text-[12px] font-bold ${!emp.last_login || new Date(emp.last_login) < new Date(Date.now() - 3 * 86400000) ? 'text-red-500 bg-red-50 px-2.5 py-1 rounded-lg tracking-wide' : 'text-[#5A7A8C] font-medium'}`}>
                             {formatLastLogin(emp.last_login)}
                           </span>
                         </td>
                         <td className="py-4 px-6">
-                          <button className="flex items-center gap-2 text-[12px] font-bold text-primary hover:text-white hover:bg-primary px-3 py-1.5 rounded-lg border border-primary/20 hover:border-transparent transition-all">
-                            <Bell className="w-3.5 h-3.5" />
-                            Kirim Pengingat
+                          <button className="flex items-center gap-2 text-[11px] font-bold text-[#1E4D6B] hover:text-white hover:bg-[#1E4D6B] px-3.5 py-2 rounded-xl border border-[#D8E8F0] hover:border-transparent transition-all shadow-sm hover:shadow-md">
+                            <Bell weight="duotone" className="w-4 h-4" />
+                            Pengingat
                           </button>
                         </td>
                       </tr>
@@ -274,31 +268,31 @@ export default function AdminDashboardPage() {
         {/* ── FAQ Terpopuler ── */}
         <div className="mt-10">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[1.4rem] font-bold text-tertiary tracking-tight">FAQ Terpopuler</h2>
-            <span className="text-[10px] font-bold bg-app-bg text-primary px-3 py-1.5 rounded-lg uppercase tracking-widest">
+            <h2 className="text-[1.4rem] font-bold text-[#1E3A5F] tracking-tight">FAQ Terpopuler</h2>
+            <span className="text-[9px] font-bold bg-[#EBF4FA] text-[#1E4D6B] px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-sm">
               Dari AI Chatbot
             </span>
           </div>
 
-          <Card className="shadow-soft border-none">
+          <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl p-4 rounded-3xl">
             {loading ? (
-              <div className="py-12 text-center text-[13px] text-neutral-dark">Memuat FAQ…</div>
+              <div className="py-12 text-center text-[13px] text-[#5A7A8C] font-medium">Memuat FAQ…</div>
             ) : faqs.length === 0 ? (
-              <div className="py-12 text-center text-[13px] text-neutral-dark">Belum ada riwayat chat</div>
+              <div className="py-12 text-center text-[13px] text-[#5A7A8C] font-medium">Belum ada riwayat chat</div>
             ) : (
               <div className="flex flex-col gap-2">
                 {faqs.map((faq, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between p-4 rounded-2xl hover:bg-app-soft transition-all border border-transparent hover:border-neutral/5 cursor-pointer group"
+                    className="flex items-center justify-between p-4 rounded-2xl hover:bg-white transition-all border border-transparent hover:border-[#E8EFF4] hover:shadow-sm cursor-pointer group"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="text-[10px] font-bold bg-app-bg text-primary w-7 h-7 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                      <div className="text-[10px] font-bold bg-[#EBF4FA] text-[#276087] group-hover:bg-[#276087] group-hover:text-white w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors shadow-sm">
                         {String(i + 1).padStart(2, '0')}
                       </div>
-                      <div className="text-[13.5px] font-bold text-tertiary">{faq.question}</div>
+                      <div className="text-[13.5px] font-bold text-[#1E3A5F]">{faq.question}</div>
                     </div>
-                    <div className="text-[11px] font-bold text-neutral-dark opacity-60 group-hover:opacity-100 whitespace-nowrap ml-4">
+                    <div className="text-[11px] font-bold bg-[#F8FAFC] text-[#5A7A8C] group-hover:bg-[#EBF4FA] group-hover:text-[#1E4D6B] opacity-70 group-hover:opacity-100 px-3 py-1.5 rounded-lg transition-all ml-4 border border-[#E8EFF4] group-hover:border-[#D8E8F0] shadow-sm">
                       {faq.count}× ditanyakan
                     </div>
                   </div>

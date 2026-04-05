@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
-import { UploadCloud, Search, FileText, Trash2, Edit2, Eye, X, ChevronDown, CheckCircle, Clock, XCircle, Users } from 'lucide-react';
+import { CloudArrowUp, MagnifyingGlass, FileText, Trash, PencilSimple, Eye, X, CaretDown, CheckCircle, Clock, XCircle, Users } from '@phosphor-icons/react';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -11,7 +11,7 @@ interface Document {
   name: string;
   department: string | null;
   role: string | null;
-  cloudinary_url: string;
+  file_url: string;
   created_at: string;
   status: 'indexed' | 'processing' | 'failed' | string;
 }
@@ -103,7 +103,7 @@ function DocModal({
           body: JSON.stringify({
             id: editDoc.id,
             ...payload,
-            cloudinary_url: editDoc.cloudinary_url,
+            file_url: editDoc.file_url,
           }),
         });
         const data = await res.json();
@@ -112,36 +112,18 @@ function DocModal({
         // Create mode
         const formData = new FormData();
         formData.append('file', file!);
+        formData.append('name', payload.name);
+        if (payload.department) formData.append('department', payload.department);
+        if (payload.role) formData.append('role', payload.role);
+        formData.append('phase', payload.phase);
 
-        const uploadRes = await fetch('/api/upload', {
+        const uploadRes = await fetch('/api/documents/upload', {
           method: 'POST',
           body: formData,
         });
 
         const uploadData = await uploadRes.json();
-        if (!uploadRes.ok) throw new Error(uploadData.error || 'Gagal upload ke Cloudinary.');
-        
-        const publicUrl = uploadData.secure_url;
-
-        const dbRes = await fetch('/api/admin/documents', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...payload,
-            cloudinary_url: publicUrl,
-          }),
-        });
-        
-        const dbData = await dbRes.json();
-        if (!dbRes.ok) throw new Error(dbData.error || 'Gagal menyimpan ke database.');
-        const doc = dbData.document;
-
-        // Trigger ingest
-        await fetch('/api/ingest-document', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ document_id: doc.id, cloudinary_url: publicUrl }),
-        });
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Gagal menyimpan dan memproses dokumen.');
       }
 
       onSuccess();
@@ -162,7 +144,7 @@ function DocModal({
             {editDoc ? 'Edit Dokumen' : 'Unggah Dokumen'}
           </h2>
           <button onClick={onClose} className="text-[#9AADB8] hover:text-[#1E3A5F] transition-colors">
-            <X className="w-5 h-5" />
+            <X weight="duotone" className="w-5 h-5" />
           </button>
         </div>
 
@@ -173,7 +155,7 @@ function DocModal({
               className="w-full border-2 border-dashed border-neutral/20 rounded-2xl p-12 flex flex-col items-center gap-4 hover:border-primary/40 transition-all group"
             >
               <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <UploadCloud className="w-7 h-7 text-[#1E4D6B]" />
+                <CloudArrowUp weight="duotone" className="w-8 h-8 text-[#1E4D6B]" />
               </div>
               <div className="text-center">
                 <p className="font-bold text-[#1E3A5F] text-[14px] mb-1">Pilih atau seret file</p>
@@ -184,10 +166,10 @@ function DocModal({
             <div className="flex flex-col gap-5 text-left">
               {!editDoc && file && (
                 <div className="flex items-center gap-3 p-4 bg-[#F8FAFC] rounded-2xl">
-                  <FileText className="w-5 h-5 text-[#1E4D6B] shrink-0" />
+                  <FileText weight="duotone" className="w-5 h-5 text-[#1E4D6B] shrink-0" />
                   <span className="text-[13px] font-bold text-[#1E3A5F] truncate flex-1">{file.name}</span>
                   <button onClick={() => { setFile(null); setStep('file'); }} className="text-[#9AADB8] hover:text-red-500 transition-colors">
-                    <X className="w-4 h-4" />
+                    <X weight="duotone" className="w-4 h-4" />
                   </button>
                 </div>
               )}
@@ -237,7 +219,7 @@ function DocModal({
                       <option value="">-- Pilih Divisi --</option>
                       {deps.map((d) => <option key={d.id} value={d.name}>{d.name}</option>)}
                     </select>
-                    <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                 </div>
               )}
@@ -254,7 +236,7 @@ function DocModal({
                       <option value="">-- Pilih Jabatan --</option>
                       {roles.map((r) => <option key={r.id} value={r.name}>{r.name}</option>)}
                     </select>
-                    <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
                 </div>
               )}
@@ -271,7 +253,7 @@ function DocModal({
                     <option value="Minggu">Minggu</option>
                     <option value="Bulan">Bulan</option>
                   </select>
-                  <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
@@ -297,7 +279,7 @@ function DocModal({
               {loading ? (
                 <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Menyimpan…</>
               ) : (
-                <><CheckCircle className="w-4 h-4" /> Simpan</>
+                <><CheckCircle weight="duotone" className="w-4 h-4" /> Simpan</>
               )}
             </button>
           </div>
@@ -333,7 +315,7 @@ export default function DocumentsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('Hapus dokumen ini? (Juga akan menghapus tugas onboarding terkait)')) return;
-    await fetch(`/api/admin/documents?id=${id}`, { method: 'DELETE' });
+    await fetch(`/api/documents/delete`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
     setDocs((prev) => prev.filter((d) => d.id !== id));
   }
 
@@ -342,69 +324,79 @@ export default function DocumentsPage() {
   });
 
   return (
-    <div className="flex flex-col w-full min-h-full bg-white">
-      {/* Header */}
-      <div className="relative bg-[#EBF4FA] px-10 pt-10 pb-20 overflow-hidden shrink-0">
-        <div className="absolute top-[-50%] right-[-10%] w-[50%] h-[200%] bg-white rounded-full blur-3xl opacity-50 pointer-events-none" />
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div className="max-w-xl">
-            <h1 className="text-[2.2rem] font-bold text-[#1E3A5F] mb-3 tracking-tight">Dokumen Orientasi</h1>
-            <p className="text-[#5A7A8C] leading-relaxed font-medium text-[15px]">
+    <div className="flex flex-col w-full min-h-full">
+      {/* ── Header ── */}
+      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
+        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex-1 min-w-[280px]">
+            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+              Dokumen Orientasi
+            </h1>
+            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
               Unggah dan kelola panduan perusahaan bagi karyawan baru.
             </p>
           </div>
-          <button
-            onClick={() => { setEditDoc(undefined); setShowModal(true); }}
-            className="flex items-center gap-2 px-6 py-3 bg-[#1E4D6B] text-white rounded-xl text-[13.5px] font-bold shadow-lg shadow-[#1E4D6B]/20 hover:bg-[#236181] transition-all active:scale-[0.98] shrink-0"
-          >
-            <UploadCloud className="w-4 h-4 stroke-[2.5]" />
-            Unggah Dokumen
-          </button>
+          <div className="relative z-10 flex items-center gap-3 shrink-0">
+            <button
+              onClick={() => { setEditDoc(undefined); setShowModal(true); }}
+              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#1E4D6B] hover:bg-[#163850] shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-white font-bold text-[13px]"
+            >
+              <CloudArrowUp weight="duotone" className="w-5 h-5" /> Unggah Dokumen
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
         {/* Stat strip */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 -mt-10 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-20">
           {[
-            { label: 'Memproses', count: docs.filter(d => d.status === 'processing').length, icon: Clock,         color: 'text-[#1E4D6B]',    bg: 'border-l-[#1E4D6B]' },
-            { label: 'Terindeks', count: docs.filter(d => d.status === 'indexed').length,    icon: CheckCircle,   color: 'text-[#22C55E]',    bg: 'border-l-[#22C55E]' },
-            { label: 'Gagal',     count: docs.filter(d => d.status === 'failed').length,     icon: XCircle,       color: 'text-red-500',      bg: 'border-l-red-400' },
+            { label: 'Prospek AI', count: docs.filter(d => d.status === 'processing').length, icon: Clock,         color: 'text-[#276087]',    bg: 'bg-[#E8EFF4]' },
+            { label: 'Terindeks', count: docs.filter(d => d.status === 'indexed').length,    icon: CheckCircle,   color: 'text-emerald-600',  bg: 'bg-emerald-50' },
+            { label: 'Gagal',     count: docs.filter(d => d.status === 'failed').length,     icon: XCircle,       color: 'text-red-500',      bg: 'bg-red-50' },
           ].map((s) => (
-            <Card key={s.label} className={`flex items-center gap-4 bg-white border border-[#E8EFF4] border-l-4 ${s.bg} py-5 px-6`}>
-              <s.icon className={`w-7 h-7 ${s.color} shrink-0`} />
+            <Card key={s.label} className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0">
+              <div className={`w-[60px] h-[60px] rounded-2xl flex items-center justify-center shrink-0 ${s.bg} ${s.color}`}>
+                <s.icon weight="duotone" className="w-7 h-7" />
+              </div>
               <div>
-                <div className="text-[1.8rem] font-bold text-[#1E3A5F] leading-none">{loading ? '…' : s.count}</div>
-                <div className="text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider mt-1">{s.label}</div>
+                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">{s.label}</div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-[1.8rem] text-[#1E3A5F] leading-none">{loading ? '…' : s.count}</span>
+                </div>
               </div>
             </Card>
           ))}
         </div>
 
         {/* Search */}
-        <div className="flex items-center justify-end mt-8 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-10 mb-6">
+          <h2 className="text-[1.4rem] font-bold text-[#1E3A5F] tracking-tight">Koleksi Dokumen</h2>
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AADB8]" strokeWidth={2.5} />
+            <MagnifyingGlass weight="duotone" className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari dokumen..."
-              className="pl-10 pr-4 py-2.5 text-[13px] bg-white border border-[#D8E8F0] rounded-xl focus:outline-none focus:border-[#1E4D6B] shadow-sm text-[#1E3A5F] placeholder:text-[#9AADB8] transition-all w-64"
+              className="pl-10 pr-4 py-2.5 text-[13px] bg-white/70 backdrop-blur-xl border border-white rounded-xl focus:outline-none focus:border-[#1E4D6B] shadow-[0_4px_20px_rgb(0,0,0,0.02)] text-[#1E3A5F] placeholder:text-[#9AADB8] transition-all w-full sm:w-64 font-medium"
             />
           </div>
         </div>
 
         {/* Documents Table */}
-        <Card className="shadow-sm border border-[#E8EFF4] bg-white p-0 overflow-hidden">
+        <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl p-0 overflow-hidden rounded-3xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-[#E8EFF4] bg-[#F8FAFC]">
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Nama Dokumen</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Target</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Tanggal Unggah</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider">Status AI</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-wider text-right">Aksi</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Nama Dokumen</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Target</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Tanggal Unggah</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Status AI</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em] text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -417,25 +409,25 @@ export default function DocumentsPage() {
                     <tr key={doc.id} className="border-b border-[#E8EFF4] hover:bg-[#F8FAFC] transition-colors group">
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 bg-blue-50 text-[#1E4D6B] rounded-xl flex items-center justify-center text-[10px] font-bold shrink-0 uppercase">
+                          <div className="w-9 h-9 bg-[#EBF4FA] text-[#1E4D6B] rounded-xl flex items-center justify-center text-[10px] font-bold shrink-0 uppercase">
                             {doc.name.split('.').pop()?.slice(0, 3) ?? 'DOC'}
                           </div>
-                          <span className="font-bold text-[13px] text-[#1E3A5F] max-w-[250px] truncate">{doc.name}</span>
+                          <span className="font-bold text-[13.5px] text-[#1E3A5F] max-w-[250px] truncate">{doc.name}</span>
                         </div>
                       </td>
                       <td className="py-4 px-6 text-[13px] text-[#5A7A8C]">
                         {doc.department ? (
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-tighter">DIVISI</span>
-                            <span className="font-bold text-[#1E4D6B] bg-[#EBF4FA] px-2 py-0.5 rounded text-[11px] w-fit">{doc.department}</span>
+                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em]">DIVISI</span>
+                            <span className="font-bold text-[#1E4D6B] bg-[#EBF4FA] px-2.5 py-1 rounded-lg text-[11px] w-fit mt-1">{doc.department}</span>
                           </div>
                         ) : doc.role ? (
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-tighter">JABATAN</span>
-                            <span className="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-[11px] w-fit">{doc.role}</span>
+                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em]">JABATAN</span>
+                            <span className="font-bold text-[#276087] bg-[#E8EFF4] px-2.5 py-1 rounded-lg text-[11px] w-fit mt-1">{doc.role}</span>
                           </div>
                         ) : (
-                          <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Semua Karyawan</span>
+                          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg tracking-widest uppercase">Semua Karyawan</span>
                         )}
                       </td>
                       <td className="py-4 px-6 text-[13px] text-[#5A7A8C]">
@@ -446,22 +438,22 @@ export default function DocumentsPage() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-end gap-2">
-                          <a href={doc.cloudinary_url} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-blue-50 text-[#9AADB8] hover:text-[#1E4D6B] transition-all" title="Lihat">
-                            <Eye className="w-4 h-4" />
+                          <a href={doc.file_url} target="_blank" rel="noreferrer" className="p-2.5 rounded-xl hover:bg-[#EBF4FA] text-[#9AADB8] hover:text-[#1E4D6B] transition-all" title="Lihat">
+                            <Eye weight="duotone" className="w-5 h-5" />
                           </a>
                           <button
                             onClick={() => { setEditDoc(doc); setShowModal(true); }}
-                            className="p-2 rounded-lg hover:bg-amber-50 text-[#9AADB8] hover:text-amber-500 transition-all"
+                            className="p-2.5 rounded-xl hover:bg-[#EBF4FA] text-[#9AADB8] hover:text-[#1E4D6B] transition-all"
                             title="Edit"
                           >
-                            <Edit2 className="w-4 h-4" />
+                            <PencilSimple weight="duotone" className="w-5 h-5" />
                           </button>
                           <button
                             onClick={() => handleDelete(doc.id)}
-                            className="p-2 rounded-lg hover:bg-red-50 text-[#9AADB8] hover:text-red-500 transition-all"
+                            className="p-2.5 rounded-xl hover:bg-red-50 text-[#9AADB8] hover:text-red-500 transition-all"
                             title="Hapus"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash weight="duotone" className="w-5 h-5" />
                           </button>
                         </div>
                       </td>

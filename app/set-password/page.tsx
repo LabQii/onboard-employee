@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Lock, Eye, EyeOff, CheckCircle2, XCircle } from 'lucide-react';
+import { LockKey, Eye, EyeSlash, CheckCircle, XCircle } from '@phosphor-icons/react';
 
 function SetPasswordContent() {
   const params = useSearchParams();
@@ -69,7 +69,7 @@ function SetPasswordContent() {
     return (
       <div className="min-h-screen bg-[#EBF4FA] flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
-          <XCircle className="w-14 h-14 text-red-400 mx-auto mb-4" />
+          <XCircle weight="duotone" className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h1 className="text-xl font-bold text-[#1E3A5F] mb-2">Link Tidak Valid</h1>
           <p className="text-[#5A7A8C] text-sm leading-relaxed">
             Link undangan sudah kedaluwarsa atau tidak valid.<br />
@@ -99,7 +99,7 @@ function SetPasswordContent() {
           </div>
           <div className="relative z-10 mt-auto">
             <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-              <CheckCircle2 className="w-8 h-8 text-green-300 mb-3" />
+              <CheckCircle weight="duotone" className="w-8 h-8 text-green-300 mb-3" />
               <p className="text-sm font-bold text-white mb-1">Hanya satu langkah lagi</p>
               <p className="text-xs text-[#B5DBEC] font-light leading-relaxed">
                 Setelah mengatur kata sandi, Anda langsung bisa mengakses dashboard onboarding Anda.
@@ -132,7 +132,7 @@ function SetPasswordContent() {
                 Kata Sandi Baru
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
+                <LockKey weight="duotone" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={password}
@@ -146,7 +146,7 @@ function SetPasswordContent() {
                   onClick={() => setShowPw(v => !v)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9AADB8] hover:text-[#1E4D6B] transition-colors"
                 >
-                  {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPw ? <EyeSlash weight="duotone" className="w-5 h-5" /> : <Eye weight="duotone" className="w-5 h-5" />}
                 </button>
               </div>
               {/* Strength bar */}
@@ -173,7 +173,7 @@ function SetPasswordContent() {
                 Konfirmasi Kata Sandi
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
+                <LockKey weight="duotone" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={confirm}
@@ -187,7 +187,7 @@ function SetPasswordContent() {
                   }`}
                 />
                 {confirm && confirm === password && (
-                  <CheckCircle2 className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-green-500" />
+                  <CheckCircle weight="duotone" className="w-5 h-5 absolute right-4 top-1/2 -translate-y-1/2 text-green-500" />
                 )}
               </div>
             </div>

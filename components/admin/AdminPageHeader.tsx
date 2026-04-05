@@ -1,19 +1,19 @@
 'use client';
 
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import { Icon } from '@phosphor-icons/react';
 
 interface AdminPageHeaderProps {
   title: string;
   description: string;
   primaryAction?: {
     label: string;
-    icon: LucideIcon;
+    icon: Icon;
     onClick?: () => void;
   };
   secondaryAction?: {
     label: string;
-    icon: LucideIcon;
+    icon: Icon;
     onClick?: () => void;
   };
   children?: React.ReactNode;
@@ -45,7 +45,7 @@ export function AdminPageHeader({
               onClick={secondaryAction.onClick}
               className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-white border border-neutral/20 rounded-xl text-[13.5px] font-bold text-tertiary hover:bg-neutral/5 transition-all shadow-soft"
             >
-              <secondaryAction.icon className="w-4 h-4 stroke-[2]" />
+              <secondaryAction.icon weight="duotone" className="w-5 h-5" />
               {secondaryAction.label}
             </button>
           )}
@@ -55,7 +55,7 @@ export function AdminPageHeader({
               onClick={primaryAction.onClick}
               className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-[13.5px] font-bold shadow-premium hover:bg-primary/90 transition-all active:scale-[0.98]"
             >
-              <primaryAction.icon className="w-4 h-4 stroke-[2.5]" />
+              <primaryAction.icon weight="duotone" className="w-5 h-5" />
               {primaryAction.label}
             </button>
           )}

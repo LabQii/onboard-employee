@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getServerSession } from '@/lib/auth';
@@ -75,7 +76,7 @@ export async function PUT(req: NextRequest) {
   }
   
   try {
-    const { id, name, department, role, phase, cloudinary_url } = await req.json();
+    const { id, name, department, role, phase, file_url } = await req.json();
     if (!id) throw new Error('ID is required');
 
     // Update documents table
@@ -89,7 +90,7 @@ export async function PUT(req: NextRequest) {
     if (docErr) throw docErr;
 
     // Update associated checklist item
-    if (cloudinary_url) {
+    if (file_url) {
       const { error: chkErr } = await supabase
         .from('checklist_items')
         .update({
@@ -98,7 +99,7 @@ export async function PUT(req: NextRequest) {
           role: role || null,
           phase: phase || 'Umum',
         })
-        .eq('description', cloudinary_url);
+        .eq('description', file_url);
         
       if (chkErr) console.error("Edit checklist error:", chkErr.message);
     }

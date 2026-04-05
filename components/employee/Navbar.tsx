@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { Bell, Search } from 'lucide-react';
+import { Bell, MagnifyingGlass } from '@phosphor-icons/react';
 
 export function UserNavbar() {
   return (
@@ -9,7 +11,7 @@ export function UserNavbar() {
         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white text-sm">
           OF
         </div>
-        <span className="font-bold text-xl text-tertiary">OnboardFlow</span>
+        <span className="font-bold text-xl text-tertiary">On-Boarding</span>
       </div>
 
       <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-neutral-dark">
@@ -20,10 +22,10 @@ export function UserNavbar() {
 
       <div className="flex items-center gap-6">
         <button className="text-neutral-dark hover:text-primary transition-colors">
-          <Search className="w-5 h-5" />
+          <MagnifyingGlass weight="duotone" className="w-5 h-5" />
         </button>
         <button className="text-neutral-dark hover:text-primary transition-colors relative">
-          <Bell className="w-5 h-5" />
+          <Bell weight="duotone" className="w-5 h-5" />
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
         </button>
         

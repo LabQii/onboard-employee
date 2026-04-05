@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
-import { ArrowLeft, CheckCircle2, Circle, MessageSquare, FileText, User } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Circle, ChatCircle, FileText, User } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -157,18 +157,21 @@ export default function EmployeeDetailPage() {
   return (
     <div className="flex flex-col w-full min-h-full">
       {/* Header */}
-      <div className="relative bg-[#EBF4FA] px-10 pt-10 pb-20 overflow-hidden shrink-0">
-        <div className="absolute top-[-50%] right-[-10%] w-[50%] h-[200%] bg-white rounded-full blur-3xl opacity-50 pointer-events-none" />
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full">
-          <Link
-            href="/admin/employees"
-            className="inline-flex items-center gap-2 text-[12px] font-bold text-[#5A7A8C] hover:text-[#1E4D6B] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" /> Kembali ke Karyawan
-          </Link>
+      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-4">
+        <Link
+          href="/admin/employees"
+          className="inline-flex items-center gap-2 text-[12px] font-bold text-[#5A7A8C] hover:text-[#1E4D6B] transition-colors mb-8"
+        >
+          <ArrowLeft weight="bold" className="w-4 h-4" /> Kembali ke Karyawan
+        </Link>
+        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
 
-          <div className="flex items-start gap-6">
-            <div className="w-[72px] h-[72px] rounded-full bg-blue-50 text-[#1E4D6B] flex items-center justify-center font-bold text-[1.4rem] shadow-sm ring-8 ring-[#EBF4FA] shrink-0">
+          <div className="relative z-10 flex items-center gap-6">
+
+
+            <div className="w-[80px] h-[80px] rounded-[1.5rem] bg-[#E8EFF4] text-[#276087] flex items-center justify-center font-bold text-[1.6rem] shadow-sm shrink-0">
               {initials}
             </div>
             <div>
@@ -229,8 +232,8 @@ export default function EmployeeDetailPage() {
                           }`}
                         >
                           {item.completed
-                            ? <CheckCircle2 className="w-5 h-5 text-[#22C55E] shrink-0" />
-                            : <Circle className="w-5 h-5 text-[#C0CDD4] shrink-0" />
+                            ? <CheckCircle weight="fill" className="w-5 h-5 text-[#22C55E] shrink-0" />
+                            : <Circle weight="light" className="w-5 h-5 text-[#C0CDD4] shrink-0" />
                           }
                           <span className={`text-[13px] font-medium flex-1 ${item.completed ? 'line-through text-[#9AADB8]' : 'text-[#1E3A5F]'}`}>
                             {item.title}
@@ -251,7 +254,7 @@ export default function EmployeeDetailPage() {
             {/* Chat History */}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center gap-3 mb-6">
-                <MessageSquare className="w-5 h-5 text-[#1E4D6B]" />
+                <ChatCircle weight="duotone" className="w-6 h-6 text-[#276087]" />
                 <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">10 Pertanyaan Terakhir ke AI</h2>
               </div>
               {chatHistory.length === 0 ? (
@@ -281,7 +284,7 @@ export default function EmployeeDetailPage() {
             {/* Profile Info */}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center gap-3 mb-5">
-                <User className="w-5 h-5 text-[#1E4D6B]" />
+                <User weight="duotone" className="w-6 h-6 text-[#276087]" />
                 <h2 className="font-bold text-[#1E3A5F] text-[1rem]">Info Profil</h2>
               </div>
               <div className="flex flex-col gap-4">
@@ -302,7 +305,7 @@ export default function EmployeeDetailPage() {
             {/* Accessible Documents */}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center gap-3 mb-5">
-                <FileText className="w-5 h-5 text-[#1E4D6B]" />
+                <FileText weight="duotone" className="w-6 h-6 text-[#276087]" />
                 <h2 className="font-bold text-[#1E3A5F] text-[1rem]">Dokumen Diakses</h2>
               </div>
               {docs.length === 0 ? (

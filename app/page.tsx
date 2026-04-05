@@ -1,5 +1,8 @@
+'use client';
+
 import LoginForm from '@/components/auth/LoginForm';
-import { Star } from 'lucide-react';
+import { Star } from '@phosphor-icons/react';
+
 
 export default function LoginPage() {
   return (
@@ -17,7 +20,7 @@ export default function LoginPage() {
           </div>
 
           <div className="relative z-10 mt-6">
-            <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">OnboardFlow.</h1>
+            <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">On-Boarding.</h1>
             <p className="text-[#B5DBEC] text-sm font-light leading-relaxed opacity-90">
               Platform orientasi terpusat untuk membantu masa transisi peran baru Anda secara terstruktur dan efisien.
             </p>
@@ -25,7 +28,7 @@ export default function LoginPage() {
 
           <div className="relative z-10 mt-auto">
             <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-              <Star className="w-8 h-8 text-[#E5B67B] mb-3 fill-current" />
+              <Star weight="duotone" className="w-8 h-8 text-[#E5B67B] mb-3" />
               <p className="text-sm font-bold text-white mb-1">Akses Eksklusif</p>
               <p className="text-xs text-[#B5DBEC] font-light leading-relaxed italic">
                 "Proses administrasi karyawan terintegrasi dengan mulus. Saya merasa diarahkan dengan baik sejak hari pertama."

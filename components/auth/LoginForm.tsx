@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Envelope, LockKey, Eye, EyeSlash } from '@phosphor-icons/react';
 import Link from 'next/link';
 
 export default function LoginForm() {
@@ -55,7 +55,7 @@ export default function LoginForm() {
             Email Kerja
           </label>
           <div className="relative">
-            <Mail className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
+            <Envelope weight="duotone" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
             <input
               id="email"
               type="email"
@@ -79,7 +79,7 @@ export default function LoginForm() {
             </Link>
           </div>
           <div className="relative">
-            <Lock className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
+            <LockKey weight="duotone" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
             <input
               id="password"
               type={showPw ? 'text' : 'password'}
@@ -94,7 +94,7 @@ export default function LoginForm() {
               onClick={() => setShowPw(v => !v)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9AADB8] hover:text-[#1E4D6B] transition-colors"
             >
-              {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPw ? <EyeSlash weight="duotone" className="w-5 h-5" /> : <Eye weight="duotone" className="w-5 h-5" />}
             </button>
           </div>
         </div>

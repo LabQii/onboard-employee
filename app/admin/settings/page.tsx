@@ -2,19 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
-import { Building2, User, KeyRound, Trash2, RefreshCw, Briefcase, UserRound, Plus } from 'lucide-react';
+import { Buildings, UserCircle, Key, Trash, ArrowsClockwise, Briefcase, UserList, Plus } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 
 // ─── Section Card ────────────────────────────────────────────────────────────
 
 function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
   return (
-    <Card className="shadow-soft border-none">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
-          <Icon className="w-4 h-4 text-[#1E4D6B]" />
+    <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl rounded-[2rem] p-8">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-12 h-12 rounded-2xl bg-[#E8EFF4] flex items-center justify-center">
+          <Icon className="w-5 h-5 text-[#276087]" />
         </div>
-        <h2 className="font-bold text-[#1E3A5F] text-[1rem]">{title}</h2>
+        <h2 className="font-bold text-[#1E3A5F] text-[1.2rem]">{title}</h2>
       </div>
       {children}
     </Card>
@@ -27,7 +27,7 @@ export default function SettingsPage() {
   const supabase = createClient();
 
   // Company name
-  const [companyName, setCompanyName] = useState('OnboardFlow');
+  const [companyName, setCompanyName] = useState('On-Boarding');
   const [savingCompany, setSavingCompany] = useState(false);
   const [companySaved, setCompanySaved] = useState(false);
 
@@ -160,21 +160,27 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col w-full min-h-full">
-      {/* Header */}
-      <div className="relative bg-[#EBF4FA] px-10 pt-10 pb-20 overflow-hidden shrink-0">
-        <div className="absolute top-[-50%] right-[-10%] w-[50%] h-[200%] bg-white rounded-full blur-3xl opacity-50 pointer-events-none" />
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full">
-          <h1 className="text-[2.2rem] font-bold text-[#1E3A5F] mb-3 tracking-tight">Pengaturan</h1>
-          <p className="text-[#5A7A8C] leading-relaxed font-medium text-[15px]">
-            Konfigurasi portal, kelola aplikasi, dan atur profil admin.
-          </p>
+      {/* ── Header ── */}
+      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
+        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex-1 min-w-[280px]">
+            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+              Pengaturan
+            </h1>
+            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
+              Konfigurasi portal, kelola aplikasi, dan atur profil admin.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto w-full px-10 pb-12 mt-8 z-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 -mt-16">
+      <div className="max-w-[1200px] mx-auto w-full px-10 pb-12 mt-4 z-10 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* ── Company Name ── */}
-          <SectionCard icon={Building2} title="Nama Perusahaan">
+          <SectionCard icon={Buildings} title="Nama Perusahaan">
             <div className="flex flex-col gap-4">
               <input
                 value={companyName}
@@ -197,44 +203,44 @@ export default function SettingsPage() {
           </SectionCard>
 
           {/* ── Admin Profile ── */}
-          <SectionCard icon={User} title="Profil Admin">
-            <div className="flex flex-col gap-4">
+          <SectionCard icon={UserCircle} title="Profil Admin">
+            <div className="flex flex-col gap-5">
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Nama</label>
+                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Nama</label>
                 <input
                   value={adminName}
                   onChange={(e) => setAdminName(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#E8EFF4] rounded-xl text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all bg-white"
+                  className="w-full px-4 py-3 border border-white/50 bg-white/70 backdrop-blur-xl rounded-xl text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all"
                   placeholder="Nama admin..."
                 />
               </div>
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Email</label>
+                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Email</label>
                 <input
                   value={adminEmail}
                   disabled
-                  className="w-full px-4 py-3 border border-transparent rounded-xl text-[13px] font-medium text-[#5A7A8C] bg-[#F8FAFC] cursor-not-allowed"
+                  className="w-full px-4 py-3 border border-transparent rounded-xl text-[13px] font-medium text-[#9AADB8] bg-[#F8FAFC]/50 backdrop-blur-xl cursor-not-allowed shadow-[0_4px_20px_rgb(0,0,0,0.01)]"
                 />
               </div>
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 flex items-center gap-2">
-                  <KeyRound className="w-3 h-3" /> Password Baru
-                  <span className="font-medium normal-case text-[#5A7A8C]/50">(kosongkan jika tidak diubah)</span>
+                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <Key weight="duotone" className="w-4 h-4 text-[#9AADB8]" /> Password Baru
+                  <span className="font-medium normal-case text-[#9AADB8]/60 ml-auto mr-1">(kosongkan jika tidak diubah)</span>
                 </label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#E8EFF4] rounded-xl text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all bg-white"
+                  className="w-full px-4 py-3 border border-white/50 bg-white/70 backdrop-blur-xl rounded-xl text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all"
                   placeholder="Masukkan password baru..."
                 />
               </div>
               <button
                 onClick={saveProfile}
                 disabled={savingProfile}
-                className={`py-3 rounded-xl text-[13px] font-bold transition-all ${
+                className={`py-3 mt-2 rounded-xl text-[13px] font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 ${
                   profileSaved ? 'bg-[#22C55E] text-white' : 'bg-[#1E4D6B] text-white hover:bg-[#236181]'
-                } disabled:opacity-60`}
+                } disabled:opacity-60 disabled:hover:translate-y-0 disabled:shadow-none`}
               >
                 {savingProfile ? 'Menyimpan…' : profileSaved ? '✓ Tersimpan' : 'Simpan Profil'}
               </button>
@@ -256,7 +262,7 @@ export default function SettingsPage() {
                   disabled={loadingDeps || !newDep.trim()}
                   className="w-10 h-10 rounded-xl bg-[#1E4D6B] text-white flex items-center justify-center hover:bg-[#236181] transition-all disabled:opacity-40"
                 >
-                  <Plus className="w-5 h-5" />
+                  <Plus weight="bold" className="w-5 h-5" />
                 </button>
               </div>
               <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
@@ -264,7 +270,7 @@ export default function SettingsPage() {
                   <div key={d.id} className="flex items-center justify-between p-3 bg-[#F8FAFC] border border-[#E8EFF4] rounded-xl group transition-all hover:border-red-100">
                     <span className="text-[13px] font-bold text-[#1E3A5F]">{d.name}</span>
                     <button onClick={() => deleteDepartment(d.id)} className="p-1.5 text-[#9AADB8] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
-                      <Trash2 className="w-4 h-4" />
+                      <Trash weight="duotone" className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
@@ -274,7 +280,7 @@ export default function SettingsPage() {
           </SectionCard>
 
           {/* ── Manage Roles ── */}
-          <SectionCard icon={UserRound} title="Kelola Jabatan">
+          <SectionCard icon={UserList} title="Kelola Jabatan">
             <div className="flex flex-col gap-4">
               <div className="flex gap-2">
                 <input
@@ -288,7 +294,7 @@ export default function SettingsPage() {
                   disabled={loadingRoles || !newRole.trim()}
                   className="w-10 h-10 rounded-xl bg-[#1E4D6B] text-white flex items-center justify-center hover:bg-[#236181] transition-all disabled:opacity-40"
                 >
-                  <Plus className="w-5 h-5" />
+                  <Plus weight="bold" className="w-5 h-5" />
                 </button>
               </div>
               <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
@@ -296,7 +302,7 @@ export default function SettingsPage() {
                   <div key={r.id} className="flex items-center justify-between p-3 bg-[#F8FAFC] border border-[#E8EFF4] rounded-xl group transition-all hover:border-red-100">
                     <span className="text-[13px] font-bold text-[#1E3A5F]">{r.name}</span>
                     <button onClick={() => deleteRole(r.id)} className="p-1.5 text-[#9AADB8] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
-                      <Trash2 className="w-4 h-4" />
+                      <Trash weight="duotone" className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
@@ -306,37 +312,40 @@ export default function SettingsPage() {
           </SectionCard>
 
           {/* ── Danger Zone ── */}
-          <div className="lg:col-span-2">
-            <Card className="border-2 border-red-100 shadow-none bg-red-50">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center">
-                  <Trash2 className="w-4 h-4 text-red-500" />
+          <div className="lg:col-span-2 mt-4">
+            <Card className="rounded-[2.5rem] shadow-[0_8px_30px_rgb(220,38,38,0.06)] border border-red-100 bg-red-50/50 backdrop-blur-xl p-10">
+              <div className="flex items-center gap-5 mb-8">
+                <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center">
+                  <Trash weight="duotone" className="w-6 h-6 text-red-500" />
                 </div>
-                <h2 className="font-bold text-red-600 text-[1rem]">Zona Berbahaya</h2>
+                <div>
+                  <h2 className="font-bold text-red-600 text-[1.4rem]">Zona Berbahaya</h2>
+                  <p className="text-[14px] text-[#5A7A8C] font-medium mt-1">
+                    Tindakan di bawah ini bersifat permanen dan tidak dapat dibatalkan.
+                  </p>
+                </div>
               </div>
-              <p className="text-[12px] text-[#5A7A8C] font-medium mb-6">
-                Tindakan di bawah ini bersifat permanen dan tidak dapat dibatalkan.
-                Ketik <strong>HAPUS</strong> untuk mengaktifkan tombol hapus data.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+
+              <div className="flex flex-col sm:flex-row items-center gap-5 bg-white/60 p-6 rounded-2xl border border-white">
                 <input
                   value={dangerConfirm}
                   onChange={(e) => setDangerConfirm(e.target.value)}
-                  placeholder='Ketik "HAPUS" untuk konfirmasi...'
-                  className="flex-1 px-4 py-3 border border-red-200 rounded-xl text-[13px] text-[#1E3A5F] focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition-all bg-white"
+                  placeholder='Ketik "HAPUS" untuk konfirmasi riset...'
+                  className="flex-1 px-5 py-3.5 border border-red-200 rounded-xl text-[13px] font-bold text-[#1E3A5F] focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition-all bg-white shadow-[0_4px_20px_rgb(0,0,0,0.02)] w-full"
                 />
                 <button
                   onClick={handleDeleteAllData}
                   disabled={dangerConfirm !== 'HAPUS'}
-                  className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-xl text-[13px] font-bold hover:bg-red-600 transition-all disabled:opacity-40 shrink-0"
+                  className="flex items-center justify-center gap-2 px-8 py-3.5 bg-red-500 text-white rounded-xl text-[13px] font-bold hover:bg-red-600 transition-all shadow-md hover:shadow-lg disabled:opacity-40 disabled:hover:shadow-none w-full sm:w-auto shrink-0"
                 >
-                  <Trash2 className="w-4 h-4" /> Hapus Semua Data Onboarding
+                  <Trash weight="bold" className="w-4 h-4" /> Riset Semua Data Onboarding
                 </button>
+                <div className="w-full sm:w-[1px] h-[1px] sm:h-12 bg-red-100 shrink-0 mx-2" />
                 <button
                   onClick={() => { if (confirm('Keluarkan semua sesi dan refresh aplikasi?')) location.reload(); }}
-                  className="flex items-center gap-2 px-6 py-3 border border-red-200 text-red-500 rounded-xl text-[13px] font-bold hover:bg-red-100 transition-all shrink-0 bg-white"
+                  className="flex items-center justify-center gap-2 px-8 py-3.5 border-2 border-red-100 text-red-500 rounded-xl text-[13px] font-bold hover:bg-red-50 hover:border-red-200 transition-all shadow-sm w-full sm:w-auto shrink-0 bg-white"
                 >
-                  <RefreshCw className="w-4 h-4" /> Refresh Portal
+                  <ArrowsClockwise weight="duotone" className="w-4 h-4" /> Refresh Portal
                 </button>
               </div>
             </Card>

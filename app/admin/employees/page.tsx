@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/Card';
 import {
-  Plus, Search, X, ChevronDown, MoreVertical, Calendar,
-  Mail, Pencil, Trash2, RefreshCw, CheckCircle2, Clock, UserX
-} from 'lucide-react';
+  Plus, MagnifyingGlass, X, CaretDown, DotsThreeVertical, CalendarBlank,
+  Envelope, PencilSimple, Trash, ArrowsClockwise, CheckCircle, Clock, UserMinus
+} from '@phosphor-icons/react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -77,7 +77,7 @@ function EmployeeModal({
             {mode === 'create' ? 'Undang Karyawan Baru' : 'Edit Data Karyawan'}
           </h2>
           <button onClick={onClose} className="text-[#9AADB8] hover:text-[#1E3A5F] transition-colors">
-            <X className="w-5 h-5" />
+            <X weight="duotone" className="w-5 h-5" />
           </button>
         </div>
 
@@ -108,7 +108,7 @@ function EmployeeModal({
                 <option value="">Pilih divisi...</option>
                 {deps.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
               </select>
-              <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
@@ -121,7 +121,7 @@ function EmployeeModal({
                 <option value="">Pilih jabatan...</option>
                 {roles.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
               </select>
-              <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
@@ -129,7 +129,7 @@ function EmployeeModal({
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Tanggal Mulai</label>
             <div className="relative">
-              <Calendar className="w-4 h-4 text-[#9AADB8] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <CalendarBlank weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white" />
             </div>
@@ -170,7 +170,7 @@ function DeleteModal({ emp, onClose, onDeleted }: { emp: Employee; onClose: () =
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center">
         <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
-          <Trash2 className="w-7 h-7 text-red-500" />
+          <Trash weight="duotone" className="w-7 h-7 text-red-500" />
         </div>
         <h2 className="font-bold text-[#1E3A5F] text-[1.1rem] mb-2">Hapus Karyawan?</h2>
         <p className="text-[13px] text-[#5A7A8C] mb-6 leading-relaxed">
@@ -184,7 +184,7 @@ function DeleteModal({ emp, onClose, onDeleted }: { emp: Employee; onClose: () =
           </button>
           <button onClick={handleDelete} disabled={loading}
             className="flex-1 py-3 bg-red-500 text-white rounded-xl text-[13px] font-bold hover:bg-red-600 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
-            {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Trash weight="bold" className="w-4 h-4" />}
             Hapus
           </button>
         </div>
@@ -230,14 +230,14 @@ function EmployeeCard({
   }
 
   return (
-    <Card className="flex flex-col relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 shadow-sm border border-[#E8EFF4] bg-white rounded-2xl p-6">
+    <Card className="flex flex-col relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl rounded-[2rem] p-7">
       {/* Menu */}
       <div className="absolute top-4 right-4 z-10">
         <button
           onClick={() => setMenuOpen(v => !v)}
           className="w-8 h-8 rounded-lg flex items-center justify-center text-[#9AADB8] hover:bg-[#F0F7FB] hover:text-[#1E4D6B] transition-all opacity-0 group-hover:opacity-100"
         >
-          <MoreVertical className="w-4 h-4" />
+          <DotsThreeVertical weight="bold" className="w-5 h-5" />
         </button>
         {menuOpen && (
           <>
@@ -245,19 +245,19 @@ function EmployeeCard({
             <div className="absolute right-0 top-9 z-20 bg-white border border-[#E8EFF4] rounded-xl shadow-lg py-1 w-44 overflow-hidden">
               <button onClick={() => { onEdit(); setMenuOpen(false); }}
                 className="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] font-semibold text-[#1E3A5F] hover:bg-[#F0F7FB] transition-colors">
-                <Pencil className="w-3.5 h-3.5" /> Edit Data
+                <PencilSimple weight="duotone" className="w-4 h-4" /> Edit Data
               </button>
               {!hasActivated && (
                 <button onClick={handleResend} disabled={resendLoading}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] font-semibold text-[#1E4D6B] hover:bg-[#F0F7FB] transition-colors">
-                  {resendLoading ? <span className="w-3.5 h-3.5 border-2 border-[#1E4D6B]/30 border-t-[#1E4D6B] rounded-full animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                  {resendLoading ? <span className="w-3.5 h-3.5 border-2 border-[#1E4D6B]/30 border-t-[#1E4D6B] rounded-full animate-spin" /> : <ArrowsClockwise weight="bold" className="w-4 h-4" />}
                   Kirim Ulang
                 </button>
               )}
               <hr className="my-1 border-[#E8EFF4]" />
               <button onClick={() => { onDelete(); setMenuOpen(false); }}
                 className="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] font-semibold text-red-500 hover:bg-red-50 transition-colors">
-                <Trash2 className="w-3.5 h-3.5" /> Hapus
+                <Trash weight="duotone" className="w-4 h-4" /> Hapus
               </button>
             </div>
           </>
@@ -280,7 +280,7 @@ function EmployeeCard({
 
       {/* Email */}
       <div className="flex items-center gap-2 mb-4 justify-center">
-        <Mail className="w-3.5 h-3.5 text-[#9AADB8]" />
+        <Envelope weight="duotone" className="w-4 h-4 text-[#9AADB8]" />
         <span className="text-[11px] text-[#5A7A8C] truncate max-w-[180px]">{emp.email}</span>
       </div>
 
@@ -288,11 +288,11 @@ function EmployeeCard({
       <div className="flex items-center justify-center gap-2 mb-4">
         {hasActivated ? (
           <span className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
-            <CheckCircle2 className="w-3 h-3" /> Aktif
+            <CheckCircle weight="fill" className="w-3.5 h-3.5" /> Aktif
           </span>
         ) : (
           <span className="flex items-center gap-1.5 text-[11px] font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
-            <Clock className="w-3 h-3" /> Menunggu Aktivasi
+            <Clock weight="duotone" className="w-3.5 h-3.5" /> Menunggu Aktivasi
           </span>
         )}
       </div>
@@ -366,60 +366,68 @@ export default function EmployeesPage() {
       {/* Toast */}
       {toast && (
         <div className="fixed top-6 right-6 z-50 bg-[#1E4D6B] text-white px-5 py-3 rounded-2xl shadow-lg text-[13px] font-bold flex items-center gap-2 animate-in slide-in-from-right-4">
-          <CheckCircle2 className="w-4 h-4 text-green-300" /> {toast}
+          <CheckCircle weight="fill" className="w-4 h-4 text-green-300" /> {toast}
         </div>
       )}
 
-      {/* Header */}
-      <div className="relative bg-[#EBF4FA] px-10 pt-10 pb-20 overflow-hidden shrink-0">
-        <div className="absolute top-[-50%] right-[-10%] w-[50%] h-[200%] bg-white rounded-full blur-3xl opacity-60 pointer-events-none" />
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div>
-            <h1 className="text-[2.2rem] font-bold text-[#1E3A5F] mb-2 tracking-tight">Karyawan</h1>
-            <p className="text-[#5A7A8C] font-medium text-[15px]">Kelola data karyawan dan progres onboarding.</p>
+      {/* ── Header ── */}
+      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
+        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex-1 min-w-[280px]">
+            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+              Karyawan
+            </h1>
+            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
+              Kelola data karyawan dan progres onboarding.
+            </p>
             {/* Stats */}
-            <div className="flex items-center gap-4 mt-4">
-              <span className="text-[12px] font-bold bg-white text-[#1E3A5F] px-3 py-1 rounded-full border border-[#D8E8F0]">
+            <div className="flex items-center gap-3 mt-5">
+              <span className="text-[11px] font-bold bg-[#E8EFF4] text-[#276087] px-3.5 py-1.5 rounded-lg border border-white shadow-sm uppercase tracking-widest shrink-0">
                 {stats.total} Total
               </span>
-              <span className="text-[12px] font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">
+              <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-lg border border-white shadow-sm uppercase tracking-widest shrink-0">
                 {stats.active} Aktif
               </span>
-              <span className="text-[12px] font-bold bg-amber-50 text-amber-700 px-3 py-1 rounded-full">
+              <span className="text-[11px] font-bold bg-amber-50 text-amber-700 px-3.5 py-1.5 rounded-lg border border-white shadow-sm uppercase tracking-widest shrink-0">
                 {stats.pending} Menunggu
               </span>
             </div>
           </div>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-[#1E4D6B] text-white rounded-xl text-[13.5px] font-bold shadow-lg shadow-[#1E4D6B]/20 hover:bg-[#236181] transition-all active:scale-[0.98] shrink-0"
-          >
-            <Plus className="w-4 h-4 stroke-[2.5]" /> Undang Karyawan
-          </button>
+          <div className="relative z-10 shrink-0">
+            <button
+              onClick={() => setShowCreate(true)}
+              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#1E4D6B] hover:bg-[#163850] shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-white font-bold text-[13px]"
+            >
+              <Plus weight="bold" className="w-4 h-4" /> Undang Karyawan
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 -mt-6 relative z-10 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 mb-8 mt-2">
           <div className="relative">
-            <ChevronDown className="w-4 h-4 text-[#9AADB8] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <select
               value={filterDept}
               onChange={e => setFilterDept(e.target.value)}
-              className="appearance-none bg-white border border-[#D8E8F0] rounded-xl px-4 py-2.5 pr-9 text-[13px] font-medium text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] shadow-sm transition-all"
+              className="appearance-none bg-white/70 backdrop-blur-xl border border-white rounded-xl px-4 py-3 pr-10 text-[13px] font-bold text-[#1E3A5F] focus:outline-none focus:border-[#1E4D6B] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all sm:w-48"
             >
               <option value="">Semua Divisi</option>
               {deps.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
             </select>
           </div>
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AADB8]" strokeWidth={2.5} />
+          <div className="relative w-full sm:w-auto">
+            <MagnifyingGlass weight="duotone" className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Cari karyawan..."
-              className="pl-10 pr-4 py-2.5 w-56 text-[13px] bg-white border border-[#D8E8F0] rounded-xl focus:outline-none focus:border-[#1E4D6B] shadow-sm text-[#1E3A5F] placeholder:text-[#9AADB8] transition-all"
+              className="pl-10 pr-4 py-3 w-full sm:w-64 text-[13px] font-medium bg-white/70 backdrop-blur-xl border border-white rounded-xl focus:outline-none focus:border-[#1E4D6B] shadow-[0_4px_20px_rgb(0,0,0,0.02)] text-[#1E3A5F] placeholder:text-[#9AADB8] transition-all"
             />
           </div>
         </div>
@@ -428,18 +436,20 @@ export default function EmployeesPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-64 bg-white rounded-2xl border border-[#E8EFF4] animate-pulse" />
+              <div key={i} className="h-64 bg-white/50 backdrop-blur-md rounded-[2rem] border border-white shadow-sm animate-pulse" />
             ))}
           </div>
         ) : employees.length === 0 ? (
           <div className="text-center py-24 flex flex-col items-center gap-4">
-            <UserX className="w-12 h-12 text-[#9AADB8]" />
-            <div className="text-[#5A7A8C] text-[13px] font-medium">Belum ada karyawan terdaftar.</div>
+            <div className="w-20 h-20 bg-[#E8EFF4] rounded-full flex items-center justify-center">
+              <UserMinus weight="duotone" className="w-10 h-10 text-[#9AADB8]" />
+            </div>
+            <div className="text-[#5A7A8C] text-[14px] font-bold tracking-tight">Belum ada karyawan terdaftar.</div>
             <button
               onClick={() => setShowCreate(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1E4D6B] text-white rounded-xl text-[13px] font-bold hover:bg-[#236181] transition-all"
+              className="mt-2 inline-flex items-center gap-2 px-6 py-3 bg-[#1E4D6B] text-white rounded-2xl text-[13px] font-bold hover:bg-[#236181] shadow-md transition-all hover:-translate-y-0.5"
             >
-              <Plus className="w-4 h-4" /> Undang Karyawan Pertama
+              <Plus weight="bold" className="w-4 h-4" /> Undang Karyawan Pertama
             </button>
           </div>
         ) : (

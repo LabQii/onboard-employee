@@ -3,10 +3,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/Card';
 import {
-  CheckSquare, FileText, Send, Bell, Bot, PhoneCall,
-  Lock, Search, LogOut, CheckCircle2, Circle, User
-} from 'lucide-react';
+  CheckSquare, FileText, PaperPlane, Bell, Phone,
+  LockKey, MagnifyingGlass, SignOut, CheckCircle, Circle, User
+} from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+
+const AssistantIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="8" cy="11.5" r="1.5" fill="#276087" />
+    <circle cx="12" cy="11.5" r="1.5" fill="#276087" />
+    <circle cx="16" cy="11.5" r="1.5" fill="#276087" />
+  </svg>
+);
 
 interface Profile {
   id: string;
@@ -109,15 +119,27 @@ export default function EmployeeDashboard() {
     setChatLoading(true);
 
     try {
+      const contextDocs = checklistItems.map(i => `- ${i.title} (Status: ${i.completed ? 'Selesai' : 'Belum'}, Keterangan: ${i.description || '-'})`).join('\n');
+      const profileContext = `Nama: ${profile?.full_name || 'Karyawan'}\nDivisi: ${profile?.department || '-'}\nPeran: ${profile?.role || '-'}\nTanggal Masuk: ${profile?.start_date || '-'}\nDaftar Dokumen/Tugas Tersedia: \n${contextDocs || 'Belum ada'}`;
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: text }),
+        body: JSON.stringify({ 
+          question: text,
+          department: profile?.department,
+          role: profile?.role,
+          profileContext
+        })
       });
+
+      if (!res.ok) throw new Error("Gagal memanggil backend RAG");
+
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'bot', text: data.answer || 'Maaf, saya tidak bisa menjawab sekarang.' }]);
-    } catch {
-      setMessages(prev => [...prev, { role: 'bot', text: 'Koneksi bermasalah. Coba lagi.' }]);
+      setMessages(prev => [...prev, { role: 'bot', text: data.answer || data.error || 'Terjadi galat.' }]);
+    } catch (error: any) {
+      console.error('Groq Chat Error:', error);
+      setMessages(prev => [...prev, { role: 'bot', text: `Terjadi kendala: ${error?.message || 'Pastikan API key valid.'}` }]);
     } finally {
       setChatLoading(false);
     }
@@ -162,7 +184,7 @@ export default function EmployeeDashboard() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-[#1E4D6B] text-white font-bold text-[10px] rounded-lg flex items-center justify-center">OF</div>
-            <h1 className="font-bold text-[1rem] text-[#1E3A5F] tracking-tight">OnboardFlow</h1>
+            <h1 className="font-bold text-[1rem] text-[#1E3A5F] tracking-tight">On-Boarding</h1>
           </div>
 
           {/* Tabs */}
@@ -190,7 +212,7 @@ export default function EmployeeDashboard() {
             </div>
             <button onClick={handleLogout} title="Keluar"
               className="text-[#9AADB8] hover:text-red-500 transition-colors">
-              <LogOut className="w-4 h-4" />
+              <SignOut weight="duotone" className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -207,7 +229,7 @@ export default function EmployeeDashboard() {
               Halo, {profile?.full_name?.split(' ')[0]}!
             </h1>
             <p className="text-[#5A7A8C] text-lg mb-6 lg:mb-8 font-medium">
-              {daysSinceStart === 0 ? 'Hari pertama perjalanan anda!' : `Hari ke-${daysSinceStart} di OnboardFlow`}
+              {daysSinceStart === 0 ? 'Hari pertama perjalanan anda!' : `Hari ke-${daysSinceStart} di On-Boarding`}
             </p>
             <div className="flex items-center gap-3 flex-wrap">
               <div className="bg-white/80 backdrop-blur-sm border border-white px-4 py-2 rounded-full text-[13px] font-bold text-[#1E3A5F] shadow-sm">
@@ -237,22 +259,22 @@ export default function EmployeeDashboard() {
               <div>
                 <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Progres Onboarding</div>
                 <div className="font-bold text-[1.1rem] text-[#1E3A5F] tracking-tight">
-                  {progress === 100 ? 'Selesai! 🎉' : progress > 50 ? 'Hampir Selesai' : 'Sedang Berproses'}
+                  {progress === 100 ? 'Selesai! ' : progress > 50 ? 'Hampir Selesai' : 'Sedang Berproses'}
                 </div>
               </div>
             </Card>
 
             {/* Tasks remaining */}
             <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] snap-center">
-              <div className="w-[60px] h-[60px] rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                <CheckSquare className="w-6 h-6 stroke-[1.8]" />
+              <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8EFF4] text-[#276087] flex items-center justify-center shrink-0">
+                <CheckSquare weight="duotone" className="w-7 h-7" />
               </div>
               <div>
                 <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Tugas Tersisa</div>
                 <div className="flex items-center gap-3">
                   <span className="font-bold text-[1.5rem] text-[#1E3A5F] leading-none">{remaining}</span>
                   {remaining > 0 && (
-                    <span className="text-[9px] font-bold bg-red-50 text-red-500 px-2 py-0.5 rounded-lg tracking-widest mt-1">BELUM SELESAI</span>
+                    <span className="text-[9px] font-bold bg-[#E8EFF4] text-[#276087] px-2 py-0.5 rounded-lg tracking-widest mt-1">BELUM SELESAI</span>
                   )}
                 </div>
               </div>
@@ -260,14 +282,14 @@ export default function EmployeeDashboard() {
 
             {/* Completed */}
             <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0 min-w-[240px] snap-center">
-              <div className="w-[60px] h-[60px] rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-6 h-6 stroke-[1.8]" />
+              <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8EFF4] text-[#276087] flex items-center justify-center shrink-0">
+                <CheckCircle weight="duotone" className="w-7 h-7" />
               </div>
               <div>
                 <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">Selesai</div>
                 <div className="flex items-center gap-3">
                   <span className="font-bold text-[1.5rem] text-[#1E3A5F] leading-none">{completedItems}</span>
-                  <span className="text-[9px] font-bold bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-lg tracking-widest mt-1">
+                  <span className="text-[9px] font-bold bg-[#E8EFF4] text-[#276087] px-2 py-0.5 rounded-lg tracking-widest mt-1">
                     dari {totalItems}
                   </span>
                 </div>
@@ -289,7 +311,7 @@ export default function EmployeeDashboard() {
 
               {totalItems === 0 ? (
                 <Card className="py-16 text-center">
-                  <Lock className="w-8 h-8 text-[#C0CDD4] mx-auto mb-3" />
+                  <LockKey weight="duotone" className="w-8 h-8 text-[#C0CDD4] mx-auto mb-3" />
                   <p className="text-[13px] text-[#9AADB8] font-medium">Belum ada checklist. Admin akan segera menambahkan.</p>
                 </Card>
               ) : (
@@ -326,8 +348,8 @@ export default function EmployeeDashboard() {
                                 : 'border-[#C0CDD4] text-transparent group-hover:border-[#1E4D6B]'
                                 }`}>
                                 {item.completed
-                                  ? <CheckCircle2 className="w-3 h-3" />
-                                  : <Circle className="w-3 h-3" />}
+                                  ? <CheckCircle weight="fill" className="w-3.5 h-3.5" />
+                                  : <Circle weight="light" className="w-3.5 h-3.5" />}
                               </div>
                               <div className="text-left flex-1 min-w-0 pr-4">
                                 <span className={`font-bold text-[14px] block transition-all ${item.completed ? 'text-[#9AADB8] line-through' : 'text-[#1E3A5F]'}`}>
@@ -341,7 +363,7 @@ export default function EmployeeDashboard() {
                                     onClick={(e) => e.stopPropagation()}
                                     className="mt-2 inline-flex items-center justify-center py-2 px-4 bg-white/50 hover:bg-[#1E4D6B] text-[#1E4D6B] hover:text-white rounded-lg text-[11px] font-bold transition-all border border-[#E8EFF4] hover:border-[#1E4D6B] shadow-sm"
                                   >
-                                    <FileText className="w-3.5 h-3.5 mr-1.5" /> Baca Dokumen
+                                    <FileText weight="duotone" className="w-3.5 h-3.5 mr-1.5" /> Baca Dokumen
                                   </a>
                                 ) : item.description ? (
                                   <span className="text-[11px] text-[#9AADB8] font-medium block mt-1">{item.description}</span>
@@ -349,7 +371,7 @@ export default function EmployeeDashboard() {
                               </div>
                             </div>
                             <span className={`text-[9px] font-bold px-3 py-1 rounded-lg tracking-[0.15em] shrink-0 ml-2 ${item.priority === 'wajib'
-                              ? 'bg-amber-50 text-amber-600'
+                              ? 'bg-[#E8EFF4] text-[#276087]'
                               : 'bg-[#EBF4FA] text-[#1E4D6B]'
                               }`}>
                               {(item.priority || 'opsional').toUpperCase()}
@@ -377,7 +399,7 @@ export default function EmployeeDashboard() {
               <div className="bg-gradient-to-r from-[#1E4D6B] to-[#276087] p-5 text-white flex items-center justify-between shrink-0 shadow-sm border-b border-[#1A4560]/20">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                    <Bot className="w-5 h-5 text-white stroke-[1.5]" />
+                    <AssistantIcon className="w-5 h-5 text-white stroke-[1.5]" />
                   </div>
                   <div>
                     <h3 className="font-bold text-[14px]">Asisten Onboarding</h3>
@@ -394,21 +416,37 @@ export default function EmployeeDashboard() {
                   <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''} max-w-[90%] ${msg.role === 'user' ? 'self-end' : ''}`}>
                     {msg.role === 'bot' && (
                       <div className="w-7 h-7 rounded-lg bg-white text-[#1E4D6B] flex items-center justify-center shrink-0 shadow-sm border border-[#E8EFF4]">
-                        <Bot className="w-3.5 h-3.5 stroke-[1.5]" />
+                        <AssistantIcon className="w-3.5 h-3.5 stroke-[1.5]" />
                       </div>
                     )}
                     <div className={`px-4 py-3 rounded-2xl text-[13px] leading-relaxed font-medium ${msg.role === 'bot'
                       ? 'bg-white text-[#1E3A5F] rounded-tl-sm shadow-sm border border-[#E8EFF4]'
-                      : 'bg-[#1E4D6B] text-white rounded-tr-sm'
+                      : 'bg-[#1E4D6B] text-white rounded-tr-sm whitespace-pre-wrap'
                       }`}>
-                      {msg.text}
+                      {msg.role === 'bot' ? (
+                        <div className="flex flex-col gap-2">
+                          <ReactMarkdown
+                            components={{
+                              p: ({node, ...props}) => <p className="mb-1" {...props} />,
+                              ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-1 space-y-1" {...props} />,
+                              ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-1 space-y-1" {...props} />,
+                              li: ({node, ...props}) => <li className="" {...props} />,
+                              strong: ({node, ...props}) => <strong className="font-bold text-[#1E3A5F]" {...props} />
+                            }}
+                          >
+                            {msg.text}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        msg.text
+                      )}
                     </div>
                   </div>
                 ))}
                 {chatLoading && (
                   <div className="flex gap-3">
                     <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-sm border border-[#E8EFF4]">
-                      <Bot className="w-3.5 h-3.5 text-[#1E4D6B] stroke-[1.5]" />
+                      <AssistantIcon className="w-3.5 h-3.5 text-[#1E4D6B] stroke-[1.5]" />
                     </div>
                     <div className="bg-white px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm border border-[#E8EFF4] flex gap-1 items-center">
                       {[0, 1, 2].map(i => (
@@ -446,11 +484,11 @@ export default function EmployeeDashboard() {
                     disabled={!chatInput.trim() || chatLoading}
                     className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-[#1E4D6B] hover:bg-[#1E4D6B] hover:text-white rounded-lg transition-all disabled:opacity-30"
                   >
-                    <Send className="w-4 h-4" strokeWidth={2.5} />
+                    <PaperPlane weight="duotone" className="w-4 h-4" />
                   </button>
                 </div>
                 <button className="w-full h-10 text-[12px] font-bold border border-[#D8E8F0] rounded-xl text-[#5A7A8C] hover:bg-[#F0F7FB] transition-all flex items-center justify-center gap-2">
-                  <PhoneCall className="w-4 h-4" /> Hubungi HR Langsung
+                  <Phone weight="duotone" className="w-4 h-4" /> Hubungi HR Langsung
                 </button>
               </div>
             </Card>
