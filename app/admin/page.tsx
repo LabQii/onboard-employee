@@ -175,7 +175,6 @@ export default function AdminDashboardPage() {
   return (
     <div className="flex flex-col w-full min-h-full">
       {/* ── Header ── */}
-      {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
         <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
 
@@ -267,7 +266,6 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
-        {/* ── Stat Cards ── */}
         {/* ── Stat Cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-20">
           <StatCard

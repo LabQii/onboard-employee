@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { createClient } from '@supabase/supabase-js';
 import { getServerSession } from '@/lib/auth';
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,19 +21,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email destination is missing' }, { status: 400 });
     }
 
-    // Konfigurasi Nodemailer berdasarkan ENV var
-    // Default menggunakan SMTP gmail port 587
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: Number(process.env.SMTP_PORT) || 587,
-      secure: false, // true for 465, false for other ports
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
     });
 
-    // Content Email
     const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -42,7 +45,6 @@ export async function POST(req: NextRequest) {
     .body h2 { color: #111827; font-size: 18px; margin: 0 0 16px; font-weight: 600; }
     .body p { color: #6B7280; font-size: 14.5px; line-height: 1.6; margin: 0 0 32px; }
     .btn { display: inline-block; background-color: #111827; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 9px; font-size: 14.5px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .btn:hover { background-color: #1F2937; }
     .divider { border: none; border-top: 1px dashed #E5E7EB; margin: 32px 0; }
     .footer { text-align: center; padding: 24px 40px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; }
     .footer p { font-size: 12px; color: #9CA3AF; margin: 0; }
@@ -77,7 +79,6 @@ export async function POST(req: NextRequest) {
 </html>
     `;
 
-    // Mengirim email
     const info = await transporter.sendMail({
       from: `"On-Boarding" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: email,
@@ -85,18 +86,13 @@ export async function POST(req: NextRequest) {
       html: htmlContent,
     });
 
-    // Create Notification for Admin/HR
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-    
+    // Create Notification for Admin dashboard
     await supabaseAdmin.from('notifications').insert({
       type: 'reminder',
       title: 'Pengingat Terkirim',
       message: `Email pengingat telah dikirim ke ${name}.`,
-      user_id: null, // Admin-wide notification
-      is_read: false
+      user_id: null,
+      is_read: false,
     });
 
     return NextResponse.json({ message: 'Reminder sent successfully', messageId: info.messageId });
@@ -105,6 +101,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
-// Add Supabase import at the top
-import { createClient } from '@supabase/supabase-js';
