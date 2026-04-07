@@ -12,6 +12,18 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [demoMode, setDemoMode] = useState<'admin' | 'karyawan' | null>(null);
+
+  const fillDemo = (mode: 'admin' | 'karyawan') => {
+    setDemoMode(mode);
+    if (mode === 'admin') {
+      setEmail('admin@onboardflow.com');
+      setPassword('Admin@2026');
+    } else {
+      setEmail('explore.codee@gmail.com');
+      setPassword('anakindonesia');
+    }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,9 +49,29 @@ export default function LoginForm() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="mb-10 w-full">
-        <h2 className="text-[1.6rem] font-bold text-[#111827] mb-2 tracking-tight">Selamat Datang</h2>
-        <p className="text-sm text-[#5A7A8C] font-medium">Masuk untuk melanjutkan akses orientasi Anda.</p>
+      <div className="mb-10 w-full flex items-start justify-between">
+        <div>
+          <h2 className="text-[1.6rem] font-bold text-[#111827] mb-2 tracking-tight">Selamat Datang</h2>
+          <p className="text-sm text-[#5A7A8C] font-medium tracking-tight">Masuk untuk orientasi Anda.</p>
+        </div>
+        
+        {/* Demo Switcher */}
+        <div className="flex flex-col gap-1.5 p-1.5 bg-white shadow-soft rounded-2xl border border-[#E8EFF4]">
+           <button 
+             type="button"
+             onClick={() => fillDemo('admin')}
+             className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#5A7A8C] hover:bg-[#F8FAFC]'}`}
+           >
+             ADMIN
+           </button>
+           <button 
+             type="button"
+             onClick={() => fillDemo('karyawan')}
+             className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'karyawan' ? 'bg-[#276087] text-white shadow-md' : 'text-[#5A7A8C] hover:bg-[#F8FAFC]'}`}
+           >
+             KARYAWAN
+           </button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">

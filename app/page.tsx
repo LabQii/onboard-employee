@@ -1,10 +1,14 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
 import { Star } from '@phosphor-icons/react';
 
 
 export default function LoginPage() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-[#EBF4FA] p-4 lg:p-8 relative">
       <div className="w-full max-w-[960px] bg-white rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl z-10">
@@ -15,8 +19,14 @@ export default function LoginPage() {
           <div className="absolute bottom-[-10%] left-[-20%] w-[100%] h-[100%] bg-[#36799C] rounded-[100%] opacity-40 pointer-events-none" />
           
           {/* Logo */}
-          <div className="relative z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center font-bold text-lg text-[#1E4D6B] mb-10">
-            O
+          <div className="relative z-10 w-12 h-12 mb-10 group/logo">
+            {mounted ? (
+              <div className="w-full h-full bg-gradient-to-br from-[#EEF6FB] to-[#DCECF5] rounded-full flex items-center justify-center font-bold text-sm text-[#1E4D6B] shadow-xl shadow-black/10 hover:scale-110 transition-transform cursor-default animate-in fade-in duration-300">
+                OF
+              </div>
+            ) : (
+              <div className="w-full h-full opacity-0" />
+            )}
           </div>
 
           <div className="relative z-10 mt-6">

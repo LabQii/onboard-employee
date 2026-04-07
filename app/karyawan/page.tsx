@@ -199,7 +199,7 @@ export default function EmployeeDashboard() {
             </div>
             <div>
               <h4 className="font-bold text-[#1E3A5F] text-[14px]">Halo, {profile?.full_name?.split(' ')[0]}!</h4>
-              <p className="text-[#9AADB8] text-[12px] font-medium">Selamat datang kembali di perjalanan onboarding Anda.</p>
+              <p className="text-[#9AADB8] text-[12px] font-medium">Senang melihatmu kembali. Yuk lanjutin tugasnya!</p>
             </div>
             <button onClick={() => setShowWelcome(false)} className="text-[#C0CDD4] hover:text-[#1E3A5F] ml-2">
               <X className="w-4 h-4" />
@@ -387,7 +387,7 @@ export default function EmployeeDashboard() {
                                     onClick={(e) => e.stopPropagation()}
                                     className="mt-2 inline-flex items-center justify-center py-2 px-4 bg-white/50 hover:bg-[#1E4D6B] text-[#1E4D6B] hover:text-white rounded-lg text-[11px] font-bold transition-all border border-[#E8EFF4] hover:border-[#1E4D6B] shadow-sm"
                                   >
-                                    <FileText weight="duotone" className="w-3.5 h-3.5 mr-1.5" /> Baca Dokumen
+                                    <FileText weight="duotone" className="w-3.5 h-3.5 mr-1.5" /> Buka Dokumen
                                   </a>
                                 ) : item.description ? (
                                   <span className="text-[11px] text-[#9AADB8] font-medium block mt-1">{item.description}</span>
@@ -409,10 +409,6 @@ export default function EmployeeDashboard() {
               )}
             </div>
 
-            {/* Directory Intro Section */}
-            <Card className="py-12 mt-4 text-center border-dashed border-2 border-[#E8EFF4] bg-transparent shadow-none">
-              <p className="text-[#9AADB8] text-[13px] font-bold">Fitur Direktori Tim segera hadir.</p>
-            </Card>
 
           </div>
 
@@ -511,7 +507,39 @@ export default function EmployeeDashboard() {
                     <PaperPlane weight="duotone" className="w-4 h-4" />
                   </button>
                 </div>
-                <button className="w-full h-10 text-[12px] font-bold border border-[#D8E8F0] rounded-xl text-[#5A7A8C] hover:bg-[#F0F7FB] transition-all flex items-center justify-center gap-2">
+                <button
+                  onClick={async () => {
+                    const btn = document.getElementById('contact-hr-btn');
+                    if (btn) {
+                      btn.innerText = 'Mengirim...';
+                      btn.setAttribute('disabled', 'true');
+                    }
+                    try {
+                      const res = await fetch('/api/karyawan/contact-hr', { method: 'POST' });
+                      if (res.ok) {
+                        if (btn) btn.innerText = '✓ Terkirim';
+                        setTimeout(() => {
+                          if (btn) {
+                            btn.innerText = 'Hubungi HR Langsung';
+                            btn.removeAttribute('disabled');
+                          }
+                        }, 3000);
+                      }
+                    } catch (e) {
+                      if (btn) {
+                        btn.innerText = 'Gagal';
+                        setTimeout(() => {
+                          if (btn) {
+                            btn.innerText = 'Hubungi HR Langsung';
+                            btn.removeAttribute('disabled');
+                          }
+                        }, 3000);
+                      }
+                    }
+                  }}
+                  id="contact-hr-btn"
+                  className="w-full h-10 text-[12px] font-bold border border-[#D8E8F0] rounded-xl text-[#5A7A8C] hover:bg-[#F0F7FB] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
                   <Phone weight="duotone" className="w-4 h-4" /> Hubungi HR Langsung
                 </button>
               </div>

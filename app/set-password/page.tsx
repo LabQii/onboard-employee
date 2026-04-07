@@ -9,6 +9,9 @@ function SetPasswordContent() {
   const router = useRouter();
   const token = params.get('token') || '';
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const [tokenStatus, setTokenStatus] = useState<'loading' | 'valid' | 'invalid'>('loading');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -90,19 +93,27 @@ function SetPasswordContent() {
         <div className="w-full md:w-[42%] bg-[#1E4D6B] p-10 flex flex-col relative overflow-hidden text-white">
           <div className="absolute top-[-20%] right-[-30%] w-[150%] h-[150%] bg-[#22516A] rounded-[100%] opacity-50 pointer-events-none" />
           <div className="absolute bottom-[-10%] left-[-20%] w-[100%] h-[100%] bg-[#36799C] rounded-[100%] opacity-40 pointer-events-none" />
-          <div className="relative z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center font-bold text-lg text-[#1E4D6B] mb-10">O</div>
+          
+          <div className="relative z-10 w-12 h-12 mb-10 group/logo">
+            {mounted ? (
+              <div className="w-full h-full bg-gradient-to-br from-[#EEF6FB] to-[#DCECF5] rounded-full flex items-center justify-center font-bold text-sm text-[#1E4D6B] shadow-xl shadow-black/10 hover:scale-110 transition-transform cursor-default animate-in fade-in duration-300">
+                OF
+              </div>
+            ) : (
+              <div className="w-full h-full opacity-0" />
+            )}
+          </div>
           <div className="relative z-10 mt-6">
             <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">Selamat Datang!</h1>
             <p className="text-[#B5DBEC] text-sm font-light leading-relaxed opacity-90">
-              Atur kata sandi untuk mengaktifkan akun Anda dan memulai perjalanan onboarding.
+              Atur kata sandi untuk mengaktifkan akun anda
             </p>
           </div>
-          <div className="relative z-10 mt-auto">
+          <div className="relative z-10 mt-5">
             <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-              <CheckCircle weight="duotone" className="w-8 h-8 text-green-300 mb-3" />
-              <p className="text-sm font-bold text-white mb-1">Hanya satu langkah lagi</p>
+              <p className="text-sm font-bold text-white mb-1">Selanjutnya</p>
               <p className="text-xs text-[#B5DBEC] font-light leading-relaxed">
-                Setelah mengatur kata sandi, Anda langsung bisa mengakses dashboard onboarding Anda.
+                Setelah mengatur kata sandi, anda langsung bisa mengakses dashboard onboarding anda
               </p>
             </div>
           </div>
@@ -180,11 +191,10 @@ function SetPasswordContent() {
                   onChange={e => setConfirm(e.target.value)}
                   required
                   placeholder="Ulangi kata sandi"
-                  className={`w-full pl-11 pr-4 py-3.5 border rounded-xl text-[13px] font-medium focus:outline-none focus:ring-4 transition-all ${
-                    confirm && confirm !== password
-                      ? 'border-red-300 focus:border-red-400 focus:ring-red-100 text-red-500'
-                      : 'border-[#D8E8F0] focus:border-[#1E4D6B] focus:ring-[#1E4D6B]/5 text-[#1E3A5F]'
-                  }`}
+                  className={`w-full pl-11 pr-4 py-3.5 border rounded-xl text-[13px] font-medium focus:outline-none focus:ring-4 transition-all ${confirm && confirm !== password
+                    ? 'border-red-300 focus:border-red-400 focus:ring-red-100 text-red-500'
+                    : 'border-[#D8E8F0] focus:border-[#1E4D6B] focus:ring-[#1E4D6B]/5 text-[#1E3A5F]'
+                    }`}
                 />
                 {confirm && confirm === password && (
                   <CheckCircle weight="duotone" className="w-5 h-5 absolute right-4 top-1/2 -translate-y-1/2 text-green-500" />

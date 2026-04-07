@@ -34,44 +34,42 @@ export async function sendInviteEmail(
 <head>
   <meta charset="utf-8" />
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #EBF4FA; margin: 0; padding: 0; }
-    .container { max-width: 560px; margin: 40px auto; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,0.08); }
-    .header { background: #1E4D6B; padding: 40px 40px 32px; text-align: center; }
-    .header h1 { color: #ffffff; font-size: 28px; margin: 0 0 4px; letter-spacing: -0.5px; }
-    .header p { color: #B5DBEC; font-size: 13px; margin: 0; }
-    .body { padding: 40px; }
-    .body h2 { color: #1E4D6B; font-size: 18px; margin: 0 0 12px; }
-    .body p { color: #5A7A8C; font-size: 14px; line-height: 1.7; margin: 0 0 20px; }
-    .btn { display: inline-block; background: #1E4D6B; color: #ffffff !important; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; letter-spacing: 0.2px; }
-    .btn:hover { background: #236181; }
-    .divider { border: none; border-top: 1px solid #E8EFF4; margin: 24px 0; }
-    .link-box { background: #F0F7FB; border-radius: 10px; padding: 12px 16px; word-break: break-all; font-size: 12px; color: #5A7A8C; }
-    .footer { text-align: center; padding: 24px 40px; background: #F8FAFC; }
-    .footer p { font-size: 11px; color: #9AADB8; margin: 0; }
+    body { font-family: 'Inter', 'Segoe UI', sans-serif; background-color: #F9FAFB; margin: 0; padding: 40px 0; }
+    .container { max-width: 500px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #F3F4F6; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+    .header { padding: 40px 40px 20px; text-align: center; }
+    .header h1 { color: #111827; font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+    .body { padding: 0 40px 40px; text-align: center; }
+    .body h2 { color: #111827; font-size: 18px; margin: 0 0 16px; font-weight: 600; }
+    .body p { color: #6B7280; font-size: 14.5px; line-height: 1.6; margin: 0 0 32px; }
+    .btn { display: inline-block; background-color: #111827; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 9px; font-size: 14.5px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .btn:hover { background-color: #1F2937; }
+    .divider { border: none; border-top: 1px dashed #E5E7EB; margin: 32px 0; }
+    .link-box { margin-top: 12px; font-size: 11.5px; color: #9CA3AF; word-break: break-all; }
+    .footer { text-align: center; padding: 24px 40px; background-color: #F9FAFB; border-top: 1px solid #F3F4F6; }
+    .footer p { font-size: 12px; color: #9CA3AF; margin: 0; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Onboard.</h1>
-      <p>Platform Orientasi Karyawan</p>
+      <h1>On-Boarding</h1>
     </div>
     <div class="body">
-      <h2>Selamat datang, ${fullName}! 👋</h2>
+      <h2>Halo, ${fullName}</h2>
       <p>
-        Anda telah diundang untuk bergabung di <strong>On-Boarding</strong>. 
-        Klik tombol di bawah untuk mengatur kata sandi dan memulai perjalanan onboarding Anda.
+        Anda telah diundang untuk bergabung ke dalam <strong>Portal Orientasi Karyawan</strong> kami. Lengkapi profil Anda dan mulailah proses onboarding dengan mengatur kata sandi Anda menggunakan tautan di bawah ini.
       </p>
-      <a href="${inviteUrl}" class="btn">Atur Kata Sandi &amp; Masuk →</a>
+      <a href="${inviteUrl}" class="btn">Bergabung Sekarang</a>
+      
       <hr class="divider" />
-      <p style="font-size:13px; color:#9AADB8;">
-        Link ini berlaku selama <strong>48 jam</strong>. Jika Anda tidak mengharapkan undangan ini, abaikan email ini.
+      
+      <p style="font-size:13px; color:#9CA3AF; margin-bottom: 0;">
+        Link undangan di atas hanya berlaku selama <strong>48 jam</strong>.
       </p>
-      <p style="font-size:12px; color:#C0CDD4;">Atau copy link berikut ke browser:</p>
-      <div class="link-box">${inviteUrl}</div>
+      <div class="link-box">Atau gunakan URL: <br/>${inviteUrl}</div>
     </div>
     <div class="footer">
-      <p>© 2026 On-Boarding · Dikirim secara otomatis, jangan reply email ini.</p>
+      <p>© ${new Date().getFullYear()} OnboardFlow. Pesan ini dikirim secara otomatis.</p>
     </div>
   </div>
 </body>
@@ -90,7 +88,7 @@ export async function sendInviteEmail(
   await transporter.sendMail({
     from: `"On-Boarding" <${SMTP_FROM}>`,
     to: email,
-    subject: `Undangan Bergabung – On-Boarding`,
+    subject: `On-Boarding`,
     html: htmlBody,
   });
 }

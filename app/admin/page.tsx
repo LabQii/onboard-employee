@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass } from '@phosphor-icons/react';
+import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
@@ -18,6 +18,7 @@ interface DashboardStats {
 
 interface AttentionEmployee {
   id: string;
+  email: string;
   full_name: string;
   division: string;
   progress: number;
@@ -83,16 +84,30 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
+  // States for 'Pengingat' button UI
+  const [remindingIds, setRemindingIds] = useState<string[]>([]);
+  const [remindedIds, setRemindedIds] = useState<string[]>([]);
+
+  // Notifications State
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotif, setShowNotif] = useState(false);
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        const res = await fetch('/api/admin/dashboard');
-        const data = await res.json();
+        const [dashRes, notifRes] = await Promise.all([
+          fetch('/api/admin/dashboard'),
+          fetch('/api/admin/notifications')
+        ]);
+        const dashData = await dashRes.json();
+        const notifData = await notifRes.json();
 
-        if (data.stats) setStats(data.stats);
-        if (data.attentionList) setAttentionList(data.attentionList);
-        if (data.faqs) setFaqs(data.faqs);
+        if (dashData.stats) setStats(dashData.stats);
+        if (dashData.attentionList) setAttentionList(dashData.attentionList);
+        if (dashData.faqs) setFaqs(dashData.faqs);
+        if (notifData.notifications) setNotifications(notifData.notifications);
 
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -104,6 +119,45 @@ export default function AdminDashboardPage() {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function markAllRead() {
+    await fetch('/api/admin/notifications', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ all: true })
+    });
+    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+  }
+
+  async function handleRemind(emp: AttentionEmployee) {
+    if (remindedIds.includes(emp.id) || remindingIds.includes(emp.id)) return;
+
+    setRemindingIds(prev => [...prev, emp.id]);
+
+    try {
+      const res = await fetch('/api/admin/remind', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emp.email, name: emp.full_name, progress: emp.progress })
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Pengiriman gagal');
+      }
+
+      setRemindingIds(prev => prev.filter(rid => rid !== emp.id));
+      setRemindedIds(prev => [...prev, emp.id]);
+
+      setTimeout(() => {
+        setRemindedIds(prev => prev.filter(rid => rid !== emp.id));
+      }, 3000);
+    } catch (error: any) {
+      console.error(error);
+      alert(`Gagal mengirim email: ${error.message}`);
+      setRemindingIds(prev => prev.filter(rid => rid !== emp.id));
+    }
+  }
 
   const filteredAttention = attentionList.filter((e) =>
     e.full_name.toLowerCase().includes(search.toLowerCase())
@@ -123,27 +177,89 @@ export default function AdminDashboardPage() {
       {/* ── Header ── */}
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
-        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+
+          {/* Subtle Blue Dots Decoration */}
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
+          <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
+          <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
 
           <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+            <h1 className="text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
               Ringkasan Dashboard
             </h1>
-            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
-              Pantau progres onboarding seluruh karyawan dari satu tempat.
+            <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
+              Pantau progres onboarding seluruh karyawan dari satu tempat
             </p>
           </div>
-          <div className="relative z-10 flex items-center gap-3 shrink-0">
+
+          <div className="relative z-10 flex items-center gap-3 shrink-0 flex-wrap justify-end">
+            {/* Notification Bell */}
+            <div className="relative mr-2">
+              <button
+                onClick={() => setShowNotif(!showNotif)}
+                className="relative p-3 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] shadow-sm transition-all text-[#5A7A8C] hover:text-[#1E3A5F]"
+              >
+                <Bell weight="duotone" className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
+                )}
+              </button>
+
+              {showNotif && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowNotif(false)} />
+                  <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#F3F4F6] z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-[#FDFDFD]">
+                      <h3 className="font-bold text-[#1E3A5F] text-[14px]">Notifikasi</h3>
+                      <button 
+                        onClick={markAllRead}
+                        className="text-[11px] font-bold text-[#1E4D6B] hover:underline"
+                      >
+                        Tandai semua dibaca
+                      </button>
+                    </div>
+                    <div className="max-h-[350px] overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <div className="px-5 py-10 text-center text-[#9AADB8] text-[13px] font-medium">
+                          Belum ada notifikasi
+                        </div>
+                      ) : (
+                        notifications.map((n) => (
+                          <div 
+                            key={n.id} 
+                            className={`px-5 py-4 border-b border-[#F9FAFB] last:border-0 hover:bg-[#F8FAFC] transition-colors cursor-pointer relative ${!n.is_read ? 'bg-blue-50/30' : ''}`}
+                          >
+                            {!n.is_read && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#1E4D6B]" />}
+                            <div className="flex flex-col gap-1">
+                              <p className="font-bold text-[#1E3A5F] text-[13px]">{n.title}</p>
+                              <p className="text-[#5A7A8C] text-[12px] leading-relaxed">{n.message}</p>
+                              <p className="text-[10px] text-[#9AADB8] font-bold mt-1 uppercase tracking-wider">
+                                {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(n.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
             <Link href="/admin/documents">
-              <button className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white/70 backdrop-blur-xl border border-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-[#1E3A5F] font-bold text-[13px]">
+              <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] shadow-sm transition-all text-[#1E3A5F] font-bold text-[13.5px]">
                 <FileText weight="duotone" className="w-5 h-5" /> Dokumen
               </button>
             </Link>
+            <Link href="/admin/settings">
+              <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] shadow-sm transition-all text-[#1E3A5F] font-bold text-[13.5px]">
+                <GearSix weight="duotone" className="w-5 h-5" /> Pengaturan
+              </button>
+            </Link>
             <Link href="/admin/employees">
-              <button className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#1E4D6B] hover:bg-[#163850] shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-white font-bold text-[13px]">
-                <Users weight="duotone" className="w-5 h-5" /> Karyawan
+              <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[13.5px]">
+                <Users weight="duotone" className="w-5 h-5 text-white/90" /> Karyawan
               </button>
             </Link>
           </div>
@@ -251,9 +367,24 @@ export default function AdminDashboardPage() {
                           </span>
                         </td>
                         <td className="py-4 px-6">
-                          <button className="flex items-center gap-2 text-[11px] font-bold text-[#1E4D6B] hover:text-white hover:bg-[#1E4D6B] px-3.5 py-2 rounded-xl border border-[#D8E8F0] hover:border-transparent transition-all shadow-sm hover:shadow-md">
-                            <Bell weight="duotone" className="w-4 h-4" />
-                            Pengingat
+                          <button
+                            onClick={() => handleRemind(emp)}
+                            disabled={remindingIds.includes(emp.id) || remindedIds.includes(emp.id)}
+                            className={`flex items-center justify-center gap-2 text-[11px] font-bold px-3.5 py-2 rounded-xl border transition-all shadow-sm focus:outline-none min-w-[105px]
+                              ${remindedIds.includes(emp.id)
+                                ? 'bg-green-500 text-white border-transparent'
+                                : remindingIds.includes(emp.id)
+                                  ? 'bg-[#E8EFF4] text-[#5A7A8C] border-transparent cursor-not-allowed'
+                                  : 'text-[#1E4D6B] border-[#D8E8F0] hover:text-white hover:bg-[#1E4D6B] hover:border-transparent hover:shadow-md'
+                              }`}
+                          >
+                            {remindedIds.includes(emp.id) ? (
+                              <>✓ Terkirim</>
+                            ) : remindingIds.includes(emp.id) ? (
+                              <><span className="w-3 h-3 border-2 border-[#5A7A8C]/30 border-t-[#5A7A8C] rounded-full animate-spin" /> Mengirim...</>
+                            ) : (
+                              <><Bell weight="duotone" className="w-4 h-4" /> Pengingat</>
+                            )}
                           </button>
                         </td>
                       </tr>

@@ -19,9 +19,9 @@ interface Document {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const STATUS_MAP: Record<string, { label: string; color: string; dot: string }> = {
-  indexed:    { label: 'Terindeks',  color: 'text-[#22C55E] bg-[#22C55E]/5', dot: 'bg-[#22C55E] shadow-[0_0_8px_#22C55E]' },
-  processing: { label: 'Memproses',  color: 'text-primary bg-primary/5',      dot: 'bg-primary animate-pulse' },
-  failed:     { label: 'Gagal',      color: 'text-red-500 bg-red-50',         dot: 'bg-red-500' },
+  indexed: { label: 'Terindeks', color: 'text-[#22C55E] bg-[#22C55E]/5', dot: 'bg-[#22C55E] shadow-[0_0_8px_#22C55E]' },
+  processing: { label: 'Memproses', color: 'text-primary bg-primary/5', dot: 'bg-primary animate-pulse' },
+  failed: { label: 'Gagal', color: 'text-red-500 bg-red-50', dot: 'bg-red-500' },
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -48,21 +48,21 @@ function DocModal({
   const [step, setStep] = useState<'file' | 'form'>(editDoc ? 'form' : 'file');
   const [file, setFile] = useState<File | null>(null);
   const [docName, setDocName] = useState(editDoc?.name || '');
-  
+
   // Targeting
   const [targetType, setTargetType] = useState<'all' | 'dept' | 'role'>(
     editDoc?.role ? 'role' : editDoc?.department ? 'dept' : 'all'
   );
   const [department, setDepartment] = useState(editDoc?.department || '');
   const [role, setRole] = useState(editDoc?.role || '');
-  
+
   const [phase, setPhase] = useState('Hari');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
-  const [deps, setDeps] = useState<{id: string, name: string}[]>([]);
-  const [roles, setRoles] = useState<{id: string, name: string}[]>([]);
-  
+
+  const [deps, setDeps] = useState<{ id: string, name: string }[]>([]);
+  const [roles, setRoles] = useState<{ id: string, name: string }[]>([]);
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -195,11 +195,10 @@ function DocModal({
                     <button
                       key={t.id}
                       onClick={() => setTargetType(t.id as any)}
-                      className={`py-2 px-1 rounded-xl text-[11px] font-bold border transition-all ${
-                        targetType === t.id
+                      className={`py-2 px-1 rounded-xl text-[11px] font-bold border transition-all ${targetType === t.id
                           ? 'bg-[#1E4D6B] text-white border-[#1E4D6B] shadow-md shadow-[#1E4D6B]/20'
                           : 'bg-white text-[#5A7A8C] border-neutral/10 hover:border-[#1E4D6B]/30'
-                      }`}
+                        }`}
                     >
                       {t.label}
                     </button>
@@ -327,24 +326,28 @@ export default function DocumentsPage() {
     <div className="flex flex-col w-full min-h-full">
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
-        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+
+          {/* Subtle Blue Dots Decoration */}
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
+          <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
+          <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
 
           <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+            <h1 className="text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
               Dokumen Orientasi
             </h1>
-            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
-              Unggah dan kelola panduan perusahaan bagi karyawan baru.
+            <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
+              Unggah dan kelola panduan perusahaan bagi karyawan baru
             </p>
           </div>
-          <div className="relative z-10 flex items-center gap-3 shrink-0">
+
+          <div className="relative z-10 flex items-center gap-3 shrink-0 flex-wrap justify-end">
             <button
               onClick={() => { setEditDoc(undefined); setShowModal(true); }}
-              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#1E4D6B] hover:bg-[#163850] shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-white font-bold text-[13px]"
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[13.5px]"
             >
-              <CloudArrowUp weight="duotone" className="w-5 h-5" /> Unggah Dokumen
+              <CloudArrowUp weight="duotone" className="w-5 h-5 text-white/90" /> Unggah Dokumen
             </button>
           </div>
         </div>
@@ -354,9 +357,9 @@ export default function DocumentsPage() {
         {/* Stat strip */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-20">
           {[
-            { label: 'Prospek AI', count: docs.filter(d => d.status === 'processing').length, icon: Clock,         color: 'text-[#276087]',    bg: 'bg-[#E8EFF4]' },
-            { label: 'Terindeks', count: docs.filter(d => d.status === 'indexed').length,    icon: CheckCircle,   color: 'text-emerald-600',  bg: 'bg-emerald-50' },
-            { label: 'Gagal',     count: docs.filter(d => d.status === 'failed').length,     icon: XCircle,       color: 'text-red-500',      bg: 'bg-red-50' },
+            { label: 'Prospek AI', count: docs.filter(d => d.status === 'processing').length, icon: Clock, color: 'text-[#276087]', bg: 'bg-[#E8EFF4]' },
+            { label: 'Terindeks', count: docs.filter(d => d.status === 'indexed').length, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+            { label: 'Gagal', count: docs.filter(d => d.status === 'failed').length, icon: XCircle, color: 'text-red-500', bg: 'bg-red-50' },
           ].map((s) => (
             <Card key={s.label} className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all cursor-pointer p-6 shrink-0">
               <div className={`w-[60px] h-[60px] rounded-2xl flex items-center justify-center shrink-0 ${s.bg} ${s.color}`}>

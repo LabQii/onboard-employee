@@ -146,7 +146,7 @@ function EmployeeModal({
               className="flex-1 py-3 bg-[#1E4D6B] text-white rounded-xl text-[13px] font-bold hover:bg-[#236181] transition-all disabled:opacity-60 flex items-center justify-center gap-2">
               {loading
                 ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Memproses…</>
-                : mode === 'create' ? '📧 Kirim Undangan' : '�� Simpan Perubahan'}
+                : mode === 'create' ? 'Kirim Undangan' : 'Simpan Perubahan'}
             </button>
           </div>
         </form>
@@ -372,36 +372,40 @@ export default function EmployeesPage() {
 
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
-        <div className="relative bg-gradient-to-br from-[#E8F2F9] via-[#F0F7FB] to-[#F8FAFC] p-8 lg:p-12 overflow-hidden rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
-          <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[140%] bg-gradient-to-l from-white/80 to-transparent rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[100%] bg-gradient-to-tr from-[#DCECF5]/50 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+          
+          {/* Subtle Blue Dots Decoration */}
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
+          <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
+          <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
 
           <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.5rem] font-bold text-[#1E3A5F] mb-3 tracking-tight leading-tight">
+            <h1 className="text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
               Karyawan
             </h1>
-            <p className="text-[#5A7A8C] text-[15px] font-medium leading-relaxed max-w-lg">
+            <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
               Kelola data karyawan dan progres onboarding.
             </p>
             {/* Stats */}
             <div className="flex items-center gap-3 mt-5">
-              <span className="text-[11px] font-bold bg-[#E8EFF4] text-[#276087] px-3.5 py-1.5 rounded-lg border border-white shadow-sm uppercase tracking-widest shrink-0">
+              <span className="text-[11px] font-bold bg-[#F3F4F6] text-[#6B7280] px-3 py-1.5 rounded-md border border-[#E5E7EB] uppercase tracking-widest shrink-0">
                 {stats.total} Total
               </span>
-              <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-lg border border-white shadow-sm uppercase tracking-widest shrink-0">
+              <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-md border border-emerald-100 uppercase tracking-widest shrink-0">
                 {stats.active} Aktif
               </span>
-              <span className="text-[11px] font-bold bg-amber-50 text-amber-700 px-3.5 py-1.5 rounded-lg border border-white shadow-sm uppercase tracking-widest shrink-0">
+              <span className="text-[11px] font-bold bg-amber-50 text-amber-700 px-3 py-1.5 rounded-md border border-amber-100 uppercase tracking-widest shrink-0">
                 {stats.pending} Menunggu
               </span>
             </div>
           </div>
+          
           <div className="relative z-10 shrink-0">
             <button
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#1E4D6B] hover:bg-[#163850] shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-white font-bold text-[13px]"
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[13.5px]"
             >
-              <Plus weight="bold" className="w-4 h-4" /> Undang Karyawan
+              <Plus weight="bold" className="w-4 h-4 text-white/90" /> Undang Karyawan
             </button>
           </div>
         </div>

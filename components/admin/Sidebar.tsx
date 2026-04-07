@@ -1,4 +1,5 @@
 'use client';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SquaresFour, FileText, Users, Gear, SignOut } from '@phosphor-icons/react';
 import { usePathname } from 'next/navigation';
@@ -6,6 +7,11 @@ import { cn } from '@/lib/utils';
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const links = [
     { name: 'Ringkasan',          href: '/admin',                    icon: SquaresFour, exact: true },
@@ -17,17 +23,21 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-app-bg flex flex-col h-screen fixed left-0 top-0 z-40">
       {/* Header - Minimalist Logo Card */}
-      <div className="p-6 pb-2">
-        <div className="bg-white p-5 rounded-[2rem] border border-[#E8EFF4] shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex items-center gap-4 group/logo hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all cursor-default">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#1E4D6B] to-[#276087] rounded-full flex items-center justify-center font-bold text-[11px] text-white shadow-lg shadow-[#1E4D6B]/20 group-hover/logo:scale-110 transition-transform">
-            OF
+      <div className="p-6 pb-2 min-h-[110px]">
+        {mounted ? (
+          <div className="bg-white p-5 rounded-[2rem] border border-[#E8EFF4] shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex items-center gap-4 group/logo hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all cursor-default animate-in fade-in duration-300">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#1E4D6B] to-[#276087] rounded-full flex items-center justify-center font-bold text-[11px] text-white shadow-lg shadow-[#1E4D6B]/20 group-hover/logo:scale-110 transition-transform">
+              OF
+            </div>
+            <div className="flex flex-col">
+              <h1 className="font-extrabold text-[1.1rem] tracking-tight text-[#1E3A5F] leading-none">
+                On-Boarding
+              </h1>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h1 className="font-extrabold text-[1.1rem] tracking-tight text-[#1E3A5F] leading-none">
-              On-Boarding
-            </h1>
-          </div>
-        </div>
+        ) : (
+          <div className="w-full h-full opacity-0" />
+        )}
       </div>
 
       {/* Navigation */}
@@ -75,10 +85,10 @@ export function Sidebar() {
             </div>
           </div>
           
-          <form action="/auth/logout" method="post">
+          <form action="/api/auth/logout" method="post">
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-2xl text-tertiary border border-neutral/10 bg-white hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all text-[12px] font-bold shadow-sm active:scale-[0.98]"
+              className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-2xl text-tertiary border border-neutral/10 bg-white hover:bg-neutral/5 hover:border-neutral/20 hover:text-red-500 transition-all text-[12px] font-bold shadow-sm active:scale-[0.98]"
             >
               <SignOut weight="duotone" className="w-4 h-4" />
               Keluar Sesi

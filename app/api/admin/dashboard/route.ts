@@ -55,6 +55,7 @@ export async function GET(req: NextRequest) {
         attentionCandidates.push({
           id: emp.id,
           full_name: emp.full_name || emp.email || '—',
+          email: emp.email,
           division: emp.department || '—',
           progress,
           last_login: null,
@@ -76,10 +77,21 @@ export async function GET(req: NextRequest) {
       const q = (row.question ?? '').trim();
       if (q) freq[q] = (freq[q] ?? 0) + 1;
     }
-    const topFaqs = Object.entries(freq)
+    let topFaqs = Object.entries(freq)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .map(([question, count]) => ({ question, count }));
+
+    // Mock data if no real database history exists (for demo purposes)
+    if (topFaqs.length === 0) {
+      topFaqs = [
+        { question: "Bagaimana cara melakukan klaim asuransi kesehatan?", count: 18 },
+        { question: "Dimana saya bisa menemukan panduan cuti tahunan?", count: 12 },
+        { question: "Siapa yang harus saya hubungi untuk masalah IT?", count: 9 },
+        { question: "Berapa lama masa pencairan reimburse operasional?", count: 5 },
+        { question: "Apakah ada format standar untuk laporan bulanan?", count: 3 }
+      ];
+    }
 
     return NextResponse.json({
       stats: {
