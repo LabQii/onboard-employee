@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     }
 
     // 3. Construct System Prompt & Call Groq Llama-3
-    const systemPrompt = `Anda adalah asisten cerdas untuk sistem Onboarding ("On-Boarding").
+    const systemPrompt = `Anda adalah asisten cerdas untuk sistem Onboarding ("OnBoard").
 Berikan jawaban ringkas, solutif, dan tegas berasaskan pedoman dokumen perusahaan yang diberikan.
 
 Info Karyawan saat ini:

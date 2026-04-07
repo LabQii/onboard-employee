@@ -94,11 +94,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="relative">
                 <button
                   onClick={() => setShowNotif(!showNotif)}
-                  className="text-[#9AADB8] hover:text-[#1E4D6B] transition-colors relative"
+                  className={`relative p-2.5 rounded-xl transition-all duration-300 ${showNotif ? 'bg-[#1E3A5F] text-white shadow-lg' : 'text-[#9AADB8] hover:bg-white hover:text-[#1E4D6B] hover:shadow-sm'}`}
                 >
                   <Bell weight="duotone" className="w-5 h-5" />
                   {unreadCount > 0 && (
-                    <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-500 rounded-full" />
+                    <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
                   )}
                 </button>
 

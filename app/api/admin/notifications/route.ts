@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
     const { data: notifications, error } = await supabase
       .from('notifications')
       .select('*')
+      .is('user_id', null)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -43,13 +44,15 @@ export async function PATCH(req: NextRequest) {
       const { error } = await supabase
         .from('notifications')
         .update({ is_read: true })
+        .is('user_id', null)
         .eq('is_read', false);
       if (error) throw error;
     } else if (id) {
       const { error } = await supabase
         .from('notifications')
         .update({ is_read: true })
-        .eq('id', id);
+        .eq('id', id)
+        .is('user_id', null);
       if (error) throw error;
     }
 

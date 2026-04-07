@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
             </Link>
             <Link href="/admin/settings">
               <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] shadow-sm transition-all text-[#1E3A5F] font-bold text-[13.5px]">
-                <GearSix weight="duotone" className="w-5 h-5" /> Pengaturan
+                <GearSix weight="duotone" className="w-5 h-5" /> Struktur
               </button>
             </Link>
             <Link href="/admin/employees">

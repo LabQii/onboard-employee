@@ -17,7 +17,7 @@ export function Sidebar() {
     { name: 'Ringkasan',          href: '/admin',                    icon: SquaresFour, exact: true },
     { name: 'Dokumen',             href: '/admin/documents',          icon: FileText,        exact: false },
     { name: 'Karyawan',            href: '/admin/employees',          icon: Users,           exact: false },
-    { name: 'Pengaturan',          href: '/admin/settings',           icon: Gear,        exact: false },
+    { name: 'Struktur',            href: '/admin/settings',           icon: Gear,        exact: false },
   ];
 
   return (
@@ -31,7 +31,7 @@ export function Sidebar() {
             </div>
             <div className="flex flex-col">
               <h1 className="font-extrabold text-[1.1rem] tracking-tight text-[#1E3A5F] leading-none">
-                On-Boarding
+                OnBoard
               </h1>
             </div>
           </div>

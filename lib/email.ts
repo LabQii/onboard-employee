@@ -52,7 +52,7 @@ export async function sendInviteEmail(
 <body>
   <div class="container">
     <div class="header">
-      <h1>On-Boarding</h1>
+      <h1>OnBoard</h1>
     </div>
     <div class="body">
       <h2>Halo, ${fullName}</h2>
@@ -86,9 +86,9 @@ export async function sendInviteEmail(
   }
 
   await transporter.sendMail({
-    from: `"On-Boarding" <${SMTP_FROM}>`,
+    from: `"OnBoard" <${SMTP_FROM}>`,
     to: email,
-    subject: `On-Boarding`,
+    subject: `OnBoard`,
     html: htmlBody,
   });
 }
@@ -125,7 +125,7 @@ export async function sendLoginOtp(
       <div class="otp-box">${otp}</div>
       <p>Kode ini berlaku selama <strong>10 menit</strong>.<br/>Jangan berikan kode ini ke siapapun.</p>
     </div>
-    <div class="footer"><p>© 2026 On-Boarding</p></div>
+    <div class="footer"><p>© 2026 OnBoard</p></div>
   </div>
 </body>
 </html>`;
@@ -140,9 +140,9 @@ export async function sendLoginOtp(
   }
 
   await transporter.sendMail({
-    from: `"On-Boarding" <${SMTP_FROM}>`,
+    from: `"OnBoard" <${SMTP_FROM}>`,
     to: email,
-    subject: `Kode Masuk On-Boarding: ${otp}`,
+    subject: `Kode Masuk OnBoard: ${otp}`,
     html: htmlBody,
   });
 }

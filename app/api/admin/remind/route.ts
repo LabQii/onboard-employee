@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 <body>
   <div class="container">
     <div class="header">
-      <h1>On-Boarding</h1>
+      <h1>OnBoard</h1>
     </div>
     <div class="body">
       <h2>Halo, ${name}</h2>
@@ -80,9 +80,8 @@ export async function POST(req: NextRequest) {
     `;
 
     const info = await transporter.sendMail({
-      from: `"On-Boarding" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
-      to: email,
-      subject: 'On-Boarding',
+      from: `"OnBoard" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      subject: 'OnBoard',
       html: htmlContent,
     });
 
