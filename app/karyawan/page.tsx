@@ -290,7 +290,7 @@ export default function EmployeeDashboard() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                      className="absolute right-0 mt-3 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-[70] overflow-hidden"
+                      className="absolute right-0 mt-6 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-[70] overflow-hidden"
                     >
                       <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-white/50">
                         <div>

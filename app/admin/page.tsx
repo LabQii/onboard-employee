@@ -301,7 +301,7 @@ export default function AdminDashboardPage() {
                                 ? 'bg-green-500 text-white border-transparent'
                                 : remindingIds.includes(emp.id)
                                   ? 'bg-[#E8EFF4] text-[#5A7A8C] border-transparent cursor-not-allowed'
-                                  : 'text-[#1E4D6B] border-[#D8E8F0] hover:text-white hover:bg-[#1E4D6B] hover:border-transparent hover:shadow-md'
+                                  : 'bg-[#F8FAFC] text-[#1E3A5F] border-[#D8E8F0] hover:bg-[#1E3A5F] hover:text-white hover:border-transparent hover:shadow-md transition-all'
                               }`}
                           >
                             {remindedIds.includes(emp.id) ? (

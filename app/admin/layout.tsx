@@ -105,7 +105,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {showNotif && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setShowNotif(false)} />
-                    <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#F3F4F6] z-50 overflow-hidden">
+                    <div className="absolute right-0 mt-6 w-80 bg-white rounded-2xl shadow-xl border border-[#F3F4F6] z-50 overflow-hidden">
                       <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-[#FDFDFD]">
                         <div>
                           <h3 className="font-bold text-[#1E3A5F] text-[14px]">Notifikasi</h3>
