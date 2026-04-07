@@ -30,7 +30,7 @@ export default function LoginPage() {
           </div>
 
           <div className="relative z-10 mt-6">
-            <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">OnBoard.</h1>
+            <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">On Board.</h1>
             <p className="text-[#B5DBEC] text-sm font-light leading-relaxed opacity-90">
               Platform orientasi terpusat untuk membantu masa transisi peran baru Anda secara terstruktur dan efisien.
             </p>

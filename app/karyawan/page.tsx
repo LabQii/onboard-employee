@@ -258,7 +258,7 @@ export default function EmployeeDashboard() {
               OF
             </div>
             <div className="flex flex-col">
-              <h1 className="font-extrabold text-[1.05rem] text-[#1E3A5F] tracking-tight leading-none">OnBoard</h1>
+              <h1 className="font-extrabold text-[1.05rem] text-[#1E3A5F] tracking-tight leading-none">On Board</h1>
             </div>
           </div>
 

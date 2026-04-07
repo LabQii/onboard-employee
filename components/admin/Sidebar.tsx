@@ -31,7 +31,7 @@ export function Sidebar() {
             </div>
             <div className="flex flex-col">
               <h1 className="font-extrabold text-[1.1rem] tracking-tight text-[#1E3A5F] leading-none">
-                OnBoard
+                On Board
               </h1>
             </div>
           </div>

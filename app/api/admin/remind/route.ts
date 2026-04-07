@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 <body>
   <div class="container">
     <div class="header">
-      <h1>OnBoard</h1>
+      <h1>On Board</h1>
     </div>
     <div class="body">
       <h2>Halo, ${name}</h2>
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       </p>
     </div>
     <div class="footer">
-      <p>© ${new Date().getFullYear()} OnboardFlow. Pesan ini dikirim secara otomatis.</p>
+      <p>© ${new Date().getFullYear()} On Board Flow. Pesan ini dikirim secara otomatis.</p>
     </div>
   </div>
 </body>
@@ -80,8 +80,8 @@ export async function POST(req: NextRequest) {
     `;
 
     const info = await transporter.sendMail({
-      from: `"OnBoard" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
-      subject: 'OnBoard',
+      from: `"On Board" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      subject: 'On Board',
       html: htmlContent,
     });
 

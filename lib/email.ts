@@ -52,7 +52,7 @@ export async function sendInviteEmail(
 <body>
   <div class="container">
     <div class="header">
-      <h1>OnBoard</h1>
+      <h1>On Board</h1>
     </div>
     <div class="body">
       <h2>Halo, ${fullName}</h2>
@@ -69,7 +69,7 @@ export async function sendInviteEmail(
       <div class="link-box">Atau gunakan URL: <br/>${inviteUrl}</div>
     </div>
     <div class="footer">
-      <p>© ${new Date().getFullYear()} OnboardFlow. Pesan ini dikirim secara otomatis.</p>
+      <p>© ${new Date().getFullYear()} On Board Flow. Pesan ini dikirim secara otomatis.</p>
     </div>
   </div>
 </body>
@@ -86,9 +86,9 @@ export async function sendInviteEmail(
   }
 
   await transporter.sendMail({
-    from: `"OnBoard" <${SMTP_FROM}>`,
+    from: `"On Board" <${SMTP_FROM}>`,
     to: email,
-    subject: `OnBoard`,
+    subject: `On Board`,
     html: htmlBody,
   });
 }
@@ -119,13 +119,13 @@ export async function sendLoginOtp(
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>Onboard.</h1></div>
+    <div class="header"><h1>On Board.</h1></div>
     <div class="body">
       <p>Kode masuk Anda:</p>
       <div class="otp-box">${otp}</div>
       <p>Kode ini berlaku selama <strong>10 menit</strong>.<br/>Jangan berikan kode ini ke siapapun.</p>
     </div>
-    <div class="footer"><p>© 2026 OnBoard</p></div>
+    <div class="footer"><p>© 2026 On Board</p></div>
   </div>
 </body>
 </html>`;
@@ -140,9 +140,9 @@ export async function sendLoginOtp(
   }
 
   await transporter.sendMail({
-    from: `"OnBoard" <${SMTP_FROM}>`,
+    from: `"On Board" <${SMTP_FROM}>`,
     to: email,
-    subject: `Kode Masuk OnBoard: ${otp}`,
+    subject: `Kode Masuk On Board: ${otp}`,
     html: htmlBody,
   });
 }

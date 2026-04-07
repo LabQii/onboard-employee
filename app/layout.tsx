@@ -9,7 +9,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "OnBoard",
+  title: "On Board",
   description: "AI-Powered Employee Onboarding Assistant",
 };
 

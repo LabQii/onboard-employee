@@ -11,7 +11,7 @@ export function UserNavbar() {
         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white text-sm">
           OF
         </div>
-        <span className="font-bold text-xl text-tertiary">OnBoard</span>
+        <span className="font-bold text-xl text-tertiary">On Board</span>
       </div>
 
       <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-neutral-dark">
