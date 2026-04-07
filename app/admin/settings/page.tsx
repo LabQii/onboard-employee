@@ -111,7 +111,7 @@ export default function SettingsPage() {
               Struktur Organisasi
             </h1>
             <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
-              Kelola daftar divisi dan jabatan yang tersedia untuk proses onboarding.
+              Kelola daftar divisi dan jabatan yang tersedia untuk proses onboarding
             </p>
           </div>
         </div>
@@ -150,7 +150,7 @@ export default function SettingsPage() {
                 {departments.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-[#E8EFF4] rounded-2xl bg-[#F8FAFC]/50">
                     <Briefcase className="w-8 h-8 text-[#C0CDD4] mb-3" weight="duotone" />
-                    <p className="text-[13px] text-[#9AADB8] font-bold">Belum ada divisi</p>
+                    <p className="text-[13px] text-[#5A7A8C] font-extrabold">Belum ada divisi</p>
                     <p className="text-[12px] text-[#C0CDD4] mt-1 text-center font-medium">Tambahkan divisi pertama Anda di atas.</p>
                   </div>
                 )}
@@ -189,7 +189,7 @@ export default function SettingsPage() {
                 {roles.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-[#E8EFF4] rounded-2xl bg-[#F8FAFC]/50">
                     <UserList className="w-8 h-8 text-[#C0CDD4] mb-3" weight="duotone" />
-                    <p className="text-[13px] text-[#9AADB8] font-bold">Belum ada jabatan</p>
+                    <p className="text-[13px] text-[#5A7A8C] font-extrabold">Belum ada jabatan</p>
                     <p className="text-[12px] text-[#C0CDD4] mt-1 text-center font-medium">Tambahkan jabatan pertama Anda di atas.</p>
                   </div>
                 )}

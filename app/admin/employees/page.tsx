@@ -42,8 +42,8 @@ function EmployeeModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const [deps, setDeps] = useState<{id: string, name: string}[]>([]);
-  const [roles, setRoles] = useState<{id: string, name: string}[]>([]);
+  const [deps, setDeps] = useState<{ id: string, name: string }[]>([]);
+  const [roles, setRoles] = useState<{ id: string, name: string }[]>([]);
 
   useEffect(() => {
     fetch('/api/admin/departments').then(res => res.json()).then(data => setDeps(data.departments || []));
@@ -331,7 +331,7 @@ export default function EmployeesPage() {
   const [deleteTarget, setDeleteTarget] = useState<Employee | null>(null);
   const [toast, setToast] = useState('');
 
-  const [deps, setDeps] = useState<{id: string, name: string}[]>([]);
+  const [deps, setDeps] = useState<{ id: string, name: string }[]>([]);
 
   useEffect(() => {
     fetch('/api/admin/departments').then(res => res.json()).then(data => setDeps(data.departments || []));
@@ -373,7 +373,7 @@ export default function EmployeesPage() {
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
         <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
-          
+
           {/* Subtle Blue Dots Decoration */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
@@ -384,22 +384,22 @@ export default function EmployeesPage() {
               Karyawan
             </h1>
             <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
-              Kelola data karyawan dan progres onboarding.
+              Kelola data karyawan dan progres onboarding
             </p>
             {/* Stats */}
             <div className="flex items-center gap-3 mt-5">
-              <span className="text-[11px] font-bold bg-[#F3F4F6] text-[#6B7280] px-3 py-1.5 rounded-md border border-[#E5E7EB] uppercase tracking-widest shrink-0">
+              <span className="text-[11px] font-extrabold bg-[#F3F4F6] text-[#5A7A8C] px-3 py-1.5 rounded-md border border-[#E5E7EB] uppercase shrink-0">
                 {stats.total} Total
               </span>
-              <span className="text-[11px] font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-md border border-emerald-100 uppercase tracking-widest shrink-0">
+              <span className="text-[11px] font-extrabold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-md border border-emerald-100 uppercase shrink-0">
                 {stats.active} Aktif
               </span>
-              <span className="text-[11px] font-bold bg-amber-50 text-amber-700 px-3 py-1.5 rounded-md border border-amber-100 uppercase tracking-widest shrink-0">
+              <span className="text-[11px] font-extrabold bg-amber-50 text-amber-700 px-3 py-1.5 rounded-md border border-amber-100 uppercase shrink-0">
                 {stats.pending} Menunggu
               </span>
             </div>
           </div>
-          
+
           <div className="relative z-10 shrink-0">
             <button
               onClick={() => setShowCreate(true)}

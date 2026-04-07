@@ -175,7 +175,7 @@ function DocModal({
               )}
 
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Nama Dokumen</label>
+                <label className="text-[11px] font-extrabold text-[#5A7A8C] uppercase mb-2 block">Nama Dokumen</label>
                 <input
                   value={docName}
                   onChange={(e) => setDocName(e.target.value)}
@@ -185,7 +185,7 @@ function DocModal({
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Kirimkan Ke</label>
+                <label className="text-[11px] font-extrabold text-[#5A7A8C] uppercase mb-2 block">Kirimkan Ke</label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { id: 'all', label: 'Semua' },
@@ -208,7 +208,7 @@ function DocModal({
 
               {targetType === 'dept' && (
                 <div>
-                  <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Pilih Divisi</label>
+                  <label className="text-[11px] font-extrabold text-[#5A7A8C] uppercase mb-2 block">Pilih Divisi</label>
                   <div className="relative">
                     <select
                       value={department}
@@ -225,7 +225,7 @@ function DocModal({
 
               {targetType === 'role' && (
                 <div>
-                  <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Pilih Jabatan</label>
+                  <label className="text-[11px] font-extrabold text-[#5A7A8C] uppercase mb-2 block">Pilih Jabatan</label>
                   <div className="relative">
                     <select
                       value={role}
@@ -241,7 +241,7 @@ function DocModal({
               )}
 
               <div>
-                <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">Fase Onboarding</label>
+                <label className="text-[11px] font-extrabold text-[#5A7A8C] uppercase mb-2 block">Fase Onboarding</label>
                 <div className="relative">
                   <select
                     value={phase}
@@ -366,7 +366,7 @@ export default function DocumentsPage() {
                 <s.icon weight="duotone" className="w-7 h-7" />
               </div>
               <div>
-                <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">{s.label}</div>
+                <div className="text-[10px] text-[#5A7A8C] font-extrabold mb-1 uppercase">{s.label}</div>
                 <div className="flex items-center gap-3">
                   <span className="font-bold text-[1.8rem] text-[#1E3A5F] leading-none">{loading ? '…' : s.count}</span>
                 </div>
@@ -395,11 +395,11 @@ export default function DocumentsPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-[#E8EFF4] bg-[#F8FAFC]">
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Nama Dokumen</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Target</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Tanggal Unggah</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em]">Status AI</th>
-                  <th className="py-4 px-6 text-[10px] font-bold text-[#5A7A8C] uppercase tracking-[0.15em] text-right">Aksi</th>
+                  <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase">Nama Dokumen</th>
+                  <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase">Target</th>
+                  <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase">Tanggal Unggah</th>
+                  <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase">Status AI</th>
+                  <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -421,12 +421,12 @@ export default function DocumentsPage() {
                       <td className="py-4 px-6 text-[13px] text-[#5A7A8C]">
                         {doc.department ? (
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em]">DIVISI</span>
+                            <span className="text-[10px] font-extrabold text-[#5A7A8C] uppercase">DIVISI</span>
                             <span className="font-bold text-[#1E4D6B] bg-[#EBF4FA] px-2.5 py-1 rounded-lg text-[11px] w-fit mt-1">{doc.department}</span>
                           </div>
                         ) : doc.role ? (
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em]">JABATAN</span>
+                            <span className="text-[10px] font-extrabold text-[#5A7A8C] uppercase">JABATAN</span>
                             <span className="font-bold text-[#276087] bg-[#E8EFF4] px-2.5 py-1 rounded-lg text-[11px] w-fit mt-1">{doc.role}</span>
                           </div>
                         ) : (

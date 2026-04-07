@@ -81,7 +81,7 @@ export function Sidebar() {
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-[13px] font-bold text-tertiary truncate">Admin HR</span>
-              <span className="text-[10px] text-tertiary/50 font-bold truncate">admin@flow.com</span>
+              <span className="text-[10px] text-tertiary/70 font-bold truncate">admin@flow.com</span>
             </div>
           </div>
           

@@ -52,13 +52,13 @@ function StatCard({
           <Icon weight="duotone" className="w-7 h-7" />
         </div>
         {alert && (
-          <span className="text-[9px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg uppercase tracking-widest mt-1">
+          <span className="text-[9px] font-extrabold text-red-500 bg-red-50 px-2 py-1 rounded-lg uppercase mt-1">
             Perlu Tindakan
           </span>
         )}
       </div>
       <div>
-        <div className="text-[10px] text-[#9AADB8] font-bold mb-1 tracking-[0.15em] uppercase">{label}</div>
+        <div className="text-[10px] text-[#5A7A8C] font-extrabold mb-1 uppercase">{label}</div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-[1.8rem] text-[#1E3A5F] leading-none">{value}</span>
         </div>
@@ -242,11 +242,11 @@ export default function AdminDashboardPage() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-[#E8EFF4] bg-[#F8FAFC]">
-                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Nama</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Divisi</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Progress</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Terakhir Login</th>
-                    <th className="py-4 px-6 text-[10px] font-bold text-[#9AADB8] uppercase tracking-[0.15em] whitespace-nowrap">Aksi</th>
+                    <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase whitespace-nowrap">Nama</th>
+                    <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase whitespace-nowrap">Divisi</th>
+                    <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase whitespace-nowrap">Progress</th>
+                    <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase whitespace-nowrap">Terakhir Login</th>
+                    <th className="py-4 px-6 text-[10px] font-extrabold text-[#5A7A8C] uppercase whitespace-nowrap">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -326,7 +326,7 @@ export default function AdminDashboardPage() {
         <div className="mt-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[1.4rem] font-bold text-[#1E3A5F] tracking-tight">FAQ Terpopuler</h2>
-            <span className="text-[9px] font-bold bg-[#EBF4FA] text-[#1E4D6B] px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-sm">
+            <span className="text-[9px] font-extrabold bg-[#EBF4FA] text-[#1E4D6B] px-3 py-1.5 rounded-lg uppercase shadow-sm">
               Dari AI Chatbot
             </span>
           </div>
