@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
+import { Users, TrendUp, Warning, FileText, ArrowRight, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
@@ -88,27 +88,17 @@ export default function AdminDashboardPage() {
   const [remindingIds, setRemindingIds] = useState<string[]>([]);
   const [remindedIds, setRemindedIds] = useState<string[]>([]);
 
-  // Notifications State
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [showNotif, setShowNotif] = useState(false);
-  const unreadCount = notifications.filter(n => !n.is_read).length;
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        const [dashRes, notifRes] = await Promise.all([
-          fetch('/api/admin/dashboard'),
-          fetch('/api/admin/notifications')
-        ]);
-        const dashData = await dashRes.json();
-        const notifData = await notifRes.json();
+        const res = await fetch('/api/admin/dashboard');
+        const data = await res.json();
 
-        if (dashData.stats) setStats(dashData.stats);
-        if (dashData.attentionList) setAttentionList(dashData.attentionList);
-        if (dashData.faqs) setFaqs(dashData.faqs);
-        if (notifData.notifications) setNotifications(notifData.notifications);
-
+        if (data.stats) setStats(data.stats);
+        if (data.attentionList) setAttentionList(data.attentionList);
+        if (data.faqs) setFaqs(data.faqs);
       } catch (err) {
         console.error('Dashboard fetch error:', err);
       } finally {
@@ -119,15 +109,6 @@ export default function AdminDashboardPage() {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  async function markAllRead() {
-    await fetch('/api/admin/notifications', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ all: true })
-    });
-    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
-  }
 
   async function handleRemind(emp: AttentionEmployee) {
     if (remindedIds.includes(emp.id) || remindingIds.includes(emp.id)) return;
@@ -193,59 +174,6 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="relative z-10 flex items-center gap-3 shrink-0 flex-wrap justify-end">
-            {/* Notification Bell */}
-            <div className="relative mr-2">
-              <button
-                onClick={() => setShowNotif(!showNotif)}
-                className="relative p-3 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] shadow-sm transition-all text-[#5A7A8C] hover:text-[#1E3A5F]"
-              >
-                <Bell weight="duotone" className="w-5 h-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-                )}
-              </button>
-
-              {showNotif && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setShowNotif(false)} />
-                  <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-[#F3F4F6] z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                    <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-[#FDFDFD]">
-                      <h3 className="font-bold text-[#1E3A5F] text-[14px]">Notifikasi</h3>
-                      <button 
-                        onClick={markAllRead}
-                        className="text-[11px] font-bold text-[#1E4D6B] hover:underline"
-                      >
-                        Tandai semua dibaca
-                      </button>
-                    </div>
-                    <div className="max-h-[350px] overflow-y-auto">
-                      {notifications.length === 0 ? (
-                        <div className="px-5 py-10 text-center text-[#9AADB8] text-[13px] font-medium">
-                          Belum ada notifikasi
-                        </div>
-                      ) : (
-                        notifications.map((n) => (
-                          <div 
-                            key={n.id} 
-                            className={`px-5 py-4 border-b border-[#F9FAFB] last:border-0 hover:bg-[#F8FAFC] transition-colors cursor-pointer relative ${!n.is_read ? 'bg-blue-50/30' : ''}`}
-                          >
-                            {!n.is_read && <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#1E4D6B]" />}
-                            <div className="flex flex-col gap-1">
-                              <p className="font-bold text-[#1E3A5F] text-[13px]">{n.title}</p>
-                              <p className="text-[#5A7A8C] text-[12px] leading-relaxed">{n.message}</p>
-                              <p className="text-[10px] text-[#9AADB8] font-bold mt-1 uppercase tracking-wider">
-                                {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(n.created_at).toLocaleDateString()}
-                              </p>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
             <Link href="/admin/documents">
               <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#E5E7EB] hover:bg-[#F9FAFB] shadow-sm transition-all text-[#1E3A5F] font-bold text-[13.5px]">
                 <FileText weight="duotone" className="w-5 h-5" /> Dokumen
