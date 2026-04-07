@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Users, TrendUp, Warning, FileText, ArrowRight, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
+import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
