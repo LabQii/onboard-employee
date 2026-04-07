@@ -86,14 +86,36 @@ export async function POST(req: NextRequest) {
       html: htmlContent,
     });
 
-    // Create Notification for Admin dashboard
-    await supabaseAdmin.from('notifications').insert({
-      type: 'reminder',
-      title: 'Pengingat Terkirim',
-      message: `Email pengingat telah dikirim ke ${name}.`,
-      user_id: null,
-      is_read: false,
-    });
+    // Get employee user_id from profiles table to send them a notification
+    const { data: employeeData } = await supabaseAdmin
+      .from('profiles')
+      .select('id')
+      .eq('email', email)
+      .single();
+
+    const notificationsToInsert = [
+      // 1. Notification for Admin (Confirmation)
+      {
+        type: 'reminder',
+        title: 'Pengingat Terkirim',
+        message: `Email pengingat telah berhasil dikirim ke ${name}.`,
+        user_id: null, // null means global/admin
+        is_read: false,
+      }
+    ];
+
+    // 2. Notification for Employee (The actual reminder)
+    if (employeeData?.id) {
+      notificationsToInsert.push({
+        type: 'hr_reminder',
+        title: 'Pesan dari HR',
+        message: `Tim HR mengirimkan pengingat untuk menyelesaikan tugas onboarding Anda. Silakan cek progres Anda.`,
+        user_id: employeeData.id,
+        is_read: false,
+      });
+    }
+
+    await supabaseAdmin.from('notifications').insert(notificationsToInsert);
 
     return NextResponse.json({ message: 'Reminder sent successfully', messageId: info.messageId });
   } catch (error: any) {

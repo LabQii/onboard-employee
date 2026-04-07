@@ -35,10 +35,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // Fetch notifications
     async function fetchNotifs() {
       try {
-        const res = await fetch('/api/admin/notifications');
+        const res = await fetch('/api/admin/notifications', { cache: 'no-store' });
         const data = await res.json();
         setNotifications(data.notifications || []);
-      } catch (e) { /* silent */ }
+        console.log('Fetched notifications:', data.notifications?.length);
+      } catch (e) {
+        console.error('Error fetching notifications:', e);
+      }
     }
 
     fetchProfile();
@@ -46,7 +49,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     // Poll every 10 seconds for new notifications
     const interval = setInterval(fetchNotifs, 10000);
-    return () => clearInterval(interval);
+    
+    // Refresh on focus
+    window.addEventListener('focus', fetchNotifs);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', fetchNotifs);
+    };
   }, []);
 
   async function markAllRead() {

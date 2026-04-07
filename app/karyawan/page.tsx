@@ -64,21 +64,28 @@ export default function EmployeeDashboard() {
   ]);
   const [chatLoading, setChatLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotif, setShowNotif] = useState(false);
+
+  const unreadCount = notifications.filter(n => !n.is_read).length;
 
   // Fetch data
   useEffect(() => {
     async function load() {
       try {
-        const [profileRes, checklistRes] = await Promise.all([
+        const [profileRes, checklistRes, notifRes] = await Promise.all([
           fetch('/api/karyawan/profile'),
           fetch('/api/karyawan/checklist'),
+          fetch('/api/karyawan/notifications', { cache: 'no-store' }),
         ]);
         if (profileRes.status === 401) { router.push('/'); return; }
         const { profile: p } = await profileRes.json();
         const { items } = await checklistRes.json();
+        const { notifications: n } = await notifRes.json();
 
         setProfile(p);
         setChecklistItems(items ?? []);
+        setNotifications(n ?? []);
 
         // Welcome Alert Logic: Only show once per session (after login)
         const isWelcomeShown = sessionStorage.getItem('onboard_welcome_shown');
@@ -97,7 +104,34 @@ export default function EmployeeDashboard() {
       }
     }
     load();
+
+    // Polling for notifications
+    const fetchNotifs = async () => {
+      try {
+        const res = await fetch('/api/karyawan/notifications', { cache: 'no-store' });
+        const data = await res.json();
+        if (data.notifications) setNotifications(data.notifications);
+      } catch (e) { console.error('Notif fetch error:', e); }
+    };
+    const interval = setInterval(fetchNotifs, 15000);
+    window.addEventListener('focus', fetchNotifs);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', fetchNotifs);
+    };
   }, [router]);
+
+  async function markAllRead() {
+    try {
+      await fetch('/api/karyawan/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ all: true })
+      });
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    } catch (e) { console.error('Mark read error:', e); }
+  }
 
   // Scroll listener
   useEffect(() => {
@@ -228,12 +262,88 @@ export default function EmployeeDashboard() {
             </div>
           </div>
 
-          {/* User */}
+          {/* User & Notifications */}
           <div className="flex items-center gap-4">
-            <button className="relative text-[#5A7A8C] hover:text-[#1E4D6B] transition-colors">
-              <Bell className="w-5 h-5 stroke-[2]" />
-              <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-red-400 rounded-full" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowNotif(!showNotif)}
+                className={`relative p-2.5 rounded-xl transition-all duration-300 ${showNotif ? 'bg-[#1E4D6B] text-white shadow-lg' : 'text-[#5A7A8C] hover:bg-white hover:text-[#1E4D6B] hover:shadow-sm'}`}
+              >
+                <Bell className="w-5 h-5 stroke-[2]" />
+                {unreadCount > 0 && (
+                  <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {showNotif && (
+                  <>
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setShowNotif(false)}
+                      className="fixed inset-0 z-[60]"
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                      className="absolute right-0 mt-3 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-[70] overflow-hidden"
+                    >
+                      <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-white/50">
+                        <div>
+                          <h3 className="font-bold text-[#1E3A5F] text-[14px]">Notifikasi</h3>
+                          {unreadCount > 0 && (
+                            <p className="text-[11px] text-[#9AADB8] font-medium">{unreadCount} belum dibaca</p>
+                          )}
+                        </div>
+                        <button
+                          onClick={markAllRead}
+                          className="text-[11px] font-bold text-[#1E4D6B] hover:underline"
+                        >
+                          Tandai dibaca
+                        </button>
+                      </div>
+                      <div className="max-h-[350px] overflow-y-auto">
+                        {notifications.length === 0 ? (
+                          <div className="px-5 py-10 text-center flex flex-col items-center gap-3">
+                            <div className="w-12 h-12 bg-[#F9FAFB] rounded-full flex items-center justify-center text-[#E5E7EB]">
+                              <Bell weight="duotone" className="w-6 h-6" />
+                            </div>
+                            <p className="text-[#9AADB8] text-[13px] font-medium">Belum ada notifikasi</p>
+                          </div>
+                        ) : (
+                          notifications.map((n) => (
+                            <div
+                              key={n.id}
+                              className={`px-5 py-4 border-b border-[#F9FAFB] last:border-0 hover:bg-white transition-colors cursor-pointer relative ${!n.is_read ? 'bg-blue-50/20' : ''}`}
+                            >
+                              {!n.is_read && (
+                                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#1E4D6B] rounded-r" />
+                              )}
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${n.type === 'hr_reminder' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
+                                    {n.type === 'hr_reminder' ? 'HR Reminder' : 'Info'}
+                                  </span>
+                                </div>
+                                <p className="font-bold text-[#1E3A5F] text-[13px]">{n.title}</p>
+                                <p className="text-[#5A7A8C] text-[12px] leading-relaxed">{n.message}</p>
+                                <p className="text-[10px] text-[#9AADB8] font-bold mt-1 uppercase tracking-wider">
+                                  {new Date(n.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} • {new Date(n.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                </p>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="flex items-center gap-3 border-l border-[#E8EFF4] pl-4">
               <div className="text-right hidden sm:block">
                 <div className="text-[14px] font-bold text-[#1E3A5F] leading-tight">{profile?.full_name || '—'}</div>
