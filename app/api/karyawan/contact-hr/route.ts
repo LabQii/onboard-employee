@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       type: 'hr_contact',
       title: 'Bantuan Diperlukan',
       message: `${name} (${dept}) meminta bantuan melalui Hubungi HR.`,
-      user_id: session.userId,
+      user_id: null, // null means global/admin, so the employee doesn't see their own request as a notification
       is_read: false
     });
 

@@ -81,8 +81,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
       
       <div className="flex-1 ml-64 flex flex-col h-screen relative z-10 overflow-hidden">
-        {/* Top Navbar Global for Admin */}
-        <div className="h-16 border-b border-[#E8EFF4] bg-white/70 backdrop-blur-xl flex items-center justify-center px-10 shrink-0 relative w-full z-20">
+        {/* Top Navbar Global for Admin - Sticky and High Z-Index to float over content */}
+        <div className="sticky top-0 z-[100] h-16 border-b border-[#E8EFF4] bg-white/80 backdrop-blur-xl flex items-center justify-center px-10 shrink-0 w-full">
             
           <div className="max-w-[1200px] w-full flex justify-between items-center relative z-10">
             <div className="w-4"></div>{/* Spacer */}
