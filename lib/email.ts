@@ -52,7 +52,7 @@ export async function sendInviteEmail(
 <body>
   <div class="container">
     <div class="header">
-      <h1>On Board</h1>
+      <img src="${APP_URL}/logo.png" height="50" style="display:block; margin: 0 auto 10px;" alt="Logo" />
     </div>
     <div class="body">
       <h2>Halo, ${fullName}</h2>
@@ -119,7 +119,7 @@ export async function sendLoginOtp(
 </head>
 <body>
   <div class="container">
-    <div class="header"><h1>On Board.</h1></div>
+    <div class="header"><img src="${APP_URL}/logo.png" height="50" style="display:block; margin: 0 auto 10px;" alt="Logo" /></div>
     <div class="body">
       <p>Kode masuk Anda:</p>
       <div class="otp-box">${otp}</div>

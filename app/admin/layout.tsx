@@ -47,16 +47,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     fetchProfile();
     fetchNotifs();
 
-    // Poll every 10 seconds for new notifications
-    const interval = setInterval(fetchNotifs, 10000);
+    // Poll every 60 seconds for new notifications
+    const interval = setInterval(fetchNotifs, 60000);
     
-    // Refresh on focus
-    window.addEventListener('focus', fetchNotifs);
-    
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', fetchNotifs);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   async function markAllRead() {

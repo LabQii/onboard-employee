@@ -1,17 +1,20 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { Bell, MagnifyingGlass } from '@phosphor-icons/react';
 
 export function UserNavbar() {
   return (
     <header className="bg-white px-8 py-4 flex items-center justify-between border-b border-neutral/20 shadow-sm sticky top-0 z-50">
-      <div className="flex items-center justify-center gap-3">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white text-sm">
-          OF
+      <div className="flex items-center justify-center gap-2.5">
+        <div className="w-9 h-9 flex items-center justify-center group/logo hover:scale-105 transition-all cursor-pointer">
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            className="w-full h-full object-contain"
+          />
         </div>
-        <span className="font-bold text-xl text-tertiary">On Board</span>
+        <span className="font-extrabold text-[1.4rem] text-tertiary tracking-tight">On Board</span>
       </div>
 
       <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-neutral-dark">

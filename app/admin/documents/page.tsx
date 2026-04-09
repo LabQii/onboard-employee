@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { CloudArrowUp, MagnifyingGlass, FileText, Trash, PencilSimple, Eye, X, CaretDown, CheckCircle, Clock, XCircle, Users } from '@phosphor-icons/react';
+import Toast from '@/components/ui/Toast';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -297,6 +298,11 @@ export default function DocumentsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editDoc, setEditDoc] = useState<Document | undefined>();
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+  };
 
   async function fetchData() {
     setLoading(true);
@@ -314,8 +320,13 @@ export default function DocumentsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('Hapus dokumen ini? (Juga akan menghapus tugas onboarding terkait)')) return;
-    await fetch(`/api/documents/delete`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
-    setDocs((prev) => prev.filter((d) => d.id !== id));
+    try {
+      await fetch(`/api/documents/delete`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
+      setDocs((prev) => prev.filter((d) => d.id !== id));
+      showToast('Dokumen berhasil dihapus');
+    } catch (e) {
+      showToast('Gagal menghapus dokumen', 'error');
+    }
   }
 
   const filtered = docs.filter((d) => {
@@ -324,6 +335,12 @@ export default function DocumentsPage() {
 
   return (
     <div className="flex flex-col w-full min-h-full">
+      <Toast
+        isVisible={!!toast}
+        message={toast?.message || ''}
+        type={toast?.type || 'success'}
+        onClose={() => setToast(null)}
+      />
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
         <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
@@ -473,7 +490,7 @@ export default function DocumentsPage() {
         <DocModal
           editDoc={editDoc}
           onClose={() => { setShowModal(false); setEditDoc(undefined); }}
-          onSuccess={fetchData}
+          onSuccess={() => { fetchData(); showToast(editDoc ? 'Dokumen diperbarui' : 'Dokumen berhasil diunggah'); }}
         />
       )}
     </div>

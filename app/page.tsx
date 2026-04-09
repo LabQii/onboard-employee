@@ -2,57 +2,67 @@
 
 import React, { useState, useEffect } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
-import { Star } from '@phosphor-icons/react';
-
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-[#EBF4FA] p-4 lg:p-8 relative">
-      <div className="w-full max-w-[960px] bg-white rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl z-10">
-        
+    <main className="flex min-h-screen w-full items-center justify-center bg-[#F1F5F9] p-4 lg:p-8 font-[family-name:var(--font-geist-sans)]">
+      <div className="w-full max-w-[1000px] bg-white rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row shadow-[0_20px_50px_rgba(0,0,0,0.1)] z-10">
+
         {/* Left Panel */}
-        <div className="w-full md:w-[42%] bg-[#1E4D6B] p-10 flex flex-col relative overflow-hidden text-white">
-          <div className="absolute top-[-20%] right-[-30%] w-[150%] h-[150%] bg-[#22516A] rounded-[100%] opacity-50 pointer-events-none" />
-          <div className="absolute bottom-[-10%] left-[-20%] w-[100%] h-[100%] bg-[#36799C] rounded-[100%] opacity-40 pointer-events-none" />
-          
-          {/* Logo */}
-          <div className="relative z-10 w-12 h-12 mb-10 group/logo">
+        <div className="w-full md:w-[45%] bg-[#1E4D6B] p-12 flex flex-col relative overflow-hidden text-white min-h-[500px]">
+          {/* Decorative Circles */}
+          <div className="absolute top-[-10%] right-[-10%] w-[120%] h-[120%] bg-[#22516A] rounded-full opacity-40 pointer-events-none" />
+          <div className="absolute top-[20%] right-[-40%] w-[100%] h-[100%] bg-[#36799C] rounded-full opacity-20 pointer-events-none" />
+          <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-[#276087] rounded-full opacity-30 pointer-events-none" />
+
+          {/* Logo Placeholder/Logo */}
+          <div className="relative z-10 w-16 h-16 mb-12 flex flex-col items-start">
             {mounted ? (
-              <div className="w-full h-full bg-gradient-to-br from-[#EEF6FB] to-[#DCECF5] rounded-full flex items-center justify-center font-bold text-sm text-[#1E4D6B] shadow-xl shadow-black/10 hover:scale-110 transition-transform cursor-default animate-in fade-in duration-300">
-                OF
+              <div className="text-[12px] font-bold tracking-widest text-[#B5DBEC] flex flex-col gap-1">
+                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center mb-1">
+                  <div className="w-4 h-4 rounded-sm bg-white" />
+                </div>
+                <span className="opacity-80">On Board Logo</span>
               </div>
             ) : (
               <div className="w-full h-full opacity-0" />
             )}
           </div>
 
-          <div className="relative z-10 mt-6">
-            <h1 className="text-3xl font-bold leading-tight mb-3 tracking-tight">On Board.</h1>
-            <p className="text-[#B5DBEC] text-sm font-light leading-relaxed opacity-90">
-              Platform orientasi terpusat untuk membantu masa transisi peran baru Anda secara terstruktur dan efisien.
+          <div className="relative z-10 mb-auto">
+            <h1 className="text-[2.5rem] font-bold leading-tight mb-4 tracking-tight">On Board</h1>
+            <p className="text-[#B5DBEC] text-[0.95rem] font-medium leading-relaxed max-w-[280px]">
+              Panduan onboarding untuk membantu Anda beradaptasi dengan mudah
             </p>
           </div>
 
-          <div className="relative z-10 mt-auto">
-            <div className="bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-              <Star weight="duotone" className="w-8 h-8 text-[#E5B67B] mb-3" />
-              <p className="text-sm font-bold text-white mb-1">Akses Eksklusif</p>
-              <p className="text-xs text-[#B5DBEC] font-light leading-relaxed italic">
-                "Proses administrasi karyawan terintegrasi dengan mulus. Saya merasa diarahkan dengan baik sejak hari pertama."
+          {/* Testimonial Card */}
+          <div className="relative z-10 mt-12 w-full">
+            <div className="bg-white/10 border border-white/20 rounded-[2rem] p-7 backdrop-blur-md shadow-2xl">
+              <p className="text-sm font-bold text-white mb-2">Noted!</p>
+              <p className="text-[0.85rem] text-[#D1E9F4] font-medium leading-relaxed italic mb-4 opacity-90">
+                &quot;Masa depan tergantung pada apa yang kamu lakukan hari ini&quot;
               </p>
-              <p className="text-[10px] font-bold text-white mt-2">— Sarah J., Desainer Produk</p>
+              <p className="text-[10px] font-bold text-white tracking-widest uppercase">— Muhammad Iqbal Firmansyah 2026</p>
             </div>
           </div>
         </div>
 
         {/* Right Panel - Form (White) */}
-        <div className="w-full md:w-[58%] p-10 lg:px-14 lg:py-12 flex flex-col justify-center bg-white relative z-10">
+        <div className="w-full md:w-[55%] p-10 lg:px-20 lg:py-16 flex flex-col justify-center bg-white relative z-10">
           <LoginForm />
         </div>
 
+      </div>
+
+      {/* Modern Watermark */}
+      <div className="fixed bottom-6 left-6 z-20">
+        <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center shadow-lg">
+          <span className="text-white font-bold text-[10px]">N</span>
+        </div>
       </div>
     </main>
   );

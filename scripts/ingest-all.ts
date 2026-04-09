@@ -86,20 +86,20 @@ async function main() {
 
   for (const doc of docs) {
     console.log(`\n📄 Processing: "${doc.name}"`);
-    console.log(`   URL: ${doc.cloudinary_url}`);
+    console.log(`   URL: ${doc.file_url}`);
 
     try {
       // 1. Download file
-      const res = await fetch(doc.cloudinary_url);
+      const res = await fetch(doc.file_url);
       if (!res.ok) throw new Error(`HTTP ${res.status} when downloading`);
       const buffer = Buffer.from(await res.arrayBuffer());
 
       // 2. Extract text
-      const text = await extractText(buffer, doc.cloudinary_url);
+      const text = await extractText(buffer, doc.file_url);
       console.log(`   Extracted text length: ${text.length} chars`);
 
       // 3. Delete old chunks
-      await prisma.$executeRaw`DELETE FROM chunks WHERE document_id = ${doc.id}::uuid`;
+      await prisma.$executeRaw`DELETE FROM document_chunks WHERE document_id = ${doc.id}::uuid`;
 
       // 4. Chunk & embed
       const chunks = chunkText(text);
@@ -114,7 +114,7 @@ async function main() {
         const vectorString = `[${vector.join(',')}]`;
 
         await prisma.$executeRaw`
-          INSERT INTO chunks (document_id, content, embedding)
+          INSERT INTO document_chunks (document_id, content, embedding)
           VALUES (${doc.id}::uuid, ${chunk}, ${vectorString}::vector)
         `;
         process.stdout.write(`\r   Chunk ${i + 1}/${chunks.length} embedded`);

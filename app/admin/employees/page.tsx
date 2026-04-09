@@ -6,6 +6,7 @@ import {
   Plus, MagnifyingGlass, X, CaretDown, DotsThreeVertical, CalendarBlank,
   Envelope, PencilSimple, Trash, ArrowsClockwise, CheckCircle, Clock, UserMinus
 } from '@phosphor-icons/react';
+import Toast from '@/components/ui/Toast';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -363,12 +364,11 @@ export default function EmployeesPage() {
 
   return (
     <div className="flex flex-col w-full min-h-full">
-      {/* Toast */}
-      {toast && (
-        <div className="fixed top-6 right-6 z-50 bg-[#1E4D6B] text-white px-5 py-3 rounded-2xl shadow-lg text-[13px] font-bold flex items-center gap-2 animate-in slide-in-from-right-4">
-          <CheckCircle weight="fill" className="w-4 h-4 text-green-300" /> {toast}
-        </div>
-      )}
+      <Toast
+        isVisible={!!toast}
+        message={toast}
+        onClose={() => setToast('')}
+      />
 
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">

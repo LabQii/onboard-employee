@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Briefcase, UserList, Plus, Trash } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
+import Toast from '@/components/ui/Toast';
 
 // ─── Section Card ────────────────────────────────────────────────────────────
 
@@ -33,6 +34,11 @@ export default function SettingsPage() {
   const [newRole, setNewRole] = useState('');
   const [loadingDeps, setLoadingDeps] = useState(false);
   const [loadingRoles, setLoadingRoles] = useState(false);
+  const [toast, setToast] = useState('');
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+  };
 
   useEffect(() => {
     // Fetch deps & roles
@@ -54,6 +60,7 @@ export default function SettingsPage() {
       if (res.ok) {
         setDepartments(prev => [...prev, data.department]);
         setNewDep('');
+        showToast('Divisi berhasil ditambahkan');
       }
     } catch (e) {
       console.error(e);
@@ -65,7 +72,10 @@ export default function SettingsPage() {
   async function deleteDepartment(id: string) {
     if (!confirm('Hapus divisi ini?')) return;
     const res = await fetch(`/api/admin/departments?id=${id}`, { method: 'DELETE' });
-    if (res.ok) setDepartments(prev => prev.filter(d => d.id !== id));
+    if (res.ok) {
+      setDepartments(prev => prev.filter(d => d.id !== id));
+      showToast('Divisi berhasil dihapus');
+    }
   }
 
   async function addRole() {
@@ -81,6 +91,7 @@ export default function SettingsPage() {
       if (res.ok) {
         setRoles(prev => [...prev, data.role]);
         setNewRole('');
+        showToast('Jabatan berhasil ditambahkan');
       }
     } catch (e) {
       console.error(e);
@@ -92,11 +103,19 @@ export default function SettingsPage() {
   async function deleteRole(id: string) {
     if (!confirm('Hapus jabatan ini?')) return;
     const res = await fetch(`/api/admin/roles?id=${id}`, { method: 'DELETE' });
-    if (res.ok) setRoles(prev => prev.filter(r => r.id !== id));
+    if (res.ok) {
+      setRoles(prev => prev.filter(r => r.id !== id));
+      showToast('Jabatan berhasil dihapus');
+    }
   }
 
   return (
     <div className="flex flex-col w-full min-h-full">
+      <Toast
+        isVisible={!!toast}
+        message={toast}
+        onClose={() => setToast('')}
+      />
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
         <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">

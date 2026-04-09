@@ -11,6 +11,9 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "On Board",
   description: "AI-Powered Employee Onboarding Assistant",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

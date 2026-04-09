@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
+import Toast from '@/components/ui/Toast';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -87,6 +88,11 @@ export default function AdminDashboardPage() {
   // States for 'Pengingat' button UI
   const [remindingIds, setRemindingIds] = useState<string[]>([]);
   const [remindedIds, setRemindedIds] = useState<string[]>([]);
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+  };
 
 
   useEffect(() => {
@@ -129,13 +135,14 @@ export default function AdminDashboardPage() {
 
       setRemindingIds(prev => prev.filter(rid => rid !== emp.id));
       setRemindedIds(prev => [...prev, emp.id]);
+      showToast('Email pengingat berhasil dikirim');
 
       setTimeout(() => {
         setRemindedIds(prev => prev.filter(rid => rid !== emp.id));
       }, 3000);
     } catch (error: any) {
       console.error(error);
-      alert(`Gagal mengirim email: ${error.message}`);
+      showToast(`Gagal mengirim email: ${error.message}`, 'error');
       setRemindingIds(prev => prev.filter(rid => rid !== emp.id));
     }
   }
@@ -155,6 +162,12 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col w-full min-h-full">
+      <Toast
+        isVisible={!!toast}
+        message={toast?.message || ''}
+        type={toast?.type || 'success'}
+        onClose={() => setToast(null)}
+      />
       {/* ── Header ── */}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
         <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">

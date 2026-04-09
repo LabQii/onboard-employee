@@ -6,13 +6,13 @@ import { Envelope, LockKey, Eye, EyeSlash } from '@phosphor-icons/react';
 import Link from 'next/link';
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('explore.codee@gmail.com');
+  const [password, setPassword] = useState('anakindonesia');
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const [demoMode, setDemoMode] = useState<'admin' | 'karyawan' | null>(null);
+  const [demoMode, setDemoMode] = useState<'admin' | 'karyawan'>('karyawan');
 
   const fillDemo = (mode: 'admin' | 'karyawan') => {
     setDemoMode(mode);
@@ -51,30 +51,30 @@ export default function LoginForm() {
     <div className="w-full flex flex-col items-center">
       <div className="mb-10 w-full flex items-start justify-between">
         <div>
-          <h2 className="text-[1.6rem] font-bold text-[#111827] mb-2 tracking-tight">Selamat Datang</h2>
-          <p className="text-sm text-[#5A7A8C] font-medium tracking-tight">Masuk untuk orientasi Anda.</p>
+          <h2 className="text-[1.8rem] font-bold text-[#111827] mb-1 tracking-tight">Selamat Datang</h2>
+          <p className="text-[0.95rem] text-[#5A7A8C] font-medium tracking-tight opacity-80">Masuk untuk orientasi Anda.</p>
         </div>
-        
+
         {/* Demo Switcher */}
-        <div className="flex flex-col gap-1.5 p-1.5 bg-white shadow-soft rounded-2xl border border-[#E8EFF4]">
-           <button 
-             type="button"
-             onClick={() => fillDemo('admin')}
-             className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#5A7A8C] hover:bg-[#F8FAFC]'}`}
-           >
-             ADMIN
-           </button>
-           <button 
-             type="button"
-             onClick={() => fillDemo('karyawan')}
-             className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'karyawan' ? 'bg-[#276087] text-white shadow-md' : 'text-[#5A7A8C] hover:bg-[#F8FAFC]'}`}
-           >
-             KARYAWAN
-           </button>
+        <div className="flex flex-col gap-1.5 p-1 bg-[#F8FAFC] rounded-2xl border border-[#E8EFF4] min-w-[100px]">
+          <button
+            type="button"
+            onClick={() => fillDemo('admin')}
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-white text-[#1E4D6B] shadow-sm' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
+          >
+            ADMIN
+          </button>
+          <button
+            type="button"
+            onClick={() => fillDemo('karyawan')}
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'karyawan' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
+          >
+            KARYAWAN
+          </button>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm text-center font-medium">
             {error}
@@ -83,50 +83,50 @@ export default function LoginForm() {
 
         {/* Email */}
         <div>
-          <label className="text-xs font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">
-            Email Kerja
+          <label className="text-[10px] font-bold text-[#5A7A8C] uppercase tracking-widest mb-2.5 block">
+            EMAIL KERJA
           </label>
           <div className="relative">
-            <Envelope weight="duotone" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
+            <Envelope weight="regular" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
             <input
               id="email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              placeholder="nama@perusahaan.com"
-              className="w-full pl-11 pr-4 py-3.5 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
+              placeholder="explore.codee@gmail.com"
+              className="w-full pl-12 pr-4 py-4 border border-[#E2E8F0] rounded-xl text-[14px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
             />
           </div>
         </div>
 
         {/* Password */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-bold text-[#5A7A8C] uppercase tracking-wider">
-              Kata Sandi
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-[10px] font-bold text-[#5A7A8C] uppercase tracking-widest">
+              KATA SANDI
             </label>
-            <Link href="#" className="text-xs font-semibold text-[#1E4D6B] hover:underline">
+            <Link href="#" className="text-[11px] font-bold text-[#1E4D6B] hover:underline">
               Lupa kata sandi?
             </Link>
           </div>
           <div className="relative">
-            <LockKey weight="duotone" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
+            <LockKey weight="regular" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#9AADB8]" />
             <input
               id="password"
               type={showPw ? 'text' : 'password'}
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              placeholder="••••••••"
-              className="w-full pl-11 pr-12 py-3.5 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
+              placeholder="••••••••••••"
+              className="w-full pl-12 pr-12 py-4 border border-[#E2E8F0] rounded-xl text-[14px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
             />
             <button
               type="button"
               onClick={() => setShowPw(v => !v)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9AADB8] hover:text-[#1E4D6B] transition-colors"
             >
-              {showPw ? <EyeSlash weight="duotone" className="w-5 h-5" /> : <Eye weight="duotone" className="w-5 h-5" />}
+              {showPw ? <EyeSlash weight="regular" className="w-5 h-5" /> : <Eye weight="regular" className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 mt-2 bg-[#1E4D6B] text-white rounded-full font-bold text-[14px] hover:bg-[#236181] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[#1E4D6B]/20"
+          className="w-full py-4 mt-2 bg-[#1E4D6B] text-white rounded-full font-bold text-[15px] hover:bg-[#163a52] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xl shadow-[#1E4D6B]/10 active:scale-[0.98]"
         >
           {loading ? (
             <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Memproses...</>
@@ -142,9 +142,9 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <p className="mt-12 text-center text-xs text-[#9AADB8] font-medium pb-2">
+      <p className="mt-14 text-center text-[12px] text-[#9AADB8] font-medium pb-2">
         Belum punya akun?{' '}
-        <span className="text-[#1E4D6B] font-bold">Hubungi admin HR Anda untuk mendapatkan undangan.</span>
+        <span className="text-[#1E4D6B] font-bold cursor-pointer hover:underline">Hubungi admin HR Anda untuk mendapatkan undangan.</span>
       </p>
     </div>
   );

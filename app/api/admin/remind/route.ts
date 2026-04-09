@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 <body>
   <div class="container">
     <div class="header">
-      <h1>On Board</h1>
+      <img src="${process.env.APP_URL || 'http://localhost:3000'}/logo.png" height="50" style="display:block; margin: 0 auto 10px;" alt="Logo" />
     </div>
     <div class="body">
       <h2>Halo, ${name}</h2>

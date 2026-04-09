@@ -113,13 +113,9 @@ export default function EmployeeDashboard() {
         if (data.notifications) setNotifications(data.notifications);
       } catch (e) { console.error('Notif fetch error:', e); }
     };
-    const interval = setInterval(fetchNotifs, 15000);
-    window.addEventListener('focus', fetchNotifs);
+    const interval = setInterval(fetchNotifs, 60000);
 
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', fetchNotifs);
-    };
+    return () => clearInterval(interval);
   }, [router]);
 
   async function markAllRead() {
@@ -253,12 +249,16 @@ export default function EmployeeDashboard() {
         }`}>
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo - Modern Minimalist Style */}
-          <div className="flex items-center gap-3 group/logo cursor-pointer">
-            <div className="w-[34px] h-[34px] bg-gradient-to-br from-[#1E4D6B] to-[#276087] text-white font-extrabold text-[10px] rounded-full flex items-center justify-center shadow-md shadow-[#1E4D6B]/20 group-hover/logo:scale-110 transition-transform">
-              OF
+          <div className="flex items-center gap-2.5 group/logo cursor-pointer">
+            <div className="w-10 h-10 flex items-center justify-center group-hover/logo:scale-105 transition-transform">
+              <img 
+                src="/logo.png" 
+                alt="Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="flex flex-col">
-              <h1 className="font-extrabold text-[1.05rem] text-[#1E3A5F] tracking-tight leading-none">On Board</h1>
+              <h1 className="font-extrabold text-[1.4rem] text-[#1E3A5F] tracking-tight leading-none">On Board</h1>
             </div>
           </div>
 
