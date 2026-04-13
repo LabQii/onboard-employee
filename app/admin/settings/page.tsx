@@ -6,7 +6,7 @@ import { Briefcase, UserList, Plus, Trash } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Toast from '@/components/ui/Toast';
 
-// ─── Section Card ────────────────────────────────────────────────────────────
+
 
 function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
   return (
@@ -22,12 +22,12 @@ function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType;
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+
 
 export default function SettingsPage() {
   const supabase = createClient();
 
-  // Departments & Roles
+  
   const [departments, setDepartments] = useState<{ id: string, name: string }[]>([]);
   const [roles, setRoles] = useState<{ id: string, name: string }[]>([]);
   const [newDep, setNewDep] = useState('');
@@ -41,10 +41,10 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
-    // Fetch deps & roles
+    
     fetch('/api/admin/departments').then(res => res.json()).then(data => setDepartments(data.departments || []));
     fetch('/api/admin/roles').then(res => res.json()).then(data => setRoles(data.roles || []));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   async function addDepartment() {
@@ -116,11 +116,11 @@ export default function SettingsPage() {
         message={toast}
         onClose={() => setToast('')}
       />
-      {/* ── Header ── */}
+      {}
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
         <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
-          {/* Subtle Blue Dots Decoration */}
+          {}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
@@ -138,7 +138,7 @@ export default function SettingsPage() {
 
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12 mt-4 z-10 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* ── Manage Departments ── */}
+          {}
           <SectionCard icon={Briefcase} title="Daftar Divisi">
             <div className="flex flex-col gap-5">
               <div className="relative flex items-center">
@@ -177,7 +177,7 @@ export default function SettingsPage() {
             </div>
           </SectionCard>
 
-          {/* ── Manage Roles ── */}
+          {}
           <SectionCard icon={UserList} title="Daftar Jabatan">
             <div className="flex flex-col gap-5">
               <div className="relative flex items-center">

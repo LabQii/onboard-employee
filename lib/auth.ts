@@ -14,7 +14,7 @@ export interface SessionPayload {
   fullName: string;
 }
 
-/** Sign JWT — works in Node.js AND Edge runtime */
+
 export async function signToken(payload: SessionPayload): Promise<string> {
   return await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
@@ -23,7 +23,7 @@ export async function signToken(payload: SessionPayload): Promise<string> {
     .sign(JWT_SECRET);
 }
 
-/** Verify JWT — works in Node.js AND Edge runtime */
+
 export async function verifyToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
@@ -33,7 +33,7 @@ export async function verifyToken(token: string): Promise<SessionPayload | null>
   }
 }
 
-/** Server-side session from cookie (Node.js API routes) */
+
 export async function getServerSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;

@@ -28,7 +28,7 @@ export function AdminPageHeader({
 }: AdminPageHeaderProps) {
   return (
     <div className="relative bg-app-soft px-10 pt-10 pb-20 overflow-hidden shrink-0">
-      {/* Decorative background element consistent with Dashboard */}
+      {}
       <div className="absolute top-[-50%] right-[-10%] w-[50%] h-[200%] bg-app-bg rounded-full blur-3xl opacity-50 pointer-events-none" />
       
       <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col md:flex-row md:items-start justify-between gap-6">

@@ -25,18 +25,18 @@ export async function DELETE(req: NextRequest) {
 
   if (!doc) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
-  // Delete from Supabase Storage
+  
   if (doc.file_path) {
     const { error: storageError } = await supabase.storage.from('documents').remove([doc.file_path]);
     if (storageError) console.error("Error deleting from storage:", storageError.message);
   }
 
-  // Auto delete checklist
+  
   if (doc.file_url) {
     await supabase.from('checklist_items').delete().eq('description', doc.file_url);
   }
 
-  // Delete from DB — chunks automatically removed by cascade
+  
   await supabase.from('documents').delete().eq('id', id);
 
   return NextResponse.json({ success: true });

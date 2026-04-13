@@ -8,7 +8,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// GET: Ambil daftar dokumen
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ documents: data });
 }
 
-// POST: Tambah dokumen baru ke DB
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -48,12 +48,12 @@ export async function POST(req: NextRequest) {
 
     if (insertErr) throw insertErr;
 
-    // Auto-create Checklist Item for this Document
+    
     const { error: checklistErr } = await supabase
       .from('checklist_items')
       .insert({
         title: `Baca Dokumen: ${name}`,
-        description: cloudinary_url, // Use description to link the URL
+        description: cloudinary_url, 
         phase: phase || 'Umum',
         department: department || null,
         role: role || null,
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PUT: Edit dokumen
+
 export async function PUT(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -79,7 +79,7 @@ export async function PUT(req: NextRequest) {
     const { id, name, department, role, phase, file_url } = await req.json();
     if (!id) throw new Error('ID is required');
 
-    // Update documents table
+    
     const { data: doc, error: docErr } = await supabase
       .from('documents')
       .update({ name, department: department || null, role: role || null })
@@ -89,7 +89,7 @@ export async function PUT(req: NextRequest) {
 
     if (docErr) throw docErr;
 
-    // Update associated checklist item
+    
     if (file_url) {
       const { error: chkErr } = await supabase
         .from('checklist_items')
@@ -110,7 +110,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// DELETE: Hapus dokumen
+
 export async function DELETE(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -122,7 +122,7 @@ export async function DELETE(req: NextRequest) {
 
   if (!id) return NextResponse.json({ error: 'ID is required' }, { status: 400 });
 
-  // Ambil URL form dokumen untuk menghapus checklist yang berasosiasi
+  
   const { data: docInfo } = await supabase.from('documents').select('cloudinary_url').eq('id', id).single();
 
   const { error } = await supabase.from('documents').delete().eq('id', id);

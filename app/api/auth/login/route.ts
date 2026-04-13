@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email dan password wajib diisi.' }, { status: 400 });
     }
 
-    // Cari user berdasarkan email
+    
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('id, email, password_hash, full_name, is_admin')
@@ -34,13 +34,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verifikasi password
+    
     const valid = await bcrypt.compare(password, profile.password_hash);
     if (!valid) {
       return NextResponse.json({ error: 'Email atau password salah.' }, { status: 401 });
     }
 
-    // Buat JWT token
+    
     const token = await signToken({
       userId: profile.id,
       email: profile.email,
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       fullName: profile.full_name ?? '',
     });
 
-    // Set cookie HttpOnly
+    
     const response = NextResponse.json({
       success: true,
       isAdmin: profile.is_admin,
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 hari
+      maxAge: 60 * 60 * 24 * 7, 
       path: '/',
     });
 

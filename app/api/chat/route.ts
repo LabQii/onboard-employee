@@ -17,25 +17,25 @@ export async function POST(req: Request) {
 
     let contextChunks = "";
 
-    // 1. Generate Embeddings for Question via Google Gemini
+    
     try {
       const embModel = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
       const embRes = await embModel.embedContent(question);
       const vector = embRes.embedding.values;
 
-      // 2. Query pgvector for similarly matched chunks via Supabase RPC
+      
       const { data: matchedChunks, error: matchError } = await supabase.rpc('match_documents', {
         query_embedding: vector,
-        match_threshold: 0.05, // 5% similarity minimum threshold
-        match_count: 5 // Top 5 relevant chunks
+        match_threshold: 0.05, 
+        match_count: 5 
       });
 
       if (matchError) throw matchError;
 
       if (matchedChunks && matchedChunks.length > 0) {
-        // Option 1: we can filter by department logic in the App, or add department to the RPC.
-        // For now, if the user requested it, the original RPC doesn't filter department. Let's do app-side filtering for simplicity if we had departments in the RPC return, but wait, the RPC doesn't return department.
-        // We will just feed the chunks.
+        
+        
+        
         contextChunks = matchedChunks.map((c: any, i: number) => `[Doc ${i+1} - ${c.file_name}]: ${c.content}`).join('\n\n');
       } else {
          contextChunks = "Belum ada dokumen yang memiliki kecocokan yang tinggi.";
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       contextChunks = "(Pencarian teks gagal dilangsungkan.)";
     }
 
-    // 3. Construct System Prompt & Call Groq Llama-3
+    
     const systemPrompt = `Anda adalah asisten cerdas untuk sistem Onboarding ("On Board").
 Berikan jawaban ringkas, solutif, dan tegas berasaskan pedoman dokumen perusahaan yang diberikan.
 

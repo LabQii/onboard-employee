@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { CloudArrowUp, MagnifyingGlass, FileText, Trash, PencilSimple, Eye, X, CaretDown, CheckCircle, Clock, XCircle, Users } from '@phosphor-icons/react';
 import Toast from '@/components/ui/Toast';
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+
 
 interface Document {
   id: string;
@@ -17,7 +17,7 @@ interface Document {
   status: 'indexed' | 'processing' | 'failed' | string;
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+
 
 const STATUS_MAP: Record<string, { label: string; color: string; dot: string }> = {
   indexed: { label: 'Terindeks', color: 'text-[#22C55E] bg-[#22C55E]/5', dot: 'bg-[#22C55E] shadow-[0_0_8px_#22C55E]' },
@@ -35,7 +35,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ─── Document Modal (Create & Edit) ─────────────────────────────────────────
+
 
 function DocModal({
   editDoc,
@@ -50,7 +50,7 @@ function DocModal({
   const [file, setFile] = useState<File | null>(null);
   const [docName, setDocName] = useState(editDoc?.name || '');
 
-  // Targeting
+  
   const [targetType, setTargetType] = useState<'all' | 'dept' | 'role'>(
     editDoc?.role ? 'role' : editDoc?.department ? 'dept' : 'all'
   );
@@ -97,7 +97,7 @@ function DocModal({
       };
 
       if (editDoc) {
-        // Edit mode
+        
         const res = await fetch('/api/admin/documents', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -110,7 +110,7 @@ function DocModal({
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Gagal mengubah dokumen.');
       } else {
-        // Create mode
+        
         const formData = new FormData();
         formData.append('file', file!);
         formData.append('name', payload.name);
@@ -139,7 +139,7 @@ function DocModal({
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/20 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-premium w-full max-w-md mx-4 overflow-hidden">
-        {/* Modal Header */}
+        {}
         <div className="flex items-center justify-between px-6 sm:px-8 py-4 sm:py-6 border-b border-neutral/10">
           <h2 className="font-bold text-[#1E3A5F] text-[1rem] sm:text-[1.1rem]">
             {editDoc ? 'Edit Dokumen' : 'Unggah Dokumen'}
@@ -262,7 +262,7 @@ function DocModal({
           )}
         </div>
 
-        {/* Modal Footer */}
+        {}
         {step === 'form' && (
           <div className="px-6 sm:px-8 pb-6 sm:pb-8 flex gap-3">
             <button
@@ -290,7 +290,7 @@ function DocModal({
   );
 }
 
-// ─── Main Page ───────────────────────────────────────────────────────────────
+
 
 export default function DocumentsPage() {
   const [docs, setDocs] = useState<Document[]>([]);
@@ -341,11 +341,11 @@ export default function DocumentsPage() {
         type={toast?.type || 'success'}
         onClose={() => setToast(null)}
       />
-      {/* ── Header ── */}
+      {}
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
         <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
-          {/* Subtle Blue Dots Decoration */}
+          {}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
@@ -371,7 +371,7 @@ export default function DocumentsPage() {
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12">
-        {/* Stat strip */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-20">
           {[
             { label: 'Prospek AI', count: docs.filter(d => d.status === 'processing').length, icon: Clock, color: 'text-[#276087]', bg: 'bg-[#E8EFF4]' },
@@ -392,7 +392,7 @@ export default function DocumentsPage() {
           ))}
         </div>
 
-        {/* Search */}
+        {}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-10 mb-6">
           <h2 className="text-[1.4rem] font-bold text-[#1E3A5F] tracking-tight">Koleksi Dokumen</h2>
           <div className="relative">
@@ -406,7 +406,7 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        {/* Documents Table */}
+        {}
         <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl p-0 overflow-hidden rounded-3xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left">

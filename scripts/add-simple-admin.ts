@@ -15,7 +15,7 @@ async function addAdmin() {
   const password = 'password';
   const passwordHash = await bcrypt.hash(password, 12);
 
-  // Check if admin@admin.com already exists
+  
   const { data: existing } = await supabase
     .from('profiles')
     .select('id')
@@ -23,11 +23,11 @@ async function addAdmin() {
     .single();
 
   if (existing) {
-    // Update existing
+    
     await supabase.from('profiles').update({ password_hash: passwordHash, is_admin: true }).eq('id', existing.id);
-    console.log('✅ Admin sudah di-update!');
+    
   } else {
-    // Insert new
+    
     await supabase.from('profiles').insert({
       id: randomUUID(),
       email: email,
@@ -35,7 +35,7 @@ async function addAdmin() {
       password_hash: passwordHash,
       is_admin: true,
     });
-    console.log('✅ Admin baru berhasil dibuat!');
+    
   }
 
   console.log(`

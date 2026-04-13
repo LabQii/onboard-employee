@@ -85,14 +85,14 @@ export async function POST(req: NextRequest) {
       html: htmlContent,
     });
 
-    // Get employee user_id from profiles table to send them a notification
+    
     const { data: employeeData } = await supabaseAdmin
       .from('profiles')
       .select('id')
       .eq('email', email)
       .single();
 
-    // 2. Notification for Employee (The actual reminder)
+    
     if (employeeData?.id) {
       await supabaseAdmin.from('notifications').insert({
         type: 'hr_reminder',

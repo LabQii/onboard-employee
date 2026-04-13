@@ -13,6 +13,6 @@ async function main() {
     .not('description', 'ilike', 'http%');
     
   if (error) console.error(error);
-  else console.log('Cleaned up legacy items successfully.');
+  else 
 }
 main();

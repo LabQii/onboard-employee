@@ -14,9 +14,9 @@ const supabase = createClient(URL, SERVICE_KEY, {
 });
 
 async function main() {
-  console.log('Seeding HRD Admin user...');
   
-  // Minimal 6 character password for Supabase Auth default configuration.
+  
+  
   const authResponse = await supabase.auth.admin.createUser({
     email: 'admin@onboardflow.com',
     password: 'admin123',
@@ -25,17 +25,17 @@ async function main() {
 
   if (authResponse.error) {
     if (authResponse.error.message.includes('already been registered')) {
-        console.log('Admin user already exists in auth.');
+        
     } else {
         console.error('Error creating auth user:', authResponse.error.message);
         return;
     }
   } else {
-    console.log('Admin user created successfully in Auth layer.');
+    
   }
 
-  // Next, map them to the profile schema and enforce HRD rules mapping `is_admin = true`.
-  // Fetch the user ID by email to ensure we have the correct identifier.
+  
+  
   const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers();
   const adminUser = usersData?.users.find(u => u.email === 'admin@onboardflow.com');
 
@@ -53,10 +53,10 @@ async function main() {
     if (profileError) {
       console.error('Error escalating privileges to profile:', profileError.message);
     } else {
-       console.log('Successfully bound profiles.is_admin = true. You can now login.');
-       console.log('\n--- CREDENTIALS ---');
-       console.log('Email:', 'admin@onboardflow.com');
-       console.log('Password:', 'admin123');
+       
+       
+       
+       
     }
   }
 }

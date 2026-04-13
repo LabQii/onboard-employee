@@ -24,7 +24,7 @@ export async function GET(
 
   if (error || !employee) return NextResponse.json({ error: 'Karyawan tidak ditemukan.' }, { status: 404 });
 
-  // Progress checklist
+  
   const { count: total } = await supabase
     .from('checklist_progress')
     .select('*', { count: 'exact', head: true })
@@ -41,7 +41,7 @@ export async function GET(
   return NextResponse.json({
     employee: {
       ...employee,
-      password_hash: undefined, // jangan kirim hash ke client
+      password_hash: undefined, 
       hasPassword: !!employee.password_hash,
       progress,
     },

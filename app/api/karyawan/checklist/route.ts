@@ -8,12 +8,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// GET: ambil semua checklist item user
+
 export async function GET() {
   const session = await getServerSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Get user profile first to know their department and role
+  
   const { data: profile } = await supabase
     .from('profiles')
     .select('department, role')
@@ -30,7 +30,7 @@ export async function GET() {
       checklist_progress!left(completed, completed_at)
     `);
 
-  // Target Filter: (Global) OR (Dept Match) OR (Role Match)
+  
   const filters = ['and(department.is.null,role.is.null)'];
   if (userDept) filters.push(`department.eq.${userDept}`);
   if (userRole) filters.push(`role.eq.${userRole}`);
@@ -41,7 +41,7 @@ export async function GET() {
     .order('phase')
     .order('priority');
 
-  // Flatten: gabungkan dengan status progress milik user ini
+  
   const enriched = (items ?? []).map((item: any) => {
     const progress = Array.isArray(item.checklist_progress)
       ? item.checklist_progress.find((p: any) => true)
@@ -61,7 +61,7 @@ export async function GET() {
   return NextResponse.json({ items: enriched });
 }
 
-// POST: toggle status checklist item
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

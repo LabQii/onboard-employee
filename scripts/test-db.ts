@@ -7,9 +7,9 @@ const supabase = createClient(
 
 async function run() {
   const { data: p, error: pe } = await supabase.from('checklist_progress').select('*');
-  console.log('Progress:', p, pe);
+  
   
   const { data: c, error: ce } = await supabase.from('checklist_items').select('*');
-  console.log('Items:', c, ce);
+  
 }
 run();

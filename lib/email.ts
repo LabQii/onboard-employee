@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
 const SMTP_FROM = process.env.SMTP_FROM || 'noreply@onboardflow.com';
 
-/** Buat transporter Nodemailer. Jika SMTP tidak dikonfigurasi, pakai fallback console. */
+
 function createTransporter() {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -19,7 +19,7 @@ function createTransporter() {
   });
 }
 
-/** Kirim email undangan karyawan baru */
+
 export async function sendInviteEmail(
   email: string,
   fullName: string,
@@ -76,12 +76,6 @@ export async function sendInviteEmail(
 </html>`;
 
   if (!transporter) {
-    // Dev fallback — tampilkan link di server console
-    console.log('\n─────────────────────────────────────────');
-    console.log('📧  EMAIL UNDANGAN (DEV MODE - SMTP belum dikonfigurasi)');
-    console.log(`  Kepada : ${fullName} <${email}>`);
-    console.log(`  Link   : ${inviteUrl}`);
-    console.log('─────────────────────────────────────────\n');
     return;
   }
 
@@ -93,7 +87,7 @@ export async function sendInviteEmail(
   });
 }
 
-/** Kirim email OTP login (alternatif: login tanpa password dengan kode 6 digit) */
+
 export async function sendLoginOtp(
   email: string,
   otp: string
@@ -131,11 +125,6 @@ export async function sendLoginOtp(
 </html>`;
 
   if (!transporter) {
-    console.log('\n─────────────────────────────────────────');
-    console.log('📧  OTP LOGIN (DEV MODE)');
-    console.log(`  Kepada : ${email}`);
-    console.log(`  Kode   : ${otp}`);
-    console.log('─────────────────────────────────────────\n');
     return;
   }
 

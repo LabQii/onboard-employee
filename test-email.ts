@@ -18,7 +18,7 @@ transporter.sendMail({
   subject: 'Test Email',
   text: 'This is a test email'
 }).then(info => {
-  console.log('Success:', info.messageId);
+  
 }).catch(err => {
   console.error('Error:', err.message);
 });

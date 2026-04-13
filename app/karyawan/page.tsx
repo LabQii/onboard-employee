@@ -70,7 +70,7 @@ export default function EmployeeDashboard() {
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
-  // Fetch data
+  
   useEffect(() => {
     async function load() {
       try {
@@ -88,13 +88,13 @@ export default function EmployeeDashboard() {
         setChecklistItems(items ?? []);
         setNotifications(n ?? []);
 
-        // Welcome Alert Logic: Only show once per session (after login)
+        
         const isWelcomeShown = sessionStorage.getItem('onboard_welcome_shown');
         if (!isWelcomeShown) {
           setTimeout(() => {
             setShowWelcome(true);
             sessionStorage.setItem('onboard_welcome_shown', 'true');
-            // Auto hide after 5 seconds
+            
             setTimeout(() => setShowWelcome(false), 5000);
           }, 800);
         }
@@ -106,7 +106,7 @@ export default function EmployeeDashboard() {
     }
     load();
 
-    // Polling for notifications
+    
     const fetchNotifs = async () => {
       try {
         const res = await fetch('/api/karyawan/notifications', { cache: 'no-store' });
@@ -130,16 +130,16 @@ export default function EmployeeDashboard() {
     } catch (e) { console.error('Mark read error:', e); }
   }
 
-  // Scroll listener
+  
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Toggle checklist
+  
   const toggleItem = useCallback(async (itemId: string, current: boolean) => {
-    // Optimistic update
+    
     setChecklistItems(prev => prev.map(i => i.id === itemId ? { ...i, completed: !current } : i));
     await fetch('/api/karyawan/checklist', {
       method: 'POST',
@@ -148,13 +148,13 @@ export default function EmployeeDashboard() {
     });
   }, []);
 
-  // Logout
+  
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
     window.location.href = '/';
   }
 
-  // Chat send
+  
   async function sendChat(text: string) {
     if (!text.trim()) return;
     const userMsg: Message = { role: 'user', text };
@@ -189,16 +189,16 @@ export default function EmployeeDashboard() {
     }
   }
 
-  // Stats
+  
   const totalItems = checklistItems.length;
   const completedItems = checklistItems.filter(i => i.completed).length;
   const progress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
   const remaining = totalItems - completedItems;
 
-  // Group by phase
+  
   const phases = Array.from(new Set(checklistItems.map(i => i.phase || 'Umum')));
 
-  // Days since start
+  
   const daysSinceStart = profile?.start_date
     ? Math.max(0, Math.floor((Date.now() - new Date(profile.start_date).getTime()) / 86400000)) + 1
     : 1;
@@ -215,7 +215,7 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] flex flex-col relative overflow-hidden">
-      {/* Animated Welcome Alert */}
+      {}
       <AnimatePresence>
         {showWelcome && (
           <motion.div
@@ -239,17 +239,17 @@ export default function EmployeeDashboard() {
         )}
       </AnimatePresence>
 
-      {/* Decorative Gradient Background Elements */}
+      {}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#DCECF5] rounded-full blur-[120px] opacity-60" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#E0F0FA] rounded-full blur-[150px] opacity-70" />
       </div>
 
-      {/* Top Navbar */}
+      {}
       <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-xl border-b border-[#E8EFF4] shadow-sm' : 'bg-transparent backdrop-blur-sm'
         }`}>
         <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo - Modern Minimalist Style */}
+          {}
           <div className="flex items-center gap-2.5 group/logo cursor-pointer">
             <div className="w-10 h-10 flex items-center justify-center group-hover/logo:scale-105 transition-transform">
               <img 
@@ -263,7 +263,7 @@ export default function EmployeeDashboard() {
             </div>
           </div>
 
-          {/* User & Notifications */}
+          {}
           <div className="flex items-center gap-4">
             <div className="relative">
               <button 
@@ -365,7 +365,7 @@ export default function EmployeeDashboard() {
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 pt-28 pb-12 w-full flex flex-col gap-6">
-        {/* Simplified Header with 3 Cards */}
+        {}
         <div className="flex flex-col gap-6">
           <div className="flex items-end justify-between px-2">
             <div className="flex flex-col gap-1">
@@ -379,7 +379,7 @@ export default function EmployeeDashboard() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* Card 1: Progress */}
+            {}
             <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 p-6 hover:-translate-y-1 transition-all cursor-pointer">
               <div className="relative w-[60px] h-[60px] shrink-0">
                 <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
@@ -397,7 +397,7 @@ export default function EmployeeDashboard() {
               </div>
             </Card>
 
-            {/* Card 2: Remaining */}
+            {}
             <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 p-6 hover:-translate-y-1 transition-all cursor-pointer">
               <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8EFF4] text-[#276087] flex items-center justify-center shrink-0">
                 <CheckSquare weight="duotone" className="w-7 h-7" />
@@ -411,7 +411,7 @@ export default function EmployeeDashboard() {
               </div>
             </Card>
 
-            {/* Card 3: Completed */}
+            {}
             <Card className="bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] flex items-center gap-5 p-6 hover:-translate-y-1 transition-all cursor-pointer">
               <div className="w-[60px] h-[60px] rounded-2xl bg-[#E8EFF4] text-[#276087] flex items-center justify-center shrink-0">
                 <CheckCircle weight="duotone" className="w-7 h-7" />
@@ -427,12 +427,12 @@ export default function EmployeeDashboard() {
           </div>
         </div>
 
-        {/* Content */}
+        {}
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          {/* Dynamic Content */}
+          {}
           <div className="flex-1 w-full flex flex-col gap-10">
 
-            {/* Checklist Section */}
+            {}
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1 px-1">
 
@@ -523,10 +523,10 @@ export default function EmployeeDashboard() {
 
           </div>
 
-          {/* Chatbot — desktop only inline, mobile via FAB */}
+          {}
           <div className="hidden lg:block w-full lg:w-[420px] shrink-0 sticky top-24 z-10">
             <Card className="w-full h-[440px] sm:h-[600px] p-0 flex flex-col overflow-hidden bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-              {/* Header chatbot */}
+              {}
               <div className="bg-gradient-to-r from-[#1E4D6B] to-[#276087] p-5 text-white flex items-center justify-between shrink-0 shadow-sm border-b border-[#1A4560]/20">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
@@ -541,7 +541,7 @@ export default function EmployeeDashboard() {
                 </div>
               </div>
 
-              {/* Messages */}
+              {}
               <div className="flex-1 overflow-y-auto px-5 py-6 bg-[#F8FAFC] flex flex-col gap-4">
                 {messages.map((msg, i) => (
                   <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''} max-w-[90%] ${msg.role === 'user' ? 'self-end' : ''}`}>
@@ -586,7 +586,7 @@ export default function EmployeeDashboard() {
                     </div>
                   </div>
                 )}
-                {/* Quick questions */}
+                {}
                 {messages.length === 1 && (
                   <div className="mt-auto flex flex-wrap gap-2">
                     {QUICK_QUESTIONS.map(q => (
@@ -599,7 +599,7 @@ export default function EmployeeDashboard() {
                 )}
               </div>
 
-              {/* Input */}
+              {}
               <div className="p-5 bg-white shrink-0 border-t border-[#E8EFF4]">
                 <div className="relative mb-3">
                   <input
@@ -659,7 +659,7 @@ export default function EmployeeDashboard() {
         </div>
       </div>
 
-      {/* ── Mobile Chat FAB ─────────────────────────────── */}
+      {}
       <button
         onClick={() => setShowMobileChat(true)}
         className="lg:hidden fixed bottom-6 right-6 z-[80] w-14 h-14 rounded-full bg-gradient-to-br from-[#1E4D6B] to-[#276087] text-white shadow-[0_8px_30px_rgba(30,77,107,0.45)] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
@@ -668,10 +668,10 @@ export default function EmployeeDashboard() {
         <AssistantIcon className="w-6 h-6 stroke-[1.5]" />
       </button>
 
-      {/* ── Mobile Chat Modal ───────────────────────────── */}
+      {}
       {showMobileChat && (
         <div className="lg:hidden fixed inset-0 z-[90] flex flex-col bg-[#F8FAFC]">
-          {/* Modal Header */}
+          {}
           <div className="bg-gradient-to-r from-[#1E4D6B] to-[#276087] px-5 py-4 text-white flex items-center justify-between shrink-0 safe-top">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
@@ -693,7 +693,7 @@ export default function EmployeeDashboard() {
             </button>
           </div>
 
-          {/* Messages */}
+          {}
           <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4">
             {messages.map((msg, i) => (
               <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''} max-w-[90%] ${msg.role === 'user' ? 'self-end' : ''}`}>
@@ -749,7 +749,7 @@ export default function EmployeeDashboard() {
             )}
           </div>
 
-          {/* Input */}
+          {}
           <div className="p-4 bg-white border-t border-[#E8EFF4] shrink-0 safe-bottom">
             <div className="relative mb-3">
               <input

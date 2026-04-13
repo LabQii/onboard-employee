@@ -11,14 +11,14 @@ export default function LoginPage() {
     <main className="flex min-h-screen w-full items-center justify-center bg-[#F1F5F9] p-4 sm:p-6 lg:p-8 font-[family-name:var(--font-geist-sans)]">
       <div className="w-full max-w-[1000px] bg-white rounded-[1.8rem] sm:rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row shadow-[0_20px_50px_rgba(0,0,0,0.1)] z-10">
 
-        {/* Left Panel */}
+        {}
         <div className="w-full md:w-[45%] bg-[#1E4D6B] px-8 py-10 md:p-12 flex flex-col items-center md:items-start text-center md:text-left relative overflow-hidden text-white min-h-[260px] md:min-h-[500px]">
-          {/* Decorative Circles */}
+          {}
           <div className="absolute top-[-10%] right-[-10%] w-[120%] h-[120%] bg-[#22516A] rounded-full opacity-40 pointer-events-none" />
           <div className="absolute top-[20%] right-[-40%] w-[100%] h-[100%] bg-[#36799C] rounded-full opacity-20 pointer-events-none" />
           <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-[#276087] rounded-full opacity-30 pointer-events-none" />
 
-          {/* Logo */}
+          {}
           <div className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 mb-6 md:mb-12 flex items-center justify-center bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20 shadow-xl group hover:scale-105 transition-transform duration-300">
             {mounted ? (
               <img
@@ -38,7 +38,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Testimonial Card */}
+          {}
           <div className="relative z-10 w-full hidden md:block">
             <div className="bg-white/10 border border-white/20 rounded-[2rem] p-7 backdrop-blur-md shadow-2xl">
               <p className="text-sm font-bold text-white mb-2">Noted!</p>
@@ -50,14 +50,14 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Right Panel - Form (White) */}
+        {}
         <div className="w-full md:w-[55%] p-8 sm:p-10 lg:px-20 lg:py-16 flex flex-col justify-center bg-white relative z-10">
           <LoginForm />
         </div>
 
       </div>
 
-      {/* Modern Watermark */}
+      {}
       <div className="fixed bottom-6 left-6 z-20">
         <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center shadow-lg">
           <span className="text-white font-bold text-[10px]">N</span>

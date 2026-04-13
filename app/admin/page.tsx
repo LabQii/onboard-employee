@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import Toast from '@/components/ui/Toast';
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+
 
 interface DashboardStats {
   totalEmployees: number;
@@ -30,7 +30,7 @@ interface FaqItem {
   count: number;
 }
 
-// ─── Sub-components ────────────────────────────────────────────────────────
+
 
 function StatCard({
   icon: Icon,
@@ -68,7 +68,7 @@ function StatCard({
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────
+
 
 export default function AdminDashboardPage() {
   const [supabase] = useState(() => createClient());
@@ -84,7 +84,7 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  // States for 'Pengingat' button UI
+  
   const [remindingIds, setRemindingIds] = useState<string[]>([]);
   const [remindedIds, setRemindedIds] = useState<string[]>([]);
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
@@ -112,7 +112,7 @@ export default function AdminDashboardPage() {
     }
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   async function handleRemind(emp: AttentionEmployee) {
@@ -167,11 +167,11 @@ export default function AdminDashboardPage() {
         type={toast?.type || 'success'}
         onClose={() => setToast(null)}
       />
-      {/* ── Header ── */}
+      {}
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
         <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
-          {/* Subtle Blue Dots Decoration */}
+          {}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
@@ -206,7 +206,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12">
-        {/* ── Stat Cards ── */}
+        {}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative z-20">
           <StatCard
             icon={Users}
@@ -231,7 +231,7 @@ export default function AdminDashboardPage() {
           />
         </div>
 
-        {/* ── Karyawan Perlu Perhatian ── */}
+        {}
         <div className="mt-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
@@ -334,7 +334,7 @@ export default function AdminDashboardPage() {
           </Card>
         </div>
 
-        {/* ── FAQ Terpopuler ── */}
+        {}
         <div className="mt-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[1.4rem] font-bold text-[#1E3A5F] tracking-tight">FAQ Terpopuler</h2>

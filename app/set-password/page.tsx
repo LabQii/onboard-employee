@@ -89,7 +89,7 @@ function SetPasswordContent() {
   return (
     <div className="min-h-screen bg-[#EBF4FA] flex items-center justify-center p-4">
       <div className="w-full max-w-[960px] bg-white rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl">
-        {/* Left Panel */}
+        {}
         <div className="w-full md:w-[42%] bg-[#1E4D6B] p-10 flex flex-col relative overflow-hidden text-white">
           <div className="absolute top-[-20%] right-[-30%] w-[150%] h-[150%] bg-[#22516A] rounded-[100%] opacity-50 pointer-events-none" />
           <div className="absolute bottom-[-10%] left-[-20%] w-[100%] h-[100%] bg-[#36799C] rounded-[100%] opacity-40 pointer-events-none" />
@@ -121,7 +121,7 @@ function SetPasswordContent() {
           </div>
         </div>
 
-        {/* Right Panel */}
+        {}
         <div className="w-full md:w-[58%] p-10 lg:px-14 lg:py-12 flex flex-col justify-center">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-[#1E3A5F] mb-1 tracking-tight">Atur Kata Sandi</h2>
@@ -139,7 +139,7 @@ function SetPasswordContent() {
               </div>
             )}
 
-            {/* Password */}
+            {}
             <div>
               <label className="text-xs font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">
                 Kata Sandi Baru
@@ -162,7 +162,7 @@ function SetPasswordContent() {
                   {showPw ? <EyeSlash weight="duotone" className="w-5 h-5" /> : <Eye weight="duotone" className="w-5 h-5" />}
                 </button>
               </div>
-              {/* Strength bar */}
+              {}
               {password.length > 0 && (
                 <div className="mt-2 flex items-center gap-2">
                   <div className="flex gap-1 flex-1">
@@ -180,7 +180,7 @@ function SetPasswordContent() {
               )}
             </div>
 
-            {/* Confirm Password */}
+            {}
             <div>
               <label className="text-xs font-bold text-[#5A7A8C] uppercase tracking-wider mb-2 block">
                 Konfirmasi Kata Sandi

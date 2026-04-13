@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Password minimal 8 karakter.' }, { status: 400 });
     }
 
-    // Cari user berdasarkan invite_token
+    
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('id, email, full_name, is_admin, invite_token, invite_expires_at')
@@ -31,15 +31,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Link undangan tidak valid atau sudah digunakan.' }, { status: 400 });
     }
 
-    // Cek apakah token sudah kedaluwarsa
+    
     if (profile.invite_expires_at && new Date(profile.invite_expires_at) < new Date()) {
       return NextResponse.json({ error: 'Link undangan sudah kedaluwarsa. Minta admin untuk mengirim ulang.' }, { status: 400 });
     }
 
-    // Hash password baru
+    
     const password_hash = await bcrypt.hash(password, 12);
 
-    // Simpan password + hapus token undangan
+    
     const { error: updateErr } = await supabase
       .from('profiles')
       .update({
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Gagal menyimpan password.' }, { status: 500 });
     }
 
-    // Auto-login: buat JWT
+    
     const jwtToken = await signToken({
       userId: profile.id,
       email: profile.email,
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Validasi token saja (GET) — untuk cek apakah token masih valid di halaman set-password
+
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token');
   if (!token) return NextResponse.json({ valid: false });

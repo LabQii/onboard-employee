@@ -14,7 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
   useEffect(() => {
-    // Fetch admin profile initials
+    
     async function fetchProfile() {
       try {
         const supabase = createClient();
@@ -33,16 +33,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           
           setAdminProfile({ name, email, initials });
         }
-      } catch (e) { /* silent */ }
+      } catch (e) {  }
     }
 
-    // Fetch notifications
+    
     async function fetchNotifs() {
       try {
         const res = await fetch('/api/admin/notifications', { cache: 'no-store' });
         const data = await res.json();
         setNotifications(data.notifications || []);
-        console.log('Fetched notifications:', data.notifications?.length);
+        
       } catch (e) {
         console.error('Error fetching notifications:', e);
       }
@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     fetchProfile();
     fetchNotifs();
 
-    // Poll every 60 seconds for new notifications
+    
     const interval = setInterval(fetchNotifs, 60000);
     
     return () => clearInterval(interval);
@@ -68,7 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] flex text-[#1E3A5F]">
-      {/* Decorative Gradient Background Elements */}
+      {}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#DCECF5] rounded-full blur-[120px] opacity-60" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#E0F0FA] rounded-full blur-[150px] opacity-70" />
@@ -77,11 +77,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} profile={adminProfile} />
       
       <div className="flex-1 lg:ml-64 flex flex-col h-screen relative z-10 overflow-hidden">
-        {/* Top Navbar Global for Admin - Sticky and High Z-Index to float over content */}
+        {}
         <div className="sticky top-0 z-[100] h-16 border-b border-[#E8EFF4] bg-white/80 backdrop-blur-xl flex items-center justify-center px-6 lg:px-10 shrink-0 w-full">
             
           <div className="max-w-[1200px] w-full flex justify-between items-center relative z-10">
-            {/* Mobile Menu Toggle */}
+            {}
             <button 
               onClick={() => setIsSidebarOpen(true)}
               className="lg:hidden p-2 -ml-2 text-[#9AADB8] hover:text-[#1E4D6B] transition-colors"
@@ -89,12 +89,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <List weight="bold" className="w-6 h-6" />
             </button>
 
-            <div className="w-4 hidden lg:block"></div>{/* Spacer */}
+            <div className="w-4 hidden lg:block"></div>{}
             
             <div className="flex-1"></div>
             
             <div className="flex items-center gap-5">
-              {/* Bell with live notification count */}
+              {}
               <div className="relative">
                 <button
                   onClick={() => setShowNotif(!showNotif)}
@@ -159,7 +159,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 )}
               </div>
 
-              {/* Admin Avatar with icon */}
+              {}
               <div className="w-8 h-8 rounded-xl bg-[#1E3A5F] flex items-center justify-center font-bold text-xs text-white shadow-sm">
                 <User weight="bold" className="w-4 h-4" />
               </div>
@@ -167,7 +167,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        {/* Scrollable Content */}
+        {}
         <main className="flex-1 overflow-y-auto">
           {children}
         </main>

@@ -6,7 +6,7 @@ const PUBLIC_PATHS = ['/', '/set-password', '/api/auth/login', '/api/auth/set-pa
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Izinkan path publik & aset statis
+  
   const isStaticAsset = pathname.match(/\.(png|jpg|jpeg|gif|svg|ico)$/);
   
   if (
@@ -18,21 +18,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Cek session cookie
+  
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const session = token ? await verifyToken(token) : null;
 
-  // Tidak login → redirect ke halaman utama
+  
   if (!session) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // Karyawan coba akses admin → redirect ke /karyawan
+  
   if (pathname.startsWith('/admin') && !session.isAdmin) {
     return NextResponse.redirect(new URL('/karyawan', request.url));
   }
 
-  // Admin coba akses /karyawan → redirect ke /admin
+  
   if (pathname.startsWith('/karyawan') && session.isAdmin) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }

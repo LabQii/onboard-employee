@@ -56,7 +56,7 @@ export default function Toast({ message, isVisible, onClose, type = 'success', d
             </button>
           </div>
 
-          {/* Progress Bar */}
+          {}
           <div className={`absolute bottom-0 left-0 h-1 w-full ${isError ? 'bg-red-500/10' : 'bg-emerald-500/10'}`}>
             <motion.div
               initial={{ width: '100%' }}

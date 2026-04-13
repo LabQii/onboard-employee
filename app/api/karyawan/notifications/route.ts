@@ -9,9 +9,7 @@ const supabase = createClient(
 
 export const dynamic = 'force-dynamic';
 
-/**
- * GET: Fetch notifications for the logged-in employee
- */
+
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession();
@@ -35,9 +33,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/**
- * PATCH: Mark notifications as read for the logged-in employee
- */
+
 export async function PATCH(req: NextRequest) {
   try {
     const session = await getServerSession();

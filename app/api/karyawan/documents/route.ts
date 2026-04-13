@@ -11,7 +11,7 @@ export async function GET() {
   const session = await getServerSession();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Get user profile first to know their department and role
+  
   const { data: profile } = await supabase
     .from('profiles')
     .select('department, role')
@@ -21,10 +21,10 @@ export async function GET() {
   const userDept = profile?.department;
   const userRole = profile?.role;
 
-  // We want documents where:
-  // 1. department is NULL AND role is NULL (Global)
-  // 2. OR department matches userDept
-  // 3. OR role matches userRole
+  
+  
+  
+  
   let query = supabase.from('documents').select('*');
   
   const filters = ['and(department.is.null,role.is.null)'];

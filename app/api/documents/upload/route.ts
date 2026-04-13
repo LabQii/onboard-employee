@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    // 1. Upload to Supabase Storage
+    
     const filePath = `${Date.now()}_${file.name}`;
     const { error: storageError } = await supabase.storage
       .from("documents")
@@ -49,17 +49,17 @@ export async function POST(req: NextRequest) {
 
     if (storageError) return NextResponse.json({ error: storageError.message }, { status: 500 });
 
-    // Ensure bucket is public, this gives the immediate public URL
+    
     const { data: { publicUrl } } = supabase.storage
       .from("documents")
       .getPublicUrl(filePath);
 
-    // 2. Extract Text
+    
     let text = '';
     const lowerName = file.name.toLowerCase();
     
     if (lowerName.endsWith('.pdf')) {
-      // Use legacy build for Node environments
+      
       const { getDocument, GlobalWorkerOptions } = await import('pdfjs-dist/legacy/build/pdf.mjs');
       GlobalWorkerOptions.workerSrc = 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 
@@ -85,14 +85,14 @@ export async function POST(req: NextRequest) {
       const data = await mammoth.extractRawText({ buffer });
       text = data.value;
     } else {
-      text = buffer.toString('utf-8'); // basic txt
+      text = buffer.toString('utf-8'); 
     }
 
     if (!text.trim()) {
        text = "Isi dokumen kosong atau gagal diekstrak.";
     }
 
-    // 3. Save Document Metadata
+    
     const { data: doc, error: docError } = await supabase
       .from('documents')
       .insert({ 
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 
     if (docError) return NextResponse.json({ error: docError.message }, { status: 500 });
     
-    // Auto-create Checklist Item for this Document
+    
     const { error: checklistErr } = await supabase
       .from('checklist_items')
       .insert({
@@ -123,11 +123,11 @@ export async function POST(req: NextRequest) {
       
     if (checklistErr) console.warn("Could not insert checklist item:", checklistErr.message);
 
-    // 4. Chunk Text and generate Embedding
+    
     const chunks = chunkText(text);
     const embModel = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
 
-    // Process sequentially or batch properly to avoid rate limits on 1000 requests at a time
+    
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       if (!chunk.trim()) continue;
@@ -145,14 +145,14 @@ export async function POST(req: NextRequest) {
         if (insertErr) {
           console.error(`Supabase Insert Error (chunk ${i}):`, insertErr);
         } else {
-          console.log(`Successfully inserted chunk ${i} for doc ${doc.id}`);
+          
         }
       } catch (err: any) {
         console.error(`Chunk embed error (index ${i}):`, err.message);
       }
     }
 
-    console.log(`Finished processing document ${doc.id}. Total chunks inserted: ${chunks.length}`);
+    
 
     return NextResponse.json({ success: true, document: doc, chunks: chunks.length });
   } catch (error: any) {

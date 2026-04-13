@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get profile to include name/dept in notification
+    
     const { data: profile } = await supabase
       .from('profiles')
       .select('full_name, department')
@@ -24,12 +24,12 @@ export async function POST(req: NextRequest) {
     const name = profile?.full_name || 'Karyawan';
     const dept = profile?.department || '-';
 
-    // Create Notification for Admin/HR
+    
     const { error } = await supabase.from('notifications').insert({
       type: 'hr_contact',
       title: 'Bantuan Diperlukan',
       message: `${name} (${dept}) meminta bantuan melalui Hubungi HR.`,
-      user_id: null, // null means global/admin, so the employee doesn't see their own request as a notification
+      user_id: null, 
       is_read: false
     });
 

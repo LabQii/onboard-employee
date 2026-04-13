@@ -59,7 +59,7 @@ export default function EmployeeDetailPage() {
     async function fetchAll() {
       setLoading(true);
 
-      // 1. Profile
+      
       const { data: prof } = await supabase
         .from('profiles')
         .select('id, full_name, email, department, role, start_date')
@@ -68,17 +68,17 @@ export default function EmployeeDetailPage() {
         
       setProfile(prof);
 
-      // 2. Checklist items + progress
+      
       if (prof) {
-        // Fetch templates for employees department
+        
         const { data: items } = await supabase
           .from('checklist_items')
           .select('id, title, phase, checklist_progress!left(completed, completed_at)')
           .eq('department', prof.department || 'Global');
 
-        // Map checklist with progress
+        
         const mappedChecklist = (items ?? []).map((t: any) => {
-           // find the progress for this user (in a real scenario we'd eq user_id in the relation, but this works)
+           
            const progressArr = t.checklist_progress || [];
            const progress = progressArr.length > 0 ? progressArr[0] : null;
            
@@ -94,7 +94,7 @@ export default function EmployeeDetailPage() {
         setChecklist(mappedChecklist);
       }
 
-      // 3. Last 10 chat messages
+      
       const { data: chats } = await supabase
         .from('chat_history')
         .select('id, question, created_at')
@@ -103,7 +103,7 @@ export default function EmployeeDetailPage() {
         .limit(10);
       setChatHistory(chats ?? []);
 
-      // 4. Documents accessible to this user (global OR department)
+      
       if (prof) {
         let query = supabase.from('documents').select('id, name, department');
         if (prof.department) {
@@ -119,7 +119,7 @@ export default function EmployeeDetailPage() {
     }
 
     fetchAll();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [id]);
 
   const completedCount = checklist.filter((c) => c.completed).length;
@@ -156,7 +156,7 @@ export default function EmployeeDetailPage() {
 
   return (
     <div className="flex flex-col w-full min-h-full">
-      {/* Header */}
+      {}
       <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-4">
         <Link
           href="/admin/employees"
@@ -191,9 +191,9 @@ export default function EmployeeDetailPage() {
 
       <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 -mt-8 relative z-20">
-          {/* ── Left Column ── */}
+          {}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            {/* Checklist Progress */}
+            {}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">Checklist Onboarding</h2>
@@ -205,7 +205,7 @@ export default function EmployeeDetailPage() {
                 </div>
               </div>
 
-              {/* Progress bar */}
+              {}
               <div className="w-full h-2 bg-[#E8EFF4] rounded-full mb-8 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-1000 ${progress === 100 ? 'bg-[#22C55E]' : 'bg-[#1E4D6B]'}`}
@@ -251,7 +251,7 @@ export default function EmployeeDetailPage() {
               )}
             </Card>
 
-            {/* Chat History */}
+            {}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center gap-3 mb-6">
                 <ChatCircle weight="duotone" className="w-6 h-6 text-[#276087]" />
@@ -279,9 +279,9 @@ export default function EmployeeDetailPage() {
             </Card>
           </div>
 
-          {/* ── Right Column ── */}
+          {}
           <div className="flex flex-col gap-6">
-            {/* Profile Info */}
+            {}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center gap-3 mb-5">
                 <User weight="duotone" className="w-6 h-6 text-[#276087]" />
@@ -302,7 +302,7 @@ export default function EmployeeDetailPage() {
               </div>
             </Card>
 
-            {/* Accessible Documents */}
+            {}
             <Card className="shadow-sm border border-[#E8EFF4] bg-white">
               <div className="flex items-center gap-3 mb-5">
                 <FileText weight="duotone" className="w-6 h-6 text-[#276087]" />

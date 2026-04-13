@@ -10,6 +10,6 @@ async function main() {
       ]
     }
   });
-  console.log('Deleted legacy items:', result.count);
+  
 }
 main().catch(console.error).finally(() => prisma.$disconnect());

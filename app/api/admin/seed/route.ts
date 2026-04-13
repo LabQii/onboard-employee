@@ -7,13 +7,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-/**
- * API untuk seed akun admin pertama.
- * Akses: POST /api/admin/seed
- * Hanya bisa digunakan sekali (jika belum ada admin).
- */
+
 export async function POST(req: NextRequest) {
-  // Cek apakah sudah ada admin
+  
   const { count } = await supabase
     .from('profiles')
     .select('*', { count: 'exact', head: true })

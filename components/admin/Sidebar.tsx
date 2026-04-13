@@ -18,7 +18,7 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
   const pathname = usePathname();
 
-  // Close sidebar on ESC key
+  
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) onClose?.();
@@ -27,7 +27,7 @@ export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Lock body scroll on mobile when sidebar is open
+  
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -46,7 +46,7 @@ export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile Overlay — always in DOM, opacity controlled */}
+      {}
       <div
         className={cn(
           'fixed inset-0 bg-black/50 backdrop-blur-sm z-[190] lg:hidden transition-opacity duration-300',
@@ -62,9 +62,9 @@ export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        {/* Header — Close button (mobile) + Logo */}
+        {}
         <div className="p-5 pb-2 min-h-[80px]">
-          {/* Mobile close button — inside sidebar, top row */}
+          {}
           <div className="flex items-center justify-between mb-3 lg:hidden">
             <span className="text-[11px] font-bold text-tertiary/40 uppercase tracking-widest">Menu</span>
             <button
@@ -76,7 +76,7 @@ export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
             </button>
           </div>
 
-          {/* Logo Card */}
+          {}
           <div className="bg-white p-4 rounded-[1.5rem] border border-[#E8EFF4] shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex items-center gap-3 group/logo hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all cursor-default">
             <div className="w-10 h-10 flex items-center justify-center group-hover/logo:scale-105 transition-transform">
               <img
@@ -93,7 +93,7 @@ export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
           </div>
         </div>
 
-        {/* Navigation */}
+        {}
         <nav className="flex-1 px-4 space-y-1.5 mt-2 overflow-y-auto">
           {links.map((itm) => {
             const isActive = itm.exact ? pathname === itm.href : pathname.startsWith(itm.href);
@@ -126,7 +126,7 @@ export function Sidebar({ isOpen, onClose, profile }: SidebarProps) {
           })}
         </nav>
 
-        {/* Footer */}
+        {}
         <div className="p-6 mt-auto">
           <div className="bg-white/40 p-4 rounded-3xl border border-white/60 mb-4 shadow-soft">
             <div className="flex items-center gap-3 mb-4 min-w-0">

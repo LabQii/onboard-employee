@@ -8,7 +8,7 @@ import {
 } from '@phosphor-icons/react';
 import Toast from '@/components/ui/Toast';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+
 
 interface Employee {
   id: string;
@@ -22,7 +22,7 @@ interface Employee {
   progress?: number;
 }
 
-// ─── Invite / Edit Modal ──────────────────────────────────────────────────────
+
 
 function EmployeeModal({
   mode,
@@ -83,7 +83,7 @@ function EmployeeModal({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 flex flex-col gap-4">
-          {/* Nama */}
+          {}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Nama Lengkap</label>
             <input value={fullName} onChange={e => setFullName(e.target.value)} required
@@ -91,7 +91,7 @@ function EmployeeModal({
               className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all bg-white" />
           </div>
 
-          {/* Email */}
+          {}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
@@ -100,7 +100,7 @@ function EmployeeModal({
               className="w-full px-4 py-3 border border-[#D8E8F0] rounded-xl text-[13px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] transition-all disabled:bg-[#F8FAFC] disabled:text-[#9AADB8] bg-white" />
           </div>
 
-          {/* Divisi */}
+          {}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Divisi</label>
             <div className="relative">
@@ -113,7 +113,7 @@ function EmployeeModal({
             </div>
           </div>
 
-          {/* Jabatan */}
+          {}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Jabatan</label>
             <div className="relative">
@@ -126,7 +126,7 @@ function EmployeeModal({
             </div>
           </div>
 
-          {/* Tanggal Mulai */}
+          {}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Tanggal Mulai</label>
             <div className="relative">
@@ -156,7 +156,7 @@ function EmployeeModal({
   );
 }
 
-// ─── Delete Confirm Modal ─────────────────────────────────────────────────────
+
 
 function DeleteModal({ emp, onClose, onDeleted }: { emp: Employee; onClose: () => void; onDeleted: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -194,7 +194,7 @@ function DeleteModal({ emp, onClose, onDeleted }: { emp: Employee; onClose: () =
   );
 }
 
-// ─── Employee Card ─────────────────────────────────────────────────────────────
+
 
 const AVATAR_COLORS = [
   'bg-[#1E4D6B]/10 text-[#1E4D6B]',
@@ -232,7 +232,7 @@ function EmployeeCard({
 
   return (
     <Card className="flex flex-col relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl rounded-[2rem] p-7">
-      {/* Menu */}
+      {}
       <div className="absolute top-4 right-4 z-10">
         <button
           onClick={() => setMenuOpen(v => !v)}
@@ -265,7 +265,7 @@ function EmployeeCard({
         )}
       </div>
 
-      {/* Avatar & info */}
+      {}
       <div className="flex flex-col items-center text-center mt-2 mb-6">
         <div className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl mb-4 ${colorClass} ring-4 ring-white shadow-sm`}>
           {initials}
@@ -279,13 +279,13 @@ function EmployeeCard({
         )}
       </div>
 
-      {/* Email */}
+      {}
       <div className="flex items-center gap-2 mb-4 justify-center">
         <Envelope weight="duotone" className="w-4 h-4 text-[#9AADB8]" />
         <span className="text-[11px] text-[#5A7A8C] truncate max-w-[180px]">{emp.email}</span>
       </div>
 
-      {/* Status aktivasi */}
+      {}
       <div className="flex items-center justify-center gap-2 mb-4">
         {hasActivated ? (
           <span className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
@@ -298,7 +298,7 @@ function EmployeeCard({
         )}
       </div>
 
-      {/* Progress */}
+      {}
       <div className="mt-auto w-full border-t border-[#E8EFF4] pt-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-[11px] font-bold text-[#9AADB8]">Progress Checklist</span>
@@ -320,7 +320,7 @@ function EmployeeCard({
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
+
 
 export default function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -370,11 +370,11 @@ export default function EmployeesPage() {
         onClose={() => setToast('')}
       />
 
-      {/* ── Header ── */}
+      {}
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
         <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
-          {/* Subtle Blue Dots Decoration */}
+          {}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
@@ -386,7 +386,7 @@ export default function EmployeesPage() {
             <p className="text-[#6B7280] text-[13px] sm:text-[15px] font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               Kelola data karyawan dan progres onboarding
             </p>
-            {/* Stats */}
+            {}
             <div className="flex items-center justify-center md:justify-start gap-2 sm:gap-3 mt-5 flex-wrap">
               <span className="text-[10px] sm:text-[11px] font-extrabold bg-[#F3F4F6] text-[#5A7A8C] px-2.5 sm:px-3 py-1.5 rounded-md border border-[#E5E7EB] uppercase shrink-0">
                 {stats.total} Total
@@ -412,7 +412,7 @@ export default function EmployeesPage() {
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12">
-        {/* Filters */}
+        {}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 mb-8 mt-2">
           <div className="relative">
             <CaretDown weight="duotone" className="w-4 h-4 text-[#9AADB8] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -436,7 +436,7 @@ export default function EmployeesPage() {
           </div>
         </div>
 
-        {/* Grid */}
+        {}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -472,7 +472,7 @@ export default function EmployeesPage() {
         )}
       </div>
 
-      {/* Modals */}
+      {}
       {showCreate && (
         <EmployeeModal
           mode="create"

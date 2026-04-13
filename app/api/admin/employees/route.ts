@@ -12,7 +12,7 @@ const supabase = createClient(
 
 export const dynamic = 'force-dynamic';
 
-// ─── GET: List semua karyawan ─────────────────────────────────────────────────
+
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -36,15 +36,15 @@ export async function GET(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Ambil data checklist untuk hitung progress
+  
   const { data: allItems } = await supabase.from('checklist_items').select('id, department, role');
   const { data: allProgress } = await supabase.from('checklist_progress').select('user_id, completed').eq('completed', true);
   
   const employees = (data || []).map(emp => {
     const { password_hash, ...rest } = emp;
     
-    // Filter item yang sesuai dengan karyawan ini
-    // (Global: dept & role null) OR Match Dept OR Match Role
+    
+    
     const targetedItems = allItems?.filter(item => {
       const isGlobal = !item.department && !item.role;
       const matchDept = item.department && item.department === emp.department;
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ employees });
 }
 
-// ─── POST: Undang karyawan baru ───────────────────────────────────────────────
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Nama dan email wajib diisi.' }, { status: 400 });
     }
 
-    // Cek apakah email sudah terdaftar
+    
     const { data: existing } = await supabase
       .from('profiles')
       .select('id')
@@ -91,14 +91,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email sudah terdaftar.' }, { status: 409 });
     }
 
-    // Generate invite token
+    
     const inviteToken = randomBytes(32).toString('hex');
-    const inviteExpiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(); // 48 jam
+    const inviteExpiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(); 
 
-    // Generate UUID untuk user baru
+    
     const newId = crypto.randomUUID();
 
-    // Insert profile baru
+    
     const { data: newProfile, error: insertErr } = await supabase
       .from('profiles')
       .insert({
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `Gagal membuat profil: ${insertErr.message}` }, { status: 500 });
     }
 
-    // Kirim email undangan
+    
     await sendInviteEmail(email, fullName, inviteToken);
 
     return NextResponse.json({ success: true, employee: newProfile });
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ─── PUT: Update karyawan ─────────────────────────────────────────────────────
+
 export async function PUT(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -162,7 +162,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// ─── DELETE: Hapus karyawan ───────────────────────────────────────────────────
+
 export async function DELETE(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {
@@ -179,7 +179,7 @@ export async function DELETE(req: NextRequest) {
   return NextResponse.json({ success: true });
 }
 
-// ─── PATCH: Resend invite ─────────────────────────────────────────────────────
+
 export async function PATCH(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.isAdmin) {

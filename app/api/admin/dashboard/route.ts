@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     const { data: allProgress } = await supabase.from('checklist_progress').select('user_id, completed').eq('completed', true);
 
     for (const emp of employees ?? []) {
-      // Filter item yang sesuai dengan karyawan ini: (Global) OR Match Dept OR Match Role
+      
       const targetedItems = allItems?.filter(item => {
         const isGlobal = !item.department && !item.role;
         const matchDept = item.department && item.department === emp.department;
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
       .slice(0, 5)
       .map(([question, count]) => ({ question, count }));
 
-    // Mock data if no real database history exists (for demo purposes)
+    
     if (topFaqs.length === 0) {
       topFaqs = [
         { question: "Bagaimana cara melakukan klaim asuransi kesehatan?", count: 18 },

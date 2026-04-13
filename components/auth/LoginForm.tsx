@@ -55,7 +55,7 @@ export default function LoginForm() {
           <p className="text-[0.85rem] sm:text-[0.95rem] text-[#5A7A8C] font-medium tracking-tight opacity-80">Masuk untuk membaca dokumentasi</p>
         </div>
 
-        {/* Demo Switcher */}
+        {}
         <div className="flex flex-row sm:flex-col gap-1.5 p-1 bg-[#F8FAFC] rounded-2xl border border-[#E8EFF4] w-fit">
           <button
             type="button"
@@ -81,7 +81,7 @@ export default function LoginForm() {
           </div>
         )}
 
-        {/* Email */}
+        {}
         <div>
           <label className="text-[10px] font-bold text-[#5A7A8C] uppercase tracking-widest mb-2.5 block">
             EMAIL KERJA
@@ -100,7 +100,7 @@ export default function LoginForm() {
           </div>
         </div>
 
-        {/* Password */}
+        {}
         <div>
           <div className="flex items-center justify-between mb-2.5">
             <label className="text-[10px] font-bold text-[#5A7A8C] uppercase tracking-widest">
