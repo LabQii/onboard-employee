@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Users, TrendUp, Warning, FileText, ArrowRight, Bell, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
+import { Users, TrendUp, Warning, FileText, Bell, MagnifyingGlass, GearSix } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import Toast from '@/components/ui/Toast';
@@ -161,7 +160,7 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-full">
+    <div className="flex flex-col w-full min-h-full animate-in fade-in duration-500">
       <Toast
         isVisible={!!toast}
         message={toast?.message || ''}

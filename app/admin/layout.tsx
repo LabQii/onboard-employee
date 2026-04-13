@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/admin/Sidebar';
-import { Bell, X, List } from '@phosphor-icons/react';
+import { Bell, X, List, User } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotif, setShowNotif] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [initials, setInitials] = useState('AD');
+  const [adminProfile, setAdminProfile] = useState<{name: string, email: string, initials: string} | null>(null);
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
@@ -20,15 +20,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         const supabase = createClient();
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
+          const email = session.user.email || 'admin@flow.com';
           const { data: profile } = await supabase
             .from('profiles')
             .select('full_name')
             .eq('id', session.user.id)
             .single();
-          if (profile?.full_name) {
-            const parts = profile.full_name.split(' ');
-            setInitials(parts.map((p: string) => p[0]).join('').slice(0, 2).toUpperCase());
-          }
+          
+          let name = profile?.full_name || 'Admin HR';
+          const parts = name.split(' ');
+          const initials = parts.map((p: string) => p[0]).join('').slice(0, 2).toUpperCase();
+          
+          setAdminProfile({ name, email, initials });
         }
       } catch (e) { /* silent */ }
     }
@@ -64,16 +67,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] flex text-[#1E3A5F] overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#EEF6FB] via-[#F8FAFC] flex text-[#1E3A5F]">
       {/* Decorative Gradient Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#DCECF5] rounded-full blur-[120px] opacity-60" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#E0F0FA] rounded-full blur-[150px] opacity-70" />
       </div>
 
-      <div className="relative z-10">
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      </div>
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} profile={adminProfile} />
       
       <div className="flex-1 lg:ml-64 flex flex-col h-screen relative z-10 overflow-hidden">
         {/* Top Navbar Global for Admin - Sticky and High Z-Index to float over content */}
@@ -108,7 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {showNotif && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setShowNotif(false)} />
-                    <div className="absolute right-0 mt-6 w-80 bg-white rounded-2xl shadow-xl border border-[#F3F4F6] z-50 overflow-hidden">
+                    <div className="fixed top-16 left-4 right-4 sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-6 sm:w-80 bg-white rounded-2xl shadow-xl border border-[#F3F4F6] z-50 overflow-hidden">
                       <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-[#FDFDFD]">
                         <div>
                           <h3 className="font-bold text-[#1E3A5F] text-[14px]">Notifikasi</h3>
@@ -158,9 +159,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 )}
               </div>
 
-              {/* Admin Avatar with real initials */}
+              {/* Admin Avatar with icon */}
               <div className="w-8 h-8 rounded-xl bg-[#1E3A5F] flex items-center justify-center font-bold text-xs text-white shadow-sm">
-                {initials}
+                <User weight="bold" className="w-4 h-4" />
               </div>
             </div>
           </div>

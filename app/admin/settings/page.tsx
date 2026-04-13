@@ -110,7 +110,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-full">
+    <div className="flex flex-col w-full min-h-full animate-in fade-in duration-500">
       <Toast
         isVisible={!!toast}
         message={toast}

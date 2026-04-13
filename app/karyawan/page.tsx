@@ -66,6 +66,7 @@ export default function EmployeeDashboard() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotif, setShowNotif] = useState(false);
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
@@ -218,13 +219,13 @@ export default function EmployeeDashboard() {
       <AnimatePresence>
         {showWelcome && (
           <motion.div
-            initial={{ x: 400, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.9, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
             transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-            className="fixed top-24 right-6 z-[60] bg-white border border-[#E8EFF4] shadow-2xl rounded-2xl p-6 flex items-center gap-4 max-w-sm pointer-events-auto"
+            className="fixed top-[88px] left-4 right-4 sm:left-auto sm:right-6 sm:top-24 z-[60] bg-white border border-[#E8EFF4] shadow-2xl rounded-2xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4 max-w-sm sm:mx-0 mx-auto pointer-events-auto"
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#1E4D6B] to-[#276087] rounded-xl flex items-center justify-center text-white shrink-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#1E4D6B] to-[#276087] rounded-xl flex items-center justify-center text-white shrink-0">
               <User weight="duotone" className="w-6 h-6" />
             </div>
             <div>
@@ -290,7 +291,7 @@ export default function EmployeeDashboard() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                      className="absolute right-0 mt-6 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-[70] overflow-hidden"
+                      className="fixed top-16 left-4 right-4 sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-6 sm:w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-[70] overflow-hidden"
                     >
                       <div className="px-5 py-4 border-b border-[#F3F4F6] flex items-center justify-between bg-white/50">
                         <div>
@@ -522,8 +523,8 @@ export default function EmployeeDashboard() {
 
           </div>
 
-          {/* Chatbot */}
-          <div className="w-full lg:w-[420px] shrink-0 sticky top-24 z-10">
+          {/* Chatbot — desktop only inline, mobile via FAB */}
+          <div className="hidden lg:block w-full lg:w-[420px] shrink-0 sticky top-24 z-10">
             <Card className="w-full h-[440px] sm:h-[600px] p-0 flex flex-col overflow-hidden bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
               {/* Header chatbot */}
               <div className="bg-gradient-to-r from-[#1E4D6B] to-[#276087] p-5 text-white flex items-center justify-between shrink-0 shadow-sm border-b border-[#1A4560]/20">
@@ -657,6 +658,137 @@ export default function EmployeeDashboard() {
           </div>
         </div>
       </div>
+
+      {/* ── Mobile Chat FAB ─────────────────────────────── */}
+      <button
+        onClick={() => setShowMobileChat(true)}
+        className="lg:hidden fixed bottom-6 right-6 z-[80] w-14 h-14 rounded-full bg-gradient-to-br from-[#1E4D6B] to-[#276087] text-white shadow-[0_8px_30px_rgba(30,77,107,0.45)] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+        aria-label="Buka Chat AI"
+      >
+        <AssistantIcon className="w-6 h-6 stroke-[1.5]" />
+      </button>
+
+      {/* ── Mobile Chat Modal ───────────────────────────── */}
+      {showMobileChat && (
+        <div className="lg:hidden fixed inset-0 z-[90] flex flex-col bg-[#F8FAFC]">
+          {/* Modal Header */}
+          <div className="bg-gradient-to-r from-[#1E4D6B] to-[#276087] px-5 py-4 text-white flex items-center justify-between shrink-0 safe-top">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+                <AssistantIcon className="w-5 h-5 text-white stroke-[1.5]" />
+              </div>
+              <div>
+                <h3 className="font-bold text-[14px]">Asisten Onboarding</h3>
+                <div className="text-[9px] font-bold tracking-[0.15em] flex items-center gap-1.5 uppercase opacity-70">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_6px_#4ADE80]" /> Online
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowMobileChat(false)}
+              className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+              aria-label="Tutup chat"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-4">
+            {messages.map((msg, i) => (
+              <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''} max-w-[90%] ${msg.role === 'user' ? 'self-end' : ''}`}>
+                {msg.role === 'bot' && (
+                  <div className="w-7 h-7 rounded-lg bg-white text-[#1E4D6B] flex items-center justify-center shrink-0 shadow-sm border border-[#E8EFF4]">
+                    <AssistantIcon className="w-3.5 h-3.5 stroke-[1.5]" />
+                  </div>
+                )}
+                <div className={`px-4 py-3 rounded-2xl text-[13px] leading-relaxed font-medium ${
+                  msg.role === 'bot'
+                    ? 'bg-white text-[#1E3A5F] rounded-tl-sm shadow-sm border border-[#E8EFF4]'
+                    : 'bg-[#1E4D6B] text-white rounded-tr-sm'
+                }`}>
+                  {msg.role === 'bot' ? (
+                    <div className="flex flex-col gap-2">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ node, ...props }) => <p className="mb-1" {...props} />,
+                          ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-1 space-y-1" {...props} />,
+                          ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-1 space-y-1" {...props} />,
+                          li: ({ node, ...props }) => <li className="" {...props} />,
+                          strong: ({ node, ...props }) => <strong className="font-bold text-[#1E3A5F]" {...props} />
+                        }}
+                      >
+                        {msg.text}
+                      </ReactMarkdown>
+                    </div>
+                  ) : msg.text}
+                </div>
+              </div>
+            ))}
+            {chatLoading && (
+              <div className="flex gap-3">
+                <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center shrink-0 shadow-sm border border-[#E8EFF4]">
+                  <AssistantIcon className="w-3.5 h-3.5 text-[#1E4D6B] stroke-[1.5]" />
+                </div>
+                <div className="bg-white px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm border border-[#E8EFF4] flex gap-1 items-center">
+                  {[0, 1, 2].map(i => (
+                    <span key={i} className="w-2 h-2 bg-[#9AADB8] rounded-full animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                  ))}
+                </div>
+              </div>
+            )}
+            {messages.length === 1 && (
+              <div className="mt-auto flex flex-wrap gap-2">
+                {QUICK_QUESTIONS.map(q => (
+                  <button key={q} onClick={() => sendChat(q)}
+                    className="text-[11px] px-3 py-2 bg-white text-[#1E4D6B] border border-[#D8E8F0] rounded-full hover:bg-[#1E4D6B] hover:text-white transition-all font-bold shadow-sm">
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="p-4 bg-white border-t border-[#E8EFF4] shrink-0 safe-bottom">
+            <div className="relative mb-3">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={e => setChatInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendChat(chatInput)}
+                placeholder="Tanyakan sesuatu..."
+                className="w-full h-12 pl-4 pr-12 text-[13px] bg-[#F8FAFC] border border-[#E8EFF4] rounded-xl focus:ring-4 focus:ring-[#1E4D6B]/8 focus:border-[#1E4D6B] transition-all font-medium text-[#1E3A5F] placeholder:text-[#9AADB8] focus:outline-none"
+              />
+              <button
+                onClick={() => sendChat(chatInput)}
+                disabled={!chatInput.trim() || chatLoading}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-[#1E4D6B] hover:bg-[#1E4D6B] hover:text-white rounded-lg transition-all disabled:opacity-30"
+              >
+                <PaperPlane weight="duotone" className="w-4 h-4" />
+              </button>
+            </div>
+            <button
+              id="contact-hr-btn-mobile"
+              onClick={async () => {
+                const btn = document.getElementById('contact-hr-btn-mobile') as HTMLButtonElement | null;
+                if (btn) { btn.textContent = 'Mengirim...'; btn.disabled = true; }
+                try {
+                  const res = await fetch('/api/karyawan/contact-hr', { method: 'POST' });
+                  if (res.ok && btn) { btn.textContent = '✓ Terkirim'; }
+                } catch {
+                  if (btn) { btn.textContent = 'Gagal'; }
+                } finally {
+                  setTimeout(() => { if (btn) { btn.textContent = 'Hubungi HR Langsung'; btn.disabled = false; } }, 3000);
+                }
+              }}
+              className="w-full h-10 text-[12px] font-bold border border-[#D8E8F0] rounded-xl text-[#5A7A8C] hover:bg-[#F0F7FB] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              <Phone weight="duotone" className="w-4 h-4" /> Hubungi HR Langsung
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -28,10 +28,10 @@ export default function Toast({ message, isVisible, onClose, type = 'success', d
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: -20, x: 20 }}
-          animate={{ opacity: 1, y: 0, x: 0 }}
+          initial={{ opacity: 0, y: -20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95, y: -10 }}
-          className="fixed top-6 right-6 z-[9999] min-w-[320px] bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-[#E8EFF4] overflow-hidden"
+          className="fixed top-6 left-4 right-4 sm:left-auto sm:right-6 sm:w-auto sm:min-w-[320px] z-[9999] bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-[#E8EFF4] overflow-hidden"
         >
           <div className="flex items-center gap-4 p-5">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isError ? 'bg-red-50' : 'bg-emerald-50'}`}>
