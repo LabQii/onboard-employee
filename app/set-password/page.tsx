@@ -94,11 +94,13 @@ function SetPasswordContent() {
           <div className="absolute top-[-20%] right-[-30%] w-[150%] h-[150%] bg-[#22516A] rounded-[100%] opacity-50 pointer-events-none" />
           <div className="absolute bottom-[-10%] left-[-20%] w-[100%] h-[100%] bg-[#36799C] rounded-[100%] opacity-40 pointer-events-none" />
           
-          <div className="relative z-10 w-12 h-12 mb-10 group/logo">
+          <div className="relative z-10 w-16 h-16 mb-10 flex items-center justify-center bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20 shadow-xl group hover:scale-105 transition-transform duration-300">
             {mounted ? (
-              <div className="w-full h-full bg-gradient-to-br from-[#EEF6FB] to-[#DCECF5] rounded-full flex items-center justify-center font-bold text-sm text-[#1E4D6B] shadow-xl shadow-black/10 hover:scale-110 transition-transform cursor-default animate-in fade-in duration-300">
-                OF
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="Logo" 
+                className="w-10 h-10 object-contain drop-shadow-md animate-in zoom-in duration-500"
+              />
             ) : (
               <div className="w-full h-full opacity-0" />
             )}

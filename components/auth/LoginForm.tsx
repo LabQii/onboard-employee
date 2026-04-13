@@ -52,7 +52,7 @@ export default function LoginForm() {
       <div className="mb-10 w-full flex items-start justify-between">
         <div>
           <h2 className="text-[1.8rem] font-bold text-[#111827] mb-1 tracking-tight">Selamat Datang</h2>
-          <p className="text-[0.95rem] text-[#5A7A8C] font-medium tracking-tight opacity-80">Masuk untuk orientasi Anda.</p>
+          <p className="text-[0.95rem] text-[#5A7A8C] font-medium tracking-tight opacity-80">Masuk untuk membaca dokumentasi</p>
         </div>
 
         {/* Demo Switcher */}
@@ -60,7 +60,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={() => fillDemo('admin')}
-            className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-white text-[#1E4D6B] shadow-sm' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
           >
             ADMIN
           </button>

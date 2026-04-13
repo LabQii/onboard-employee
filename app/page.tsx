@@ -18,21 +18,20 @@ export default function LoginPage() {
           <div className="absolute top-[20%] right-[-40%] w-[100%] h-[100%] bg-[#36799C] rounded-full opacity-20 pointer-events-none" />
           <div className="absolute bottom-[-20%] left-[-20%] w-[80%] h-[80%] bg-[#276087] rounded-full opacity-30 pointer-events-none" />
 
-          {/* Logo Placeholder/Logo */}
-          <div className="relative z-10 w-16 h-16 mb-12 flex flex-col items-start">
+          {/* Logo */}
+          <div className="relative z-10 w-16 h-16 mb-12 flex items-center justify-center bg-white/10 rounded-2xl backdrop-blur-sm border border-white/20 shadow-xl group hover:scale-105 transition-transform duration-300">
             {mounted ? (
-              <div className="text-[12px] font-bold tracking-widest text-[#B5DBEC] flex flex-col gap-1">
-                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center mb-1">
-                  <div className="w-4 h-4 rounded-sm bg-white" />
-                </div>
-                <span className="opacity-80">On Board Logo</span>
-              </div>
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="w-10 h-10 object-contain drop-shadow-md animate-in zoom-in duration-500"
+              />
             ) : (
               <div className="w-full h-full opacity-0" />
             )}
           </div>
 
-          <div className="relative z-10 mb-auto">
+          <div className="relative z-10 mb-10 mt-3">
             <h1 className="text-[2.5rem] font-bold leading-tight mb-4 tracking-tight">On Board</h1>
             <p className="text-[#B5DBEC] text-[0.95rem] font-medium leading-relaxed max-w-[280px]">
               Panduan onboarding untuk membantu Anda beradaptasi dengan mudah
@@ -40,7 +39,7 @@ export default function LoginPage() {
           </div>
 
           {/* Testimonial Card */}
-          <div className="relative z-10 mt-12 w-full">
+          <div className="relative z-10 w-full">
             <div className="bg-white/10 border border-white/20 rounded-[2rem] p-7 backdrop-blur-md shadow-2xl">
               <p className="text-sm font-bold text-white mb-2">Noted!</p>
               <p className="text-[0.85rem] text-[#D1E9F4] font-medium leading-relaxed italic mb-4 opacity-90">

@@ -7,10 +7,12 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Izinkan path publik & aset statis
+  const isStaticAsset = pathname.match(/\.(png|jpg|jpeg|gif|svg|ico)$/);
+  
   if (
     PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p + '?')) ||
+    isStaticAsset ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon') ||
     pathname.startsWith('/api/auth/')
   ) {
     return NextResponse.next();

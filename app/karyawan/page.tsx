@@ -150,7 +150,7 @@ export default function EmployeeDashboard() {
   // Logout
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/');
+    window.location.href = '/';
   }
 
   // Chat send

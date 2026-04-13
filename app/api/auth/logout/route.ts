@@ -1,8 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { COOKIE_NAME } from '@/lib/auth';
 
-export async function POST() {
-  const url = new URL('/', process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000');
+export async function POST(request: NextRequest) {
+  // Use the current request URL to build the redirect URL (relative to the same domain)
+  const url = new URL('/', request.url);
+  
   const response = NextResponse.redirect(url, {
     status: 303 // Use 303 See Other for redirects after POST
   });
@@ -14,9 +16,10 @@ export async function POST() {
     maxAge: 0,
     path: '/',
   });
+  
   return response;
 }
 
-export async function GET() {
-  return POST();
+export async function GET(request: NextRequest) {
+  return POST(request);
 }
