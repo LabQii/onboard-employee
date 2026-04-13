@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/admin/Sidebar';
-import { Bell, X } from '@phosphor-icons/react';
+import { Bell, X, List } from '@phosphor-icons/react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotif, setShowNotif] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [initials, setInitials] = useState('AD');
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
@@ -71,15 +72,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       <div className="relative z-10">
-        <Sidebar />
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       </div>
       
-      <div className="flex-1 ml-64 flex flex-col h-screen relative z-10 overflow-hidden">
+      <div className="flex-1 lg:ml-64 flex flex-col h-screen relative z-10 overflow-hidden">
         {/* Top Navbar Global for Admin - Sticky and High Z-Index to float over content */}
-        <div className="sticky top-0 z-[100] h-16 border-b border-[#E8EFF4] bg-white/80 backdrop-blur-xl flex items-center justify-center px-10 shrink-0 w-full">
+        <div className="sticky top-0 z-[100] h-16 border-b border-[#E8EFF4] bg-white/80 backdrop-blur-xl flex items-center justify-center px-6 lg:px-10 shrink-0 w-full">
             
           <div className="max-w-[1200px] w-full flex justify-between items-center relative z-10">
-            <div className="w-4"></div>{/* Spacer */}
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden p-2 -ml-2 text-[#9AADB8] hover:text-[#1E4D6B] transition-colors"
+            >
+              <List weight="bold" className="w-6 h-6" />
+            </button>
+
+            <div className="w-4 hidden lg:block"></div>{/* Spacer */}
             
             <div className="flex-1"></div>
             

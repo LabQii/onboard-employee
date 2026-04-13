@@ -1,11 +1,16 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { SquaresFour, FileText, Users, Gear, SignOut } from '@phosphor-icons/react';
+import { SquaresFour, FileText, Users, Gear, SignOut, X } from '@phosphor-icons/react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
@@ -21,85 +26,107 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-app-bg flex flex-col h-screen fixed left-0 top-0 z-40">
-      {/* Header - Minimalist Logo Card */}
-      <div className="p-6 pb-2 min-h-[110px]">
-        {mounted ? (
-          <div className="bg-white p-4 rounded-[1.5rem] border border-[#E8EFF4] shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex items-center gap-3 group/logo hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all cursor-default animate-in fade-in duration-300">
-            <div className="w-10 h-10 flex items-center justify-center group-hover/logo:scale-105 transition-transform">
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div className="flex flex-col">
-              <h1 className="font-extrabold text-[1.4rem] tracking-tight text-[#1E3A5F] leading-none">
-                On Board
-              </h1>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full h-full opacity-0" />
-        )}
-      </div>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[110] lg:hidden transition-opacity duration-300"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 space-y-1.5 mt-2">
-        {links.map((itm) => {
-          const isActive = itm.exact ? pathname === itm.href : pathname.startsWith(itm.href);
-          const Icon = itm.icon;
-          return (
-            <Link
-              key={itm.name}
-              href={itm.href}
-              className={cn(
-                'flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all font-bold text-[13.5px]',
-                isActive
-                  ? 'bg-white shadow-soft text-tertiary'
-                  : 'text-tertiary/50 hover:text-tertiary hover:bg-white/50'
-              )}
-            >
-              <Icon
-                weight="duotone"
-                className={cn(
-                  'w-5 h-5 shrink-0 transition-colors',
-                  isActive ? 'text-primary' : 'text-tertiary/40'
-                )}
-              />
-              <span>{itm.name}</span>
-              {isActive && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(91,164,207,0.6)]" />
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+      <aside className={cn(
+        "w-64 bg-app-bg flex flex-col h-screen fixed left-0 top-0 z-[120] transition-transform duration-300 transform lg:translate-x-0",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        {/* Close Button (Mobile Only) */}
+        <button 
+          onClick={onClose}
+          className="lg:hidden absolute top-4 right-4 p-2 text-tertiary/50 hover:text-tertiary transition-colors"
+        >
+          <X className="w-6 h-6" />
+        </button>
 
-      {/* Footer */}
-      <div className="p-6 mt-auto">
-        <div className="bg-white/40 p-4 rounded-3xl border border-white/60 mb-4 shadow-soft">
-          <div className="flex items-center gap-3 mb-4 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-tertiary flex items-center justify-center shrink-0 shadow-lg shadow-tertiary/10">
-              <span className="text-xs font-bold text-white uppercase tracking-tighter">HR</span>
+        {/* Header - Minimalist Logo Card */}
+        <div className="p-6 pb-2 min-h-[110px]">
+          {mounted ? (
+            <div className="bg-white p-4 rounded-[1.5rem] border border-[#E8EFF4] shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex items-center gap-3 group/logo hover:shadow-[0_8px_30px_rgb(0,0,0,0.05)] transition-all cursor-default animate-in fade-in duration-300">
+              <div className="w-10 h-10 flex items-center justify-center group-hover/logo:scale-105 transition-transform">
+                <img 
+                  src="/logo.png" 
+                  alt="Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="font-extrabold text-[1.4rem] tracking-tight text-[#1E3A5F] leading-none">
+                  On Board
+                </h1>
+              </div>
             </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-[13px] font-bold text-tertiary truncate">Admin HR</span>
-              <span className="text-[10px] text-tertiary/70 font-bold truncate">admin@flow.com</span>
-            </div>
-          </div>
-          
-          <form action="/api/auth/logout" method="post">
-            <button
-              type="submit"
-              className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-2xl text-tertiary border border-neutral/10 bg-white hover:bg-neutral/5 hover:border-neutral/20 hover:text-red-500 transition-all text-[12px] font-bold shadow-sm active:scale-[0.98]"
-            >
-              <SignOut weight="duotone" className="w-4 h-4" />
-              Keluar Sesi
-            </button>
-          </form>
+          ) : (
+            <div className="w-full h-full opacity-0" />
+          )}
         </div>
-      </div>
-    </aside>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 space-y-1.5 mt-2">
+          {links.map((itm) => {
+            const isActive = itm.exact ? pathname === itm.href : pathname.startsWith(itm.href);
+            const Icon = itm.icon;
+            return (
+              <Link
+                key={itm.name}
+                href={itm.href}
+                onClick={onClose}
+                className={cn(
+                  'flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all font-bold text-[13.5px]',
+                  isActive
+                    ? 'bg-white shadow-soft text-tertiary'
+                    : 'text-tertiary/50 hover:text-tertiary hover:bg-white/50'
+                )}
+              >
+                <Icon
+                  weight="duotone"
+                  className={cn(
+                    'w-5 h-5 shrink-0 transition-colors',
+                    isActive ? 'text-primary' : 'text-tertiary/40'
+                  )}
+                />
+                <span>{itm.name}</span>
+                {isActive && (
+                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(91,164,207,0.6)]" />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div className="p-6 mt-auto">
+          <div className="bg-white/40 p-4 rounded-3xl border border-white/60 mb-4 shadow-soft">
+            <div className="flex items-center gap-3 mb-4 min-w-0">
+              <div className="w-10 h-10 rounded-2xl bg-tertiary flex items-center justify-center shrink-0 shadow-lg shadow-tertiary/10">
+                <span className="text-xs font-bold text-white uppercase tracking-tighter">HR</span>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[13px] font-bold text-tertiary truncate">Admin HR</span>
+                <span className="text-[10px] text-tertiary/70 font-bold truncate">admin@flow.com</span>
+              </div>
+            </div>
+            
+            <form action="/api/auth/logout" method="post">
+              <button
+                type="submit"
+                className="flex items-center justify-center gap-2 px-4 py-3 w-full rounded-2xl text-tertiary border border-neutral/10 bg-white hover:bg-neutral/5 hover:border-neutral/20 hover:text-red-500 transition-all text-[12px] font-bold shadow-sm active:scale-[0.98]"
+              >
+                <SignOut weight="duotone" className="w-4 h-4" />
+                Keluar Sesi
+              </button>
+            </form>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 }

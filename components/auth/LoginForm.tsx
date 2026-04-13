@@ -49,25 +49,25 @@ export default function LoginForm() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="mb-10 w-full flex items-start justify-between">
+      <div className="mb-8 sm:mb-10 w-full flex flex-col sm:flex-row sm:items-start justify-between gap-6 sm:gap-4">
         <div>
-          <h2 className="text-[1.8rem] font-bold text-[#111827] mb-1 tracking-tight">Selamat Datang</h2>
-          <p className="text-[0.95rem] text-[#5A7A8C] font-medium tracking-tight opacity-80">Masuk untuk membaca dokumentasi</p>
+          <h2 className="text-[1.5rem] sm:text-[1.8rem] font-bold text-[#111827] mb-1 tracking-tight">Selamat Datang</h2>
+          <p className="text-[0.85rem] sm:text-[0.95rem] text-[#5A7A8C] font-medium tracking-tight opacity-80">Masuk untuk membaca dokumentasi</p>
         </div>
 
         {/* Demo Switcher */}
-        <div className="flex flex-col gap-1.5 p-1 bg-[#F8FAFC] rounded-2xl border border-[#E8EFF4] min-w-[100px]">
+        <div className="flex flex-row sm:flex-col gap-1.5 p-1 bg-[#F8FAFC] rounded-2xl border border-[#E8EFF4] w-fit">
           <button
             type="button"
             onClick={() => fillDemo('admin')}
-            className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
+            className={`px-4 sm:px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'admin' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
           >
             ADMIN
           </button>
           <button
             type="button"
             onClick={() => fillDemo('karyawan')}
-            className={`px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'karyawan' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
+            className={`px-4 sm:px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all ${demoMode === 'karyawan' ? 'bg-[#1E4D6B] text-white shadow-md' : 'text-[#9AADB8] hover:bg-[#F1F5F9]'}`}
           >
             KARYAWAN
           </button>
@@ -95,7 +95,7 @@ export default function LoginForm() {
               onChange={e => setEmail(e.target.value)}
               required
               placeholder="explore.codee@gmail.com"
-              className="w-full pl-12 pr-4 py-4 border border-[#E2E8F0] rounded-xl text-[14px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
+              className="w-full pl-12 pr-4 py-3 sm:py-4 border border-[#E2E8F0] rounded-xl text-[13px] sm:text-[14px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
             />
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function LoginForm() {
               onChange={e => setPassword(e.target.value)}
               required
               placeholder="••••••••••••"
-              className="w-full pl-12 pr-12 py-4 border border-[#E2E8F0] rounded-xl text-[14px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
+              className="w-full pl-12 pr-12 py-3 sm:py-4 border border-[#E2E8F0] rounded-xl text-[13px] sm:text-[14px] text-[#1E3A5F] font-medium focus:outline-none focus:border-[#1E4D6B] focus:ring-4 focus:ring-[#1E4D6B]/5 transition-all placeholder:text-[#9AADB8]"
             />
             <button
               type="button"
@@ -142,7 +142,7 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <p className="mt-14 text-center text-[12px] text-[#9AADB8] font-medium pb-2">
+      <p className="mt-10 sm:mt-14 text-center text-[12px] text-[#9AADB8] font-medium pb-2">
         Belum punya akun?{' '}
         <span className="text-[#1E4D6B] font-bold cursor-pointer hover:underline">Hubungi admin HR Anda untuk mendapatkan undangan.</span>
       </p>

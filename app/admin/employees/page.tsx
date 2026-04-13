@@ -73,8 +73,8 @@ function EmployeeModal({
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between px-8 py-6 border-b border-[#E8EFF4]">
-          <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">
+        <div className="flex items-center justify-between px-6 sm:px-8 py-4 sm:py-6 border-b border-[#E8EFF4]">
+          <h2 className="font-bold text-[#1E3A5F] text-[1rem] sm:text-[1.1rem]">
             {mode === 'create' ? 'Undang Karyawan Baru' : 'Edit Data Karyawan'}
           </h2>
           <button onClick={onClose} className="text-[#9AADB8] hover:text-[#1E3A5F] transition-colors">
@@ -82,7 +82,7 @@ function EmployeeModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="p-6 sm:p-8 flex flex-col gap-4">
           {/* Nama */}
           <div>
             <label className="text-[11px] font-bold text-[#5A7A8C] uppercase tracking-wider mb-1.5 block">Nama Lengkap</label>
@@ -169,7 +169,7 @@ function DeleteModal({ emp, onClose, onDeleted }: { emp: Employee; onClose: () =
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-6 sm:p-8 text-center">
         <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
           <Trash weight="duotone" className="w-7 h-7 text-red-500" />
         </div>
@@ -371,39 +371,39 @@ export default function EmployeesPage() {
       />
 
       {/* ── Header ── */}
-      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
-        <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+      <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
+        <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
           {/* Subtle Blue Dots Decoration */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
 
-          <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
+          <div className="relative z-10 flex-1 min-w-0 md:min-w-[280px] text-center md:text-left">
+            <h1 className="text-[1.8rem] sm:text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
               Karyawan
             </h1>
-            <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
+            <p className="text-[#6B7280] text-[13px] sm:text-[15px] font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               Kelola data karyawan dan progres onboarding
             </p>
             {/* Stats */}
-            <div className="flex items-center gap-3 mt-5">
-              <span className="text-[11px] font-extrabold bg-[#F3F4F6] text-[#5A7A8C] px-3 py-1.5 rounded-md border border-[#E5E7EB] uppercase shrink-0">
+            <div className="flex items-center justify-center md:justify-start gap-2 sm:gap-3 mt-5 flex-wrap">
+              <span className="text-[10px] sm:text-[11px] font-extrabold bg-[#F3F4F6] text-[#5A7A8C] px-2.5 sm:px-3 py-1.5 rounded-md border border-[#E5E7EB] uppercase shrink-0">
                 {stats.total} Total
               </span>
-              <span className="text-[11px] font-extrabold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-md border border-emerald-100 uppercase shrink-0">
+              <span className="text-[10px] sm:text-[11px] font-extrabold bg-emerald-50 text-emerald-700 px-2.5 sm:px-3 py-1.5 rounded-md border border-emerald-100 uppercase shrink-0">
                 {stats.active} Aktif
               </span>
-              <span className="text-[11px] font-extrabold bg-amber-50 text-amber-700 px-3 py-1.5 rounded-md border border-amber-100 uppercase shrink-0">
+              <span className="text-[10px] sm:text-[11px] font-extrabold bg-amber-50 text-amber-700 px-2.5 sm:px-3 py-1.5 rounded-md border border-amber-100 uppercase shrink-0">
                 {stats.pending} Menunggu
               </span>
             </div>
           </div>
 
-          <div className="relative z-10 shrink-0">
+          <div className="relative z-10 shrink-0 flex justify-center md:justify-end">
             <button
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[13.5px]"
+              className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[12px] sm:text-[13.5px]"
             >
               <Plus weight="bold" className="w-4 h-4 text-white/90" /> Undang Karyawan
             </button>
@@ -411,7 +411,7 @@ export default function EmployeesPage() {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
+      <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12">
         {/* Filters */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 mb-8 mt-2">
           <div className="relative">

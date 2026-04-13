@@ -140,8 +140,8 @@ function DocModal({
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/20 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-premium w-full max-w-md mx-4 overflow-hidden">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-neutral/10">
-          <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">
+        <div className="flex items-center justify-between px-6 sm:px-8 py-4 sm:py-6 border-b border-neutral/10">
+          <h2 className="font-bold text-[#1E3A5F] text-[1rem] sm:text-[1.1rem]">
             {editDoc ? 'Edit Dokumen' : 'Unggah Dokumen'}
           </h2>
           <button onClick={onClose} className="text-[#9AADB8] hover:text-[#1E3A5F] transition-colors">
@@ -149,7 +149,7 @@ function DocModal({
           </button>
         </div>
 
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
           {step === 'file' ? (
             <button
               onClick={() => fileRef.current?.click()}
@@ -264,7 +264,7 @@ function DocModal({
 
         {/* Modal Footer */}
         {step === 'form' && (
-          <div className="px-8 pb-8 flex gap-3">
+          <div className="px-6 sm:px-8 pb-6 sm:pb-8 flex gap-3">
             <button
               onClick={onClose}
               className="flex-1 py-3 border border-neutral/20 rounded-xl text-[13px] font-bold text-[#5A7A8C] hover:bg-[#F8FAFC] transition-all"
@@ -342,35 +342,35 @@ export default function DocumentsPage() {
         onClose={() => setToast(null)}
       />
       {/* ── Header ── */}
-      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
-        <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+      <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
+        <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
           {/* Subtle Blue Dots Decoration */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
 
-          <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
+          <div className="relative z-10 flex-1 min-w-0 md:min-w-[280px] text-center md:text-left">
+            <h1 className="text-[1.8rem] sm:text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
               Dokumen Orientasi
             </h1>
-            <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
+            <p className="text-[#6B7280] text-[13px] sm:text-[15px] font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               Unggah dan kelola panduan perusahaan bagi karyawan baru
             </p>
           </div>
 
-          <div className="relative z-10 flex items-center gap-3 shrink-0 flex-wrap justify-end">
+          <div className="relative z-10 flex items-center gap-3 shrink-0 flex-wrap justify-center md:justify-end">
             <button
               onClick={() => { setEditDoc(undefined); setShowModal(true); }}
-              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[13.5px]"
+              className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#1E3A5F] hover:bg-[#152e4d] shadow-sm transition-all text-white font-bold text-[12px] sm:text-[13.5px]"
             >
-              <CloudArrowUp weight="duotone" className="w-5 h-5 text-white/90" /> Unggah Dokumen
+              <CloudArrowUp weight="duotone" className="w-4 h-4 sm:w-5 sm:h-5 text-white/90" /> Unggah Dokumen
             </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto w-full px-10 pb-12">
+      <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12">
         {/* Stat strip */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-20">
           {[

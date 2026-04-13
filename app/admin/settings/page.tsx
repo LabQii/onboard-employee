@@ -10,8 +10,8 @@ import Toast from '@/components/ui/Toast';
 
 function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
   return (
-    <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl rounded-[2rem] p-8">
-      <div className="flex items-center gap-4 mb-8">
+    <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.03)] border border-white bg-white/70 backdrop-blur-xl rounded-[1.8rem] sm:rounded-[2.5rem] p-6 sm:p-8">
+      <div className="flex items-center gap-4 mb-6 sm:mb-8">
         <div className="w-12 h-12 rounded-2xl bg-[#E8EFF4] flex items-center justify-center">
           <Icon className="w-5 h-5 text-[#276087]" />
         </div>
@@ -117,26 +117,26 @@ export default function SettingsPage() {
         onClose={() => setToast('')}
       />
       {/* ── Header ── */}
-      <div className="max-w-[1200px] mx-auto w-full px-10 pt-12 pb-8">
-        <div className="relative bg-white p-8 lg:p-10 overflow-hidden rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-10">
+      <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pt-8 lg:pt-12 pb-8">
+        <div className="relative bg-white p-6 sm:p-8 lg:p-10 overflow-hidden rounded-[1.8rem] sm:rounded-[2.5rem] border border-[#F3F4F6] shadow-[0_4px_24px_rgba(0,0,0,0.02)] flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
 
           {/* Subtle Blue Dots Decoration */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1E4D6B 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
           <div className="absolute top-[-20%] right-[10%] w-[30%] h-[150%] bg-[#E8F2F9] rounded-full blur-3xl pointer-events-none opacity-60" />
           <div className="absolute bottom-[-50%] left-[-10%] w-[30%] h-[150%] bg-[#DCECF5] rounded-full blur-3xl pointer-events-none opacity-40" />
 
-          <div className="relative z-10 flex-1 min-w-[280px]">
-            <h1 className="text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
+          <div className="relative z-10 flex-1 min-w-0 md:min-w-[280px] text-center md:text-left">
+            <h1 className="text-[1.8rem] sm:text-[2.2rem] lg:text-[2.4rem] font-extrabold text-[#111827] mb-2 tracking-tight leading-tight">
               Struktur Organisasi
             </h1>
-            <p className="text-[#6B7280] text-[15px] font-medium leading-relaxed max-w-lg">
+            <p className="text-[#6B7280] text-[13px] sm:text-[15px] font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
               Kelola daftar divisi dan jabatan yang tersedia untuk proses onboarding
             </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto w-full px-10 pb-12 mt-4 z-10 relative">
+      <div className="max-w-[1200px] mx-auto w-full px-6 lg:px-10 pb-12 mt-4 z-10 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* ── Manage Departments ── */}
           <SectionCard icon={Briefcase} title="Daftar Divisi">
