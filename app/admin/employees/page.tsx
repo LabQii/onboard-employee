@@ -71,7 +71,7 @@ function EmployeeModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between px-8 py-6 border-b border-[#E8EFF4]">
           <h2 className="font-bold text-[#1E3A5F] text-[1.1rem]">
@@ -168,7 +168,7 @@ function DeleteModal({ emp, onClose, onDeleted }: { emp: Employee; onClose: () =
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center">
         <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
           <Trash weight="duotone" className="w-7 h-7 text-red-500" />

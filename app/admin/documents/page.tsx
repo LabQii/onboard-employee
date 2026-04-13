@@ -137,7 +137,7 @@ function DocModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/20 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-premium w-full max-w-md mx-4 overflow-hidden">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b border-neutral/10">
